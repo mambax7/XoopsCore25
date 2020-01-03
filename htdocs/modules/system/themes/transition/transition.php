@@ -14,7 +14,7 @@ xoops_load('gui', 'system');
 /*
  * Xoops Cpanel default GUI class
  *
- * @copyright   (c) 2000-2016 XOOPS Project (www.xoops.org)
+ * @copyright   (c) 2000-2020 XOOPS Project (www.xoops.org)
  * @license     GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
  * @package     system
  * @usbpackage  GUI
@@ -288,21 +288,21 @@ class XoopsGuiTransition extends XoopsSystemGui
         //add OPTIONS/Links Menu Items
         $menu   = array();
         $menu[] = array(
-            'link'     => 'http://xoops.org',
+            'link'     => 'https://xoops.org',
             'title'    => _OXYGEN_XOOPSPROJECT,
             'absolute' => 1);
         $menu[] = array(
-            'link'     => 'http://xoops.org',
+            'link'     => 'https://xoops.org',
             'title'    => _OXYGEN_WEBSITE,
             'absolute' => 1,
             'icon'     => XOOPS_ADMINTHEME_URL . '/transition/images/xoops.png');
         $menu[] = array(
-            'link'     => 'http://www.xoops.org/modules/repository/',
+            'link'     => 'https://xoops.org/modules/repository/',
             'title'    => _OXYGEN_XOOPSMODULES,
             'absolute' => 1,
             'icon'     => XOOPS_ADMINTHEME_URL . '/transition/images/xoops.png');
         $menu[] = array(
-            'link'     => 'http://www.xoops.org/modules/extgallery/',
+            'link'     => 'https://xoops.org/modules/extgallery/',
             'title'    => _OXYGEN_XOOPSTHEMES,
             'absolute' => 1,
             'icon'     => XOOPS_ADMINTHEME_URL . '/transition/images/tweb.png');

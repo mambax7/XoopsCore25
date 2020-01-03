@@ -21,9 +21,9 @@
  * @author              Richard Griffith <richard@geekwright.com>
  * @author              trabis <lusopoemas@gmail.com>
  * @author              Joomla!
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
+ * @copyright       (c) 2000-2020 XOOPS Project (www.xoops.org)
  * @license             GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
- * @link                http://xoops.org
+ * @link                https://xoops.org
  * @since               2.5.7
  */
 class XoopsRequest extends \Xmf\Request

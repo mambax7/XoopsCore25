@@ -9,7 +9,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
+ * @copyright       (c) 2000-2020 XOOPS Project (www.xoops.org)
  * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
  */
 $xoopsOption['pagetype'] = 'admin';
@@ -81,7 +81,7 @@ if (!empty($_GET['xoopsorgnews'])) {
     $myts     = MyTextSanitizer::getInstance();
     $rssurl   = array();
     //$rssurl[] = 'http://sourceforge.net/export/rss2_projnews.php?group_id=41586&rss_fulltext=1';
-    $rssurl[] = 'http://www.xoops.org/modules/publisher/backend.php';
+    $rssurl[] = 'https://xoops.org/modules/publisher/backend.php';
     if ($URLs = include $GLOBALS['xoops']->path('language/' . xoops_getConfigOption('language') . '/backend.php')) {
         $rssurl = array_unique(array_merge($rssurl, $URLs));
     }

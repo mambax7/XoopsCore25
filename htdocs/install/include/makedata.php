@@ -14,7 +14,7 @@
  * See the enclosed file license.txt for licensing information.
  * If you did not receive this file, get it at http://www.gnu.org/licenses/gpl-2.0.html
  *
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
+ * @copyright       (c) 2000-2020 XOOPS Project (www.xoops.org)
  * @license             GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
  * @package             installer
  * @since               2.3.0
@@ -87,10 +87,10 @@ function make_data(&$dbm, $adminname, $hashedAdminPass, $adminmail, $language, $
     $dbm->insert('group_permission', ' VALUES(0,' . $groups['XOOPS_GROUP_ADMIN'] . ",16,1,'system_admin')");
     $dbm->insert('group_permission', ' VALUES(0,' . $groups['XOOPS_GROUP_ADMIN'] . ",17,1,'system_admin')");
     // data for table 'banner'
-    $dbm->insert('banner', " (bid, cid, imptotal, impmade, clicks, imageurl, clickurl, date, htmlbanner, htmlcode) VALUES (0, 1, 0, 1, 0, '" . XOOPS_URL . "/images/banners/xoops_flashbanner2.htm', 'http://www.xoops.org/', 1008813250, 1,'')");
-    $dbm->insert('banner', " (bid, cid, imptotal, impmade, clicks, imageurl, clickurl, date, htmlbanner, htmlcode) VALUES (0, 1, 0, 1, 0, '" . XOOPS_URL . "/images/banners/xoops_banner_2.gif', 'http://www.xoops.org/', 1008813250, 0, '')");
-    $dbm->insert('banner', " (bid, cid, imptotal, impmade, clicks, imageurl, clickurl, date, htmlbanner, htmlcode) VALUES (0, 1, 0, 1, 0, '" . XOOPS_URL . "/images/banners/banner.htm', 'http://www.xoops.org/', 1008813250, 1, '')");
-    $dbm->insert('banner', " (bid, cid, imptotal, impmade, clicks, imageurl, clickurl, date, htmlbanner, htmlcode) VALUES (0, 1, 0, 1, 0, '" . XOOPS_URL . "/images/banners/xoopsifyIt.gif', 'http://www.xoops.org/', 1008813250, 1, '')");
+    $dbm->insert('banner', " (bid, cid, imptotal, impmade, clicks, imageurl, clickurl, date, htmlbanner, htmlcode) VALUES (0, 1, 0, 1, 0, '" . XOOPS_URL . "/images/banners/xoops_flashbanner2.htm', 'https://xoops.org/', 1008813250, 1,'')");
+    $dbm->insert('banner', " (bid, cid, imptotal, impmade, clicks, imageurl, clickurl, date, htmlbanner, htmlcode) VALUES (0, 1, 0, 1, 0, '" . XOOPS_URL . "/images/banners/xoops_banner_2.gif', 'https://xoops.org/', 1008813250, 0, '')");
+    $dbm->insert('banner', " (bid, cid, imptotal, impmade, clicks, imageurl, clickurl, date, htmlbanner, htmlcode) VALUES (0, 1, 0, 1, 0, '" . XOOPS_URL . "/images/banners/banner.htm', 'https://xoops.org/', 1008813250, 1, '')");
+    $dbm->insert('banner', " (bid, cid, imptotal, impmade, clicks, imageurl, clickurl, date, htmlbanner, htmlcode) VALUES (0, 1, 0, 1, 0, '" . XOOPS_URL . "/images/banners/xoopsifyIt.gif', 'https://xoops.org/', 1008813250, 1, '')");
     // default theme
     $time = time();
     $dbm->insert('tplset', " VALUES (1, 'default', 'XOOPS Default Template Set', '', " . $time . ')');
@@ -205,7 +205,7 @@ function make_data(&$dbm, $adminname, $hashedAdminPass, $adminmail, $language, $
     $dbm->insert('config', " VALUES (36, 0, 2, 'maxuname', '_MD_AM_MAXUNAME', '10', '_MD_AM_MAXUNAMEDSC', 'textbox', 'int', 3)");
     $dbm->insert('config', " VALUES (37, 0, 1, 'bad_ips', '_MD_AM_BADIPS', '" . addslashes(serialize(array('127.0.0.1'))) . "', '_MD_AM_BADIPSDSC', 'textarea', 'array', 42)");
     $dbm->insert('config', " VALUES (38, 0, 3, 'meta_keywords', '_MD_AM_METAKEY', 'xoops, web application framework, cms, content management system', '_MD_AM_METAKEYDSC', 'textarea', 'text', 0)");
-    $dbm->insert('config', " VALUES (39, 0, 3, 'footer', '_MD_AM_FOOTER', 'Powered by XOOPS &#169; 2001-" . date('Y', time()) . " <a href=\"http://xoops.org\" rel=\"external\" title=\"The XOOPS Project\">The XOOPS Project</a>', '_MD_AM_FOOTERDSC', 'textarea', 'text', 20)");
+    $dbm->insert('config', " VALUES (39, 0, 3, 'footer', '_MD_AM_FOOTER', 'Powered by XOOPS &#169; 2001-" . date('Y', time()) . " <a href=\"https://xoops.org\" rel=\"external\" title=\"The XOOPS Project\">The XOOPS Project</a>', '_MD_AM_FOOTERDSC', 'textarea', 'text', 20)");
     $dbm->insert('config', " VALUES (40, 0, 4, 'censor_enable', '_MD_AM_DOCENSOR', '0', '_MD_AM_DOCENSORDSC', 'yesno', 'int', 0)");
     $dbm->insert('config', " VALUES (41, 0, 4, 'censor_words', '_MD_AM_CENSORWRD', '" . addslashes(serialize(array(
                                                                                                                  'fuck',

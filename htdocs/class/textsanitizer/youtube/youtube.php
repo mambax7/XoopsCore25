@@ -10,7 +10,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       (c) 2000-2017 XOOPS Project (www.xoops.org)
+ * @copyright       (c) 2000-2020 XOOPS Project (www.xoops.org)
  * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
  * @package             class
  * @subpackage          textsanitizer
@@ -90,7 +90,7 @@ EOH;
     public static function decode($url, $width, $height)
     {
         // modernized responsive youtube handling suggested by XOOPS user xd9527 -- thanks!
-        // http://xoops.org/modules/newbb/viewtopic.php?post_id=359913
+        // https://xoops.org/modules/newbb/viewtopic.php?post_id=359913
 
         // match known youtube urls
         // from: http://stackoverflow.com/questions/2936467/parse-youtube-video-id-using-preg-match/6382259#6382259

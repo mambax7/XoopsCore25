@@ -168,7 +168,7 @@ Updated libraries and assets:
 - remove addrFormat override in XoopsMultiMailer (rgriffith)
 - patch from Xoops 2.5.6 XoopsFormSelectUser is not compatible with some old modules like xNews (luciorota)
 - fix "setExtra" in moduleadmin.php, Admin buttons can now use "onClick" assignments (mamba)
-- updated XOOPS copyright to 2016, changed links to http://xoops.org (mamba)
+- updated XOOPS copyright to 2016, changed links to https://xoops.org (mamba)
 - replaced intval() with (int) (mamba)
 - added possibility to include full icon URL in module's menu.php (mamba)
 - added strong { font-weight: bold; } to reset.css (mamba)

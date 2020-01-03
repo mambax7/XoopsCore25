@@ -9,7 +9,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
+ * @copyright       (c) 2000-2020 XOOPS Project (www.xoops.org)
  * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
  * @package             class
  * @since               2.0.0
@@ -22,7 +22,7 @@
  * Abstract class for extensions
  *
  * @author              Taiwen Jiang <phppp@users.sourceforge.net>
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
+ * @copyright       (c) 2000-2020 XOOPS Project (www.xoops.org)
  */
 class MyTextSanitizerExtension
 {
@@ -128,7 +128,7 @@ class MyTextSanitizerExtension
  * @author        Kazumi Ono <onokazu@xoops.org>
  * @author        Taiwen Jiang <phppp@users.sourceforge.net>
  * @author        Goghs Cheng
- * @copyright (c) 2000-2016 XOOPS Project - www.xoops.org
+ * @copyright (c) 2000-2020 XOOPS Project - www.xoops.org
  */
 class MyTextSanitizer
 {

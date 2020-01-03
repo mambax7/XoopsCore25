@@ -9,7 +9,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       (c) 2000-2019 XOOPS Project (https://xoops.org)
+ * @copyright       (c) 2000-2020 XOOPS Project (https://xoops.org)
  * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             kernel
  * @since               2.0.0
@@ -1065,7 +1065,7 @@ class XoopsObject
  * @package             kernel
  * @abstract
  * @author              Kazumi Ono <onokazu@xoops.org>
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
+ * @copyright       (c) 2000-2020 XOOPS Project (www.xoops.org)
  */
 class XoopsObjectHandler
 {
@@ -1148,7 +1148,7 @@ class XoopsObjectHandler
  *
  * @author              Taiwen Jiang <phppp@users.sourceforge.net>
  * @author              Jan Keller Pedersen <mithrandir@xoops.org>
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
+ * @copyright       (c) 2000-2020 XOOPS Project (www.xoops.org)
  * @package             Kernel
  */
 class XoopsPersistableObjectHandler extends XoopsObjectHandler

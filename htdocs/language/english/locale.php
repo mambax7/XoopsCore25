@@ -12,7 +12,7 @@
 /**
  * Xoops locale
  *
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
+ * @copyright       (c) 2000-2020 XOOPS Project (www.xoops.org)
  * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
  * @package             kernel
  * @since               2.3.0
@@ -43,7 +43,7 @@ if (!class_exists('XoopsLocalAbstract')) {
  * @subpackage          Language
  *
  * @author              Taiwen Jiang <phppp@users.sourceforge.net>
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
+ * @copyright       (c) 2000-2020 XOOPS Project (www.xoops.org)
  */
 class XoopsLocal extends XoopsLocalAbstract
 {

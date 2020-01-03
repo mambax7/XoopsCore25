@@ -218,7 +218,7 @@ ADDED/DELETED DEFINES
 - added define("_AM_MODULEADMIN_ABOUT_LICENSE","License: ");
 - added define("_AM_MODULEADMIN_ABOUT_AUTHOR_NAME","Author name: ");
 - added define("_AM_MODULEADMIN_ABOUT_AUTHOR_INFO","Author Info");
-- added define("_AM_MODULEADMIN_ADMIN_FOOTER", "<div class='center smallsmall italic pad5'>This module is maintained by the <a class='tooltip' rel='external' href='http://xoops.org/' title='Visit XOOPS Community'>XOOPS Community</a></div>");
+- added define("_AM_MODULEADMIN_ADMIN_FOOTER", "<div class='center smallsmall italic pad5'>This module is maintained by the <a class='tooltip' rel='external' href='https://xoops.org/' title='Visit XOOPS Community'>XOOPS Community</a></div>");
 
 /language/english/calendar.php
 - added define("_CAL_FORMAT","Y-m-d");

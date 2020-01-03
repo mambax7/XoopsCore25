@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright 2017 XOOPS Project (www.xoops.org)
+ * @copyright 2000-2020 XOOPS Project (www.xoops.org)
  * @license   GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
  * @package   upgrader
  * @since     2.5.9
