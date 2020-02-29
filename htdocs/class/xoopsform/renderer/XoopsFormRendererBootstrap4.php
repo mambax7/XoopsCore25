@@ -14,9 +14,8 @@
  * @category  XoopsForm
  * @package   XoopsFormRendererBootstrap4
  * @author    Richard Griffith <richard@geekwright.com>
- * @copyright 2000-2020 XOOPS Project (https://xoops.org)
- * @license   GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
- * @link      https://xoops.org
+ * @copyright 2018-2020 XOOPS Project (https://xoops.org)
+ * @license   GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 class XoopsFormRendererBootstrap4 implements XoopsFormRendererInterface
 {
@@ -362,7 +361,7 @@ class XoopsFormRendererBootstrap4 implements XoopsFormRendererInterface
             . '<ul class="dropdown-menu">';
             //. _SIZE . '&nbsp;&nbsp;<span class="caret"></span></button><ul class="dropdown-menu">';
         foreach ($GLOBALS['formtextdhtml_sizes'] as $value => $name) {
-            $fontStr .= '<li><a href="javascript:xoopsSetElementAttribute(\'size\', \'' . $value . '\', \''
+            $fontStr .= '<li class="dropdown-item"><a href="javascript:xoopsSetElementAttribute(\'size\', \'' . $value . '\', \''
                 . $textarea_id . '\', \'' . $hiddentext . '\');">' . $name . '</a></li>';
         }
         $fontStr .= '</ul></div>';
@@ -374,7 +373,7 @@ class XoopsFormRendererBootstrap4 implements XoopsFormRendererInterface
             . '<ul class="dropdown-menu">';
             //. _FONT . '&nbsp;&nbsp;<span class="caret"></span></button><ul class="dropdown-menu">';
         foreach ($fontarray as $font) {
-            $fontStr .= '<li><a href="javascript:xoopsSetElementAttribute(\'font\', \'' . $font . '\', \''
+            $fontStr .= '<li class="dropdown-item"><a href="javascript:xoopsSetElementAttribute(\'font\', \'' . $font . '\', \''
                 . $textarea_id . '\', \'' . $hiddentext . '\');">' . $font . '</a></li>';
         }
         $fontStr .= '</ul></div>';
@@ -386,7 +385,7 @@ class XoopsFormRendererBootstrap4 implements XoopsFormRendererInterface
             . '<ul class="dropdown-menu">';
             //. _COLOR . '&nbsp;&nbsp;<span class="caret"></span></button><ul class="dropdown-menu">';
         foreach ($colorArray as $color => $hex) {
-            $fontStr .= '<li><a href="javascript:xoopsSetElementAttribute(\'color\', \'' . $hex . '\', \''
+            $fontStr .= '<li class="dropdown-item"><a href="javascript:xoopsSetElementAttribute(\'color\', \'' . $hex . '\', \''
                 . $textarea_id . '\', \'' . $hiddentext . '\');">'
                 . '<span style="color:#' . $hex . ';">' . $color .'</span></a></li>';
         }
@@ -609,7 +608,7 @@ class XoopsFormRendererBootstrap4 implements XoopsFormRendererInterface
             $display_value = date(_SHORTDATESTRING, $ele_value);
         }
 
-        $jstime = formatTimestamp($ele_value, _SHORTDATESTRING);
+        $jstime = formatTimestamp($ele_value, 'm/d/Y');
         if (isset($GLOBALS['xoTheme']) && is_object($GLOBALS['xoTheme'])) {
             $GLOBALS['xoTheme']->addScript('include/calendar.js');
             $GLOBALS['xoTheme']->addStylesheet('include/calendar-blue.css');
