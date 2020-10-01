@@ -6,6 +6,7 @@
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/XOOPS/XoopsCore25.svg?style=flat)](https://scrutinizer-ci.com/g/XOOPS/XoopsCore25/code-structure)
 [![Quality Score](https://img.shields.io/scrutinizer/g/XOOPS/XoopsCore25.svg?style=flat)](https://scrutinizer-ci.com/g/XOOPS/XoopsCore25)
 [![Latest Version](https://img.shields.io/github/release/XOOPS/XoopsCore25.svg?style=flat)](https://github.com/XOOPS/XoopsCore25/releases)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmambax7%2FXoopsCore25.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmambax7%2FXoopsCore25?ref=badge_shield)
 
 > **Note:** This repository contains the core code of the XOOPS Core 2.5.x. Our next generation is currently under development on [GitHub](https://github.com/XOOPS/XoopsCore).
 
@@ -77,3 +78,7 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 
 A huge thank you to [JetBrains](https://www.jetbrains.com/) for supporting the development of this project with complimentary [PhpStorm](https://www.jetbrains.com/phpstorm/) licenses.
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmambax7%2FXoopsCore25.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmambax7%2FXoopsCore25?ref=badge_large)
