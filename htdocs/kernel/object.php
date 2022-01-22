@@ -878,7 +878,7 @@ class XoopsObject
 
                 }
             }
-            $this->cleanVars[$k] = str_replace('\\"', '"', $cleanv);
+            $this->cleanVars[$k] = str_replace('\\"', '"', $cleanv??'');
             unset($cleanv);
         }
         if (count($this->_errors) > 0) {
