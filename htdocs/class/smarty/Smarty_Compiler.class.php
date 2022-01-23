@@ -262,7 +262,7 @@ class Smarty_Compiler extends Smarty {
 
         /* replace special blocks by "{php}" */
         $source_content = preg_replace_callback($search, array($this,'_preg_callback')
-                                       , (string)$source_content);
+                                       , $source_content??'');
 
         /* Gather all template tags. */
         preg_match_all("~{$ldq}\s*(.*?)\s*{$rdq}~s", $source_content, $_match);
