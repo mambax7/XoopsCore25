@@ -257,12 +257,12 @@ class Smarty_Compiler extends Smarty {
         /* fetch all special blocks */
         $search = "~{$ldq}\*(.*?)\*{$rdq}|{$ldq}\s*literal\s*{$rdq}(.*?){$ldq}\s*/literal\s*{$rdq}|{$ldq}\s*php\s*{$rdq}(.*?){$ldq}\s*/php\s*{$rdq}~s";
 
-        preg_match_all($search, $source_content, $match,  PREG_SET_ORDER);
+        preg_match_all($search, (string)$source_content, $match,  PREG_SET_ORDER);
         $this->_folded_blocks = $match;
 
         /* replace special blocks by "{php}" */
         $source_content = preg_replace_callback($search, array($this,'_preg_callback')
-                                       , $source_content);
+                                       , (string)$source_content);
 
         /* Gather all template tags. */
         preg_match_all("~{$ldq}\s*(.*?)\s*{$rdq}~s", $source_content, $_match);
@@ -1528,7 +1528,7 @@ class Smarty_Compiler extends Smarty {
         preg_match_all('~(?:' . $this->_obj_call_regexp . '|' . $this->_qstr_regexp . ' | (?>[^"\'=\s]+)
                          )+ |
                          [=]
-                        ~x', $tag_args, $match);
+                        ~x', (string)$tag_args, $match);
         $tokens       = $match[0];
 
         $attrs = array();

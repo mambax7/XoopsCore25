@@ -4,10 +4,13 @@ XOOPS 2.5.12 Changelog for PHP 8.1
 2.5.12 Alpha 1         NOT RELEASED
 ===================================
 Fixes:
-- Unknown: str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in file /kernel/object.php line 881
-- Unknown: preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in file /class/file/folder.php line 852
-- Unknown: preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in file /class/file/folder.php line 291
-- Unknown: trim(): Passing null to parameter #1 ($string) of type string is deprecated in file /class/smarty/xoops_plugins/compiler.xoAppUrl.php line 55
-- Unknown: Function strftime() is deprecated in file /class/smarty/Smarty_Compiler.class.php line 395
-- Unknown: Function strftime() is deprecated in file /class/smarty/plugins/modifier.date_format.php line 53
+- Unknown: str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in file /kernel/object.php line 881 (mamba)
+- Unknown: preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in file /class/file/folder.php line 852 (mamba)
+- Unknown: preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in file /class/file/folder.php line 291 (mamba)
+- Unknown: trim(): Passing null to parameter #1 ($string) of type string is deprecated in file /class/smarty/xoops_plugins/compiler.xoAppUrl.php line 55 (mamba)
+- Unknown: Function strftime() is deprecated in file /class/smarty/Smarty_Compiler.class.php line 395 (mamba)
+- Unknown: Function strftime() is deprecated in file /class/smarty/plugins/modifier.date_format.php line 53 (mamba)
+- Unknown: preg_match_all(): Passing null to parameter #2 ($subject) of type string is deprecated in the file /class/smarty/Smarty_Compiler.class.php líne 260 (oswald/mamba)
+- Unknown: preg_match_all(): Passing null to parameter #2 ($subject) of type string is deprecated in the file /class/smarty/Smarty_Compiler.class.php líne 1531 (oswald/mamba)
+- Unknown: preg_replace_callback(): Passing null to parameter #3 ($subject) of type array|string is deprecated in the file /class/smarty/Smarty_Compiler.class.php líne 265 (oswald/mamba)
 
