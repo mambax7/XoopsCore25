@@ -14,4 +14,4 @@ Fixes:
 - Unknown: preg_match_all(): Passing null to parameter #2 ($subject) of type string is deprecated in the file /class/smarty/Smarty_Compiler.class.php líne 1531 (oswald/mamba)
 - Unknown: preg_replace_callback(): Passing null to parameter #3 ($subject) of type array|string is deprecated in the file /class/smarty/Smarty_Compiler.class.php líne 265 (oswald/mamba)
 - Unknown: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in file /class/xoopsform/formelement.php line 160
-
+- Unknown: Automatic conversion of false to array is deprecated in file /class/theme.php line 509
