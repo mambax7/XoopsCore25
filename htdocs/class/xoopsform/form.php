@@ -638,9 +638,7 @@ class XoopsForm
     {
         $i        = -1;
         $elements = array();
-        if (count($this->getRequired()) > 0) {
-            $this->_elements[] = "<tr class='foot'><td colspan='2'>* = " . _REQUIRED . '</td></tr>';
-        }
+        //  Removed hard-coded legacy pseudo-element - XoopsFormRenderer is now responsible for the legend
         foreach ($this->getElements() as $ele) {
             ++$i;
             if (is_string($ele)) {
