@@ -185,9 +185,9 @@ class XoopsObject
      *
      * @param string $key
      * @param int    $data_type set to one of XOBJ_DTYPE_XXX constants (set to XOBJ_DTYPE_OTHER if no data type checking nor text sanitizing is required)
-     * @param null   $value
+     * @param mixed    $value
      * @param bool   $required  require html form input?
-     * @param int    $maxlength for XOBJ_DTYPE_TXTBOX type only
+     * @param int|null $maxlength for XOBJ_DTYPE_TXTBOX type only
      * @param string $options
      * @param string $enumerations
      *
@@ -426,6 +426,7 @@ class XoopsObject
      */
     public function getVar($key, $format = 's')
     {
+        $format = (null === $format) ? 's' : (string) $format;
         $ret = null;
         if (!isset($this->vars[$key])) {
             return $ret;
@@ -878,7 +879,7 @@ class XoopsObject
 
                 }
             }
-            $this->cleanVars[$k] = str_replace('\\"', '"', $cleanv??'');
+            $this->cleanVars[$k] = str_replace('\\"', '"', (string) $cleanv);
             unset($cleanv);
         }
         if (count($this->_errors) > 0) {
