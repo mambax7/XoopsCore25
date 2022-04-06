@@ -499,9 +499,9 @@ class MyTextSanitizer
         }
         $text = (string) $text;
         if (version_compare(phpversion(), '5.2.3', '>=')) {
-            $text = htmlspecialchars($text??'', $quote_style, $charset ?: (defined('_CHARSET') ? _CHARSET : 'UTF-8'), $double_encode);
+            $text = htmlspecialchars($text, $quote_style, $charset ?: (defined('_CHARSET') ? _CHARSET : 'UTF-8'), $double_encode);
         } else {
-            $text = htmlspecialchars($text??'', $quote_style);
+            $text = htmlspecialchars($text, $quote_style);
         }
 
         return preg_replace(array('/&amp;/i', '/&nbsp;/i'), array('&', '&amp;nbsp;'), $text);
@@ -534,7 +534,7 @@ class MyTextSanitizer
         $text = (string) $text;
         $charset = (defined('_CHARSET') ? _CHARSET : 'UTF-8');
         if (function_exists('mb_convert_encoding')) {
-            $text = mb_convert_encoding($text??'', $charset, mb_detect_encoding($text??'', mb_detect_order(), true));
+            $text = mb_convert_encoding($text, $charset, mb_detect_encoding($text, mb_detect_order(), true));
         }
         if ($html && $br) {
             $testText = strip_tags($text);
