@@ -255,13 +255,13 @@ class Smarty_Compiler extends Smarty {
 
         /* fetch all special blocks */
         $search = "~{$ldq}\*(.*?)\*{$rdq}|{$ldq}\s*literal\s*{$rdq}(.*?){$ldq}\s*/literal\s*{$rdq}|{$ldq}\s*php\s*{$rdq}(.*?){$ldq}\s*/php\s*{$rdq}~s";
-
-        preg_match_all($search, (string)$source_content, $match,  PREG_SET_ORDER);
+        $source_content = (null === $source_content) ? '' : $source_content; // added for XOOPS
+        preg_match_all($search, $source_content, $match,  PREG_SET_ORDER);
         $this->_folded_blocks = $match;
 
         /* replace special blocks by "{php}" */
         $source_content = preg_replace_callback($search, array($this,'_preg_callback')
-                                       , $source_content??'');
+                                       , $source_content);
 
         /* Gather all template tags. */
         preg_match_all("~{$ldq}\s*(.*?)\s*{$rdq}~s", $source_content, $_match);
@@ -390,14 +390,9 @@ class Smarty_Compiler extends Smarty {
             }
         }
 
-        // put header at the top of the compiled template
-//        $template_header = "<?php /* Smarty version ".$this->_version.", created on ".strftime("%Y-%m-%d %H:%M:%S")."\n";
-
-        $format = "Y-m-d H:M:S";
-        $date = new DateTime();
-        $date->setTimeStamp(time());
-        $template_header = "<?php /* Smarty version ".$this->_version.", created on ".$date->format($format)."\n";
-
+        // put header at the top of the compiled template -- Modified for XOOPS
+        $time = new DateTime();
+        $template_header = "<?php /* Smarty version ".$this->_version.", created on ".$time->format('Y-m-d H:i:s')."\n";
         $template_header .= "         compiled from ".strtr(urlencode($resource_name), array('%2F'=>'/', '%3A'=>':'))." */ ?>\n";
 
         /* Emit code to load needed plugins. */
@@ -1528,12 +1523,12 @@ class Smarty_Compiler extends Smarty {
      */
     function _parse_attrs($tag_args)
     {
-
+        $tag_args = (string) $tag_args; // modified for XOOPS
         /* Tokenize tag attributes. */
         preg_match_all('~(?:' . $this->_obj_call_regexp . '|' . $this->_qstr_regexp . ' | (?>[^"\'=\s]+)
                          )+ |
                          [=]
-                        ~x', (string)$tag_args, $match);
+                        ~x', $tag_args, $match);
         $tokens       = $match[0];
 
         $attrs = array();
