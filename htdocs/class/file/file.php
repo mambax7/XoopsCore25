@@ -231,7 +231,7 @@ class XoopsFileHandler
     }
 
     /**
-     * Prepares a ascii string for writing
+     * Prepares an ASCII string for writing
      * fixes line endings
      *
      * @param  string $data Data to prepare for writing.
@@ -539,7 +539,7 @@ class XoopsFileHandler
     /**
      * Returns last access time.
      *
-     * @return int|false timestamp Timestamp of last access time
+     * @return int|false Timestamp of last access time
      * @access public
      */
     public function lastAccess()

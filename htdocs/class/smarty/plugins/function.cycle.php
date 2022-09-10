@@ -19,7 +19,7 @@
  *                    (this can be left out for subsequent calls)
  *         - reset = boolean - resets given var to true
  *         - print = boolean - print var or not. default is true
- *         - advance = boolean - whether or not to advance the cycle
+ *         - advance = boolean - whether to advance the cycle
  *         - delimiter = the value delimiter, default is ","
  *         - assign = boolean, assigns to template var instead of
  *                    printed.
