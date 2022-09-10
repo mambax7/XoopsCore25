@@ -16,7 +16,7 @@
  * @author              Kazumi Ono (AKA onokazu) http://www.myweb.ne.jp/, http://jp.xoops.org/
  */
 
-use \Xmf\Request;
+use Xmf\Request;
 
 defined('XOOPS_ROOT_PATH') || exit('Restricted access');
 
