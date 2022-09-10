@@ -18,7 +18,7 @@
 
 /**
  * call htmlspecialchars with standard arguments
- * @param $value string
+ * @param string $value
  * @return string
  */
 function installerHtmlSpecialChars($value)
