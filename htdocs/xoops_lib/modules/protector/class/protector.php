@@ -140,7 +140,7 @@ class Protector
 
             // register as doubtful requests against SQL Injections
             if (preg_match('?[\s\'"`/]?', $val)) {
-                $this->_doubtful_requests["$key"] = $val;
+                $this->_doubtful_requests[(string)$key] = $val;
             }
         }
     }
