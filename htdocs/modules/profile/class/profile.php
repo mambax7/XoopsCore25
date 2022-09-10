@@ -25,6 +25,7 @@
  */
 class ProfileProfile extends XoopsObject
 {
+    //PHP 8.2 Dynamic properties deprecated
     public $profile_id;
     public $handler;
 
@@ -354,7 +355,7 @@ class ProfileProfileHandler extends XoopsPersistableObjectHandler
             $sql_count = 'SELECT COUNT(*)' . $sql_from . $sql_clause;
             $result    = $this->db->query($sql_count);
             if ($this->db->isResultSet($result)) {
-                list($count) = $this->db->fetchRow($result);
+            list($count) = $this->db->fetchRow($result);
             }
         }
 
