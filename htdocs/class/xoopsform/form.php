@@ -602,7 +602,7 @@ class XoopsForm
      * }
      * </code>
      *
-     * @param boolean $withtags Include the < javascript > tags in the returned string
+     * @param bool $withtags Include the < javascript > tags in the returned string
      *
      * @return string
      */

@@ -94,7 +94,7 @@ class ArtObjectHandler extends XoopsPersistableObjectHandler
     /**
      * get MySQL major version
      *
-     * @return integer : 3 - 4.1-; 4 - 4.1+; 5 - 5.0+
+     * @return int : 3 - 4.1-; 4 - 4.1+; 5 - 5.0+
      */
     public function mysql_major_version()
     {

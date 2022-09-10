@@ -62,7 +62,7 @@ class XoopsPageNav
     /**
      * Create text navigation
      *
-     * @param  integer $offset
+     * @param int $offset
      * @return string
      */
     public function renderNav($offset = 4)
@@ -125,7 +125,7 @@ class XoopsPageNav
     /**
      * Create a navigational dropdown list
      *
-     * @param  boolean $showbutton Show the "Go" button?
+     * @param bool $showbutton Show the "Go" button?
      * @return string
      */
     public function renderSelect($showbutton = false)
@@ -160,7 +160,7 @@ class XoopsPageNav
     /**
      * Create navigation with images
      *
-     * @param  integer $offset
+     * @param int $offset
      * @return string
      */
     public function renderImageNav($offset = 4)

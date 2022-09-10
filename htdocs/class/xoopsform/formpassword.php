@@ -52,7 +52,7 @@ class XoopsFormPassword extends XoopsFormElement
      * Cache password with browser. Disabled by default for security consideration
      * Added in 2.3.1
      *
-     * @var boolean
+     * @var bool
      * @access public
      */
     public $autoComplete = false;

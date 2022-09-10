@@ -92,7 +92,7 @@ class XoopsCacheModel extends XoopsCacheEngine
      * To reinitialize the settings call Cache::engine('EngineName', [optional] settings = array());
      *
      * @param  array $settings array of setting for the engine
-     * @return boolean True if the engine has been successfully initialized, false if not
+     * @return bool True if the engine has been successfully initialized, false if not
      * @access   public
      */
     public function init($settings = array())
@@ -121,10 +121,10 @@ class XoopsCacheModel extends XoopsCacheEngine
     /**
      * Write data for key into cache
      *
-     * @param  string  $key      Identifier for the data
-     * @param  mixed   $value     Data to be cached
-     * @param  integer $duration How long to cache the data, in seconds
-     * @return boolean True if the data was successfully cached, false on failure
+     * @param  string $key      Identifier for the data
+     * @param  mixed  $value    Data to be cached
+     * @param int     $duration How long to cache the data, in seconds
+     * @return bool True if the data was successfully cached, false on failure
      * @access public
      */
     public function write($key, $value, $duration = null)
@@ -167,7 +167,7 @@ class XoopsCacheModel extends XoopsCacheEngine
      * Delete a key from the cache
      *
      * @param  string $key Identifier for the data
-     * @return boolean True if the value was successfully deleted, false if it didn't exist or couldn't be removed
+     * @return bool True if the value was successfully deleted, false if it didn't exist or couldn't be removed
      * @access public
      */
     public function delete($key)
@@ -178,7 +178,7 @@ class XoopsCacheModel extends XoopsCacheEngine
     /**
      * Delete all keys from the cache
      *
-     * @return boolean True if the cache was successfully cleared, false otherwise
+     * @return bool True if the cache was successfully cleared, false otherwise
      * @access public
      */
     public function clear($check = null)

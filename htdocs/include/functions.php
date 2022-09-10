@@ -106,7 +106,7 @@ function xoops_getModuleHandler($name = null, $module_dir = null, $optional = fa
  *                                                              framework - located in /Frameworks/;
  *                                                              other - module class, located in /modules/[$type]/class/
  *
- * @return boolean
+ * @return bool
  */
 function xoops_load($name, $type = 'core')
 {
@@ -125,7 +125,7 @@ function xoops_load($name, $type = 'core')
  * @param   string $name     Name of language file to be loaded, without extension
  * @param   string $domain   Module dirname; global language file will be loaded if $domain is set to 'global' or not specified
  * @param   string $language Language to be loaded, current language content will be loaded if not specified
- * @return  boolean
+ * @return  bool
  * @todo    expand domain to multiple categories, e.g. module:system, framework:filter, etc.
  *
  */
@@ -678,7 +678,7 @@ function xoops_getbanner()
 
     $db      = XoopsDatabaseFactory::getDatabaseConnection();
     $bresult = $db->query('SELECT COUNT(*) FROM ' . $db->prefix('banner'));
-    list($numrows) = $db->fetchRow($bresult);
+    [$numrows] = $db->fetchRow($bresult);
     if ($numrows > 1) {
         --$numrows;
         $bannum = mt_rand(0, $numrows);
@@ -687,7 +687,7 @@ function xoops_getbanner()
     }
     if ($numrows > 0) {
         $bresult = $db->query('SELECT * FROM ' . $db->prefix('banner'), 1, $bannum);
-        list($bid, $cid, $imptotal, $impmade, $clicks, $imageurl, $clickurl, $date, $htmlbanner, $htmlcode) = $db->fetchRow($bresult);
+        [$bid, $cid, $imptotal, $impmade, $clicks, $imageurl, $clickurl, $date, $htmlbanner, $htmlcode] = $db->fetchRow($bresult);
         if ($xoopsConfig['my_ip'] == xoops_getenv('REMOTE_ADDR')) {
             // EMPTY
         } else {
@@ -905,7 +905,7 @@ function xoops_getMailer()
 /**
  * xoops_getrank()
  *
- * @param integer $rank_id
+ * @param int $rank_id
  * @param mixed   $posts
  * @return
  */

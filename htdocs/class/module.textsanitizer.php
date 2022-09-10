@@ -109,9 +109,9 @@ class MyTextSanitizerExtension
     /**
      * decode
      *
-     * @param string $url
-     * @param string|integer $width
-     * @param string|integer $height
+     * @param string     $url
+     * @param string|int $width
+     * @param string|int $height
      *
      * @return Null
      */
@@ -778,10 +778,10 @@ class MyTextSanitizer
     /**
      * MyTextSanitizer::sanitizeForDisplay()
      *
-     * @param  mixed   $text
-     * @param  integer $allowhtml
-     * @param  integer $smiley
-     * @param  mixed   $bbcode
+     * @param  mixed $text
+     * @param int    $allowhtml
+     * @param int    $smiley
+     * @param  mixed $bbcode
      * @return mixed|string
      * @deprecated will be removed in next XOOPS version
      */
@@ -810,10 +810,10 @@ class MyTextSanitizer
     /**
      * MyTextSanitizer::sanitizeForPreview()
      *
-     * @param  mixed   $text
-     * @param  integer $allowhtml
-     * @param  integer $smiley
-     * @param  mixed   $bbcode
+     * @param  mixed $text
+     * @param int    $allowhtml
+     * @param int    $smiley
+     * @param  mixed $bbcode
      * @return mixed|string
      * @deprecated will be removed in next XOOPS version
      */
@@ -934,10 +934,10 @@ class MyTextSanitizer
     /**
      * MyTextSanitizer::makeTareaData4Show()
      *
-     * @param  mixed   $text
-     * @param  integer $html
-     * @param  integer $smiley
-     * @param  mixed   $xcode
+     * @param  mixed $text
+     * @param int    $html
+     * @param int    $smiley
+     * @param  mixed $xcode
      * @return mixed|string
      * @deprecated will be removed in next XOOPS version
      */
@@ -966,10 +966,10 @@ class MyTextSanitizer
     /**
      * MyTextSanitizer::makeTareaData4Preview()
      *
-     * @param  mixed   $text
-     * @param  integer $html
-     * @param  integer $smiley
-     * @param  mixed   $xcode
+     * @param  mixed $text
+     * @param int    $html
+     * @param int    $smiley
+     * @param  mixed $xcode
      * @return mixed|string
      * @deprecated will be removed in next XOOPS version
      */

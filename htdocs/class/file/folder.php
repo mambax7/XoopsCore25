@@ -62,7 +62,7 @@ class XoopsFolderHandler
     /**
      * Sortedness.
      *
-     * @var boolean
+     * @var bool
      * @access public
      */
     public $sort = false;
@@ -70,7 +70,7 @@ class XoopsFolderHandler
     /**
      * mode to be used on create.
      *
-     * @var boolean
+     * @var bool
      * @access public
      */
     public $mode = '0755';
@@ -111,7 +111,7 @@ class XoopsFolderHandler
      * Constructor.
      *
      * @param bool|string $path   Path to folder
-     * @param boolean     $create Create folder if not found
+     * @param bool        $create Create folder if not found
      * @param mixed       $mode   Mode (CHMOD) to apply to created folder, false to ignore
      */
     public function __construct($path = false, $create = true, $mode = false)
@@ -164,8 +164,8 @@ class XoopsFolderHandler
      * Returns an array of the contents of the current directory, or false on failure.
      * The returned array holds two arrays: one of dirs and one of files.
      *
-     * @param boolean $sort
-     * @param mixed   $exceptions either an array or boolean true will no grab dot files
+     * @param bool  $sort
+     * @param mixed $exceptions either an array or boolean true will no grab dot files
      *
      * @return mixed Contents of current directory as an array, false on failure
      * @access public
@@ -221,7 +221,7 @@ class XoopsFolderHandler
         if (!is_array($data)) {
             return array();
         }
-        list($dirs, $files) = $data;
+        [$dirs, $files] = $data;
         $found = array();
         foreach ($files as $file) {
             if (preg_match("/^{$regexp_pattern}$/i", $file)) {
@@ -261,7 +261,7 @@ class XoopsFolderHandler
      */
     public function _findRecursive($pattern, $sort = false)
     {
-        list($dirs, $files) = $this->read($sort);
+        [$dirs, $files] = $this->read($sort);
         $found = array();
         foreach ($files as $file) {
             if (preg_match("/^{$pattern}$/i", $file)) {
@@ -282,7 +282,7 @@ class XoopsFolderHandler
      *
      * @param string $path Path to check
      *
-     * @return boolean true if windows path, false otherwise
+     * @return bool true if windows path, false otherwise
      * @access public
      * @static
      */
@@ -426,10 +426,10 @@ class XoopsFolderHandler
      *
      * @param string   $path       The path to chmod
      * @param bool|int $mode       octal value 0755
-     * @param boolean  $recursive  chmod recursively
+     * @param bool  $recursive     chmod recursively
      * @param array    $exceptions array of files, directories to skip
      *
-     * @return boolean Returns TRUE on success, FALSE on failure
+     * @return bool Returns TRUE on success, FALSE on failure
      * @access public
      */
     public function chmod($path, $mode = false, $recursive = true, $exceptions = array())
@@ -449,7 +449,7 @@ class XoopsFolderHandler
             }
         }
         if (is_dir($path)) {
-            list($paths) = $this->tree($path);
+            [$paths] = $this->tree($path);
             foreach ($paths as $key => $fullpath) {
                 $check = explode('/', $fullpath);
                 $count = count($check);
@@ -475,9 +475,9 @@ class XoopsFolderHandler
     /**
      * Returns an array of nested directories and files in each directory
      *
-     * @param string  $path   the directory path to build the tree from
-     * @param boolean $hidden return hidden files and directories
-     * @param string  $type   either file or dir. null returns both files and directories
+     * @param string  $path the directory path to build the tree from
+     * @param bool $hidden  return hidden files and directories
+     * @param string  $type either file or dir. null returns both files and directories
      *
      * @return mixed array of nested directories and files in each directory
      * @access public
@@ -542,7 +542,7 @@ class XoopsFolderHandler
      * @param string   $pathname The directory structure to create
      * @param bool|int $mode     octal value 0755
      *
-     * @return boolean Returns TRUE on success, FALSE on failure
+     * @return bool Returns TRUE on success, FALSE on failure
      * @access public
      */
     public function create($pathname, $mode = false)
@@ -620,7 +620,7 @@ class XoopsFolderHandler
      *
      * @param string $path Path of directory to delete
      *
-     * @return boolean Success
+     * @return bool Success
      * @access public
      */
     public function delete($path)
@@ -750,7 +750,7 @@ class XoopsFolderHandler
      *
      * @param array|string $options (to, from, chmod, skip)
      *
-     * @return string|boolean Success
+     * @return string|bool Success
      * @access public
      */
     public function move($options)
@@ -843,7 +843,7 @@ class XoopsFolderHandler
      *
      * @param string $path Path to check
      *
-     * @return boolean true if path ends with slash, false otherwise
+     * @return bool true if path ends with slash, false otherwise
      * @access public
      * @static
      */

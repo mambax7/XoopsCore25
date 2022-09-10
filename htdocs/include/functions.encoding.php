@@ -59,7 +59,7 @@ function xoops_bin2hex($bin)
  *
  * @param string $hex
  * @param int $checklen
- * @return boolean
+ * @return bool
  */
 function xoops_ishexstr($hex, $checklen = 32)
 {
@@ -84,7 +84,7 @@ function xoops_ishexstr($hex, $checklen = 32)
  * @param string $data value of array
  * @param string $store_method
  *
- * @return boolean|string
+ * @return bool|string
  */
 function xoops_convert_encode($data, $store_method = 'urlcode')
 {
@@ -107,7 +107,7 @@ function xoops_convert_encode($data, $store_method = 'urlcode')
  *
  * @param string $data value of array
  * @param string $store_method
- * @return boolean|string
+ * @return bool|string
  */
 function xoops_convert_decode($data, $store_method = 'urlcode')
 {
@@ -131,7 +131,7 @@ function xoops_convert_decode($data, $store_method = 'urlcode')
  * @param  mixed $value value of array
  * @param  mixed $key key of array
  * @param string $store_method
- * @return boolean|string
+ * @return bool|string
  */
 function xoops_aw_encode($value, $key, $store_method = 'urlcode')
 {
@@ -144,7 +144,7 @@ function xoops_aw_encode($value, $key, $store_method = 'urlcode')
  * @param mixed $value value of array
  * @param mixed $key key of array
  * @param string $store_method
- * @return boolean|string
+ * @return bool|string
  */
 function xoops_aw_decode($value, $key, $store_method = 'urlcode')
 {

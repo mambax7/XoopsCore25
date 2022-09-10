@@ -251,7 +251,7 @@ class xos_opal_Theme
     /**
      * User extra information for cache id, like language, user groups
      *
-     * @var boolean
+     * @var bool
      */
     public $use_extra_cache_id = true;
 

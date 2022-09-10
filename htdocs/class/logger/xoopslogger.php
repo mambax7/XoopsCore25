@@ -209,10 +209,10 @@ class XoopsLogger
     /**
      * Error handling callback (called by the zend engine)
      *
-     * @param integer $errno
-     * @param string  $errstr
-     * @param string  $errfile
-     * @param string  $errline
+     * @param int    $errno
+     * @param string $errstr
+     * @param string $errfile
+     * @param string $errline
      */
     public function handleError($errno, $errstr, $errfile, $errline)
     {
@@ -352,13 +352,13 @@ class XoopsLogger
     /**
      * XoopsLogger::triggerError()
      *
-     * @deprecated
      * @param  int     $errkey
      * @param  string  $errStr
      * @param  string  $errFile
      * @param  string  $errLine
-     * @param  integer $errNo
+     * @param  int $errNo
      * @return void
+     *@deprecated
      */
     public function triggerError($errkey = 0, $errStr = '', $errFile = '', $errLine = '', $errNo = 0)
     {

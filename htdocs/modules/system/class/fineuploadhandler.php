@@ -466,7 +466,7 @@ abstract class SystemFineUploadHandler
     /**
      * Determines is the OS is Windows or not
      *
-     * @return boolean
+     * @return bool
      */
 
     protected function isWindows()

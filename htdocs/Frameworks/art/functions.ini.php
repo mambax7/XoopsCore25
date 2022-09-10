@@ -143,8 +143,8 @@ if (!defined('FRAMEWORKS_ART_FUNCTIONS_INI')):
     /**
      * Get completed DB prefix if it is defined
      *
-     * @param string  $name  string to be completed
-     * @param boolean $isRel relative - do not add XOOPS->DB prefix
+     * @param string $name  string to be completed
+     * @param bool   $isRel relative - do not add XOOPS->DB prefix
      */
     if (!function_exists('mod_DB_prefix')) {
         /**

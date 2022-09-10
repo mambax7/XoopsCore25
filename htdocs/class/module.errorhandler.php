@@ -34,7 +34,7 @@ class ErrorHandler
      * Show an error message
      *
      * @param string  $e_code Errorcode
-     * @param integer $pages  How many pages should the link take you back?
+     * @param int     $pages  How many pages should the link take you back?
      * @global        $xoopsConfig
      */
     public static function show($e_code, $pages = 1)

@@ -85,7 +85,7 @@ class XoopsFileHandler
     /**
      * enable locking for file reading and writing
      *
-     * @var boolean
+     * @var bool
      * @access public
      */
     public $lock;
@@ -93,9 +93,9 @@ class XoopsFileHandler
     /**
      * Constructor
      *
-     * @param string  $path   Path to file
-     * @param boolean $create Create file if it does not exist (if true)
-     * @param integer $mode   Mode to apply to the folder holding the file
+     * @param string $path   Path to file
+     * @param bool   $create Create file if it does not exist (if true)
+     * @param int    $mode   Mode to apply to the folder holding the file
      * @access private
      */
     public function __construct($path, $create = false, $mode = 0755)
@@ -130,7 +130,7 @@ class XoopsFileHandler
     /**
      * Creates the File.
      *
-     * @return boolean Success
+     * @return bool Success
      * @access public
      */
     public function create()
@@ -148,9 +148,9 @@ class XoopsFileHandler
     /**
      * Opens the current file with a given $mode
      *
-     * @param  string  $mode  A valid 'fopen' mode string (r|w|a ...)
-     * @param  boolean $force If true then the file will be re-opened even if its already opened, otherwise it won't
-     * @return boolean True on success, false on failure
+     * @param  string $mode  A valid 'fopen' mode string (r|w|a ...)
+     * @param bool    $force If true then the file will be re-opened even if its already opened, otherwise it won't
+     * @return bool True on success, false on failure
      * @access public
      */
     public function open($mode = 'r', $force = false)
@@ -175,8 +175,8 @@ class XoopsFileHandler
      * Return the contents of this File as a string.
      *
      * @param bool|string|int $bytes where to start
-     * @param string      $mode
-     * @param boolean     $force If true then the file will be re-opened even if its already opened, otherwise it won't
+     * @param string          $mode
+     * @param bool            $force If true then the file will be re-opened even if its already opened, otherwise it won't
      *
      * @return mixed string on success, false on failure
      * @access public
@@ -212,8 +212,8 @@ class XoopsFileHandler
     /**
      * Sets or gets the offset for the currently opened file.
      *
-     * @param  mixed   $offset The $offset in bytes to seek. If set to false then the current offset is returned.
-     * @param  integer $seek   PHP Constant SEEK_SET | SEEK_CUR | SEEK_END determining what the $offset is relative to
+     * @param  mixed $offset The $offset in bytes to seek. If set to false then the current offset is returned.
+     * @param int    $seek   PHP Constant SEEK_SET | SEEK_CUR | SEEK_END determining what the $offset is relative to
      * @return mixed   True on success, false on failure (set mode), false on failure or integer offset on success (get mode)
      * @access public
      */
@@ -257,7 +257,7 @@ class XoopsFileHandler
      * @param  string      $data  Data to write to this File.
      * @param  string      $mode  Mode of writing. {@link http://php.net/fwrite See fwrite()}.
      * @param  bool|string $force force the file to open
-     * @return boolean     Success
+     * @return bool     Success
      * @access public
      */
     public function write($data, $mode = 'w', $force = false)
@@ -285,7 +285,7 @@ class XoopsFileHandler
      *
      * @param  string      $data  Data to write
      * @param  bool|string $force force the file to open
-     * @return boolean     Success
+     * @return bool     Success
      * @access public
      */
     public function append($data, $force = false)
@@ -296,7 +296,7 @@ class XoopsFileHandler
     /**
      * Closes the current file if it is opened.
      *
-     * @return boolean True if closing was successful or file was already closed, otherwise false
+     * @return bool True if closing was successful or file was already closed, otherwise false
      * @access public
      */
     public function close()
@@ -311,7 +311,7 @@ class XoopsFileHandler
     /**
      * Deletes the File.
      *
-     * @return boolean Success
+     * @return bool Success
      * @access public
      */
     public function delete()
@@ -434,7 +434,7 @@ class XoopsFileHandler
     /**
      * Returns true if the File exists.
      *
-     * @return boolean true if it exists, false otherwise
+     * @return bool true if it exists, false otherwise
      * @access public
      */
     public function exists()
@@ -477,7 +477,7 @@ class XoopsFileHandler
     /**
      * Returns true if the File is writable.
      *
-     * @return boolean true if its writable, false otherwise
+     * @return bool true if its writable, false otherwise
      * @access public
      */
     public function writable()
@@ -488,7 +488,7 @@ class XoopsFileHandler
     /**
      * Returns true if the File is executable.
      *
-     * @return boolean true if its executable, false otherwise
+     * @return bool true if its executable, false otherwise
      * @access public
      */
     public function executable()
@@ -499,7 +499,7 @@ class XoopsFileHandler
     /**
      * Returns true if the File is readable.
      *
-     * @return boolean true if file is readable, false otherwise
+     * @return bool true if file is readable, false otherwise
      * @access public
      */
     public function readable()
@@ -510,7 +510,7 @@ class XoopsFileHandler
     /**
      * Returns the File's owner.
      *
-     * @return integer|false the Fileowner
+     * @return int|false the Fileowner
      */
     public function owner()
     {
@@ -524,7 +524,7 @@ class XoopsFileHandler
     /**
      * Returns the File group.
      *
-     * @return integer|false the Filegroup
+     * @return int|false the Filegroup
      * @access public
      */
     public function group()
@@ -539,7 +539,7 @@ class XoopsFileHandler
     /**
      * Returns last access time.
      *
-     * @return integer|false timestamp Timestamp of last access time
+     * @return int|false timestamp Timestamp of last access time
      * @access public
      */
     public function lastAccess()
@@ -554,7 +554,7 @@ class XoopsFileHandler
     /**
      * Returns last modified time.
      *
-     * @return integer|false timestamp Timestamp of last modification
+     * @return int|false timestamp Timestamp of last modification
      * @access public
      */
     public function lastChange()

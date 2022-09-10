@@ -15,9 +15,9 @@
  *           valid markup is maintained.
  * Example:  <{$body|truncateHtml:30:'...'}>
  *
- * @param string  $string HTML to be truncated
- * @param integer $count  truncate to $count words
- * @param string  $etc    ellipsis
+ * @param string $string HTML to be truncated
+ * @param int    $count  truncate to $count words
+ * @param string $etc    ellipsis
  *
  * @return string
  */

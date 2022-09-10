@@ -195,7 +195,7 @@ class XoopsImagecategoryHandler extends XoopsObjectHandler
     /**
      * Create a new {@link XoopsImageCategory}
      *
-     * @param  boolean $isNew Flag the object as "new"
+     * @param bool $isNew Flag the object as "new"
      * @return XoopsImagecategory
      **/
     public function create($isNew = true)

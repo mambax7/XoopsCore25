@@ -49,8 +49,8 @@ class XoopsCommentRenderer
      * Constructor
      *
      * @param XoopsTpl $tpl
-     * @param boolean  $use_icons
-     * @param boolean  $do_iconcheck
+     * @param bool     $use_icons
+     * @param bool     $do_iconcheck
      *
      */
     public function __construct(XoopsTpl $tpl, $use_icons = true, $do_iconcheck = false)
@@ -69,8 +69,8 @@ class XoopsCommentRenderer
      * Access the only instance of this class
      *
      * @param  XoopsTpl $tpl reference to a {@link Smarty} object
-     * @param  boolean  $use_icons
-     * @param  boolean  $do_iconcheck
+     * @param bool      $use_icons
+     * @param bool      $do_iconcheck
      * @return \XoopsCommentRenderer
      */
     public static function instance(XoopsTpl $tpl, $use_icons = true, $do_iconcheck = false)
@@ -99,7 +99,7 @@ class XoopsCommentRenderer
     /**
      * Render the comments in flat view
      *
-     * @param boolean $admin_view
+     * @param bool $admin_view
      */
     public function renderFlatView($admin_view = false)
     {
@@ -146,9 +146,9 @@ class XoopsCommentRenderer
      *
      * This method calls itself recursively
      *
-     * @param  integer $comment_id Should be "0" when called by client
-     * @param  boolean $admin_view
-     * @param  boolean $show_nav
+     * @param int  $comment_id Should be "0" when called by client
+     * @param bool $admin_view
+     * @param bool $show_nav
      * @return void
      */
     public function renderThreadView($comment_id = 0, $admin_view = false, $show_nav = true)
@@ -219,13 +219,13 @@ class XoopsCommentRenderer
     /**
      * Render replies to a thread
      *
-     * @param array   $thread
-     * @param int     $key
-     * @param array   $replies
-     * @param string  $prefix
-     * @param bool    $admin_view
-     * @param integer $depth
-     * @param string  $current_prefix
+     * @param array  $thread
+     * @param int    $key
+     * @param array  $replies
+     * @param string $prefix
+     * @param bool   $admin_view
+     * @param int    $depth
+     * @param string $current_prefix
      * @access   private
      */
     public function _renderThreadReplies(&$thread, $key, &$replies, $prefix, $admin_view, $depth = 0, $current_prefix = '')
@@ -272,8 +272,8 @@ class XoopsCommentRenderer
      *
      * Danger: Recursive!
      *
-     * @param  integer $comment_id Always "0" when called by client.
-     * @param  boolean $admin_view
+     * @param int  $comment_id Always "0" when called by client.
+     * @param bool $admin_view
      * @return void
      */
     public function renderNestView($comment_id = 0, $admin_view = false)
@@ -332,12 +332,12 @@ class XoopsCommentRenderer
     /**
      * Render replies in nested view
      *
-     * @param array   $thread
-     * @param int     $key
-     * @param array   $replies
-     * @param string|int  $prefix
-     * @param bool    $admin_view
-     * @param integer $depth
+     * @param array      $thread
+     * @param int        $key
+     * @param array      $replies
+     * @param string|int $prefix
+     * @param bool       $admin_view
+     * @param int        $depth
      * @access private
      */
     public function _renderNestReplies(&$thread, $key, &$replies, $prefix, $admin_view, $depth = 0)

@@ -641,11 +641,11 @@ class XoopsBlock extends XoopsObject
     /**
      * XoopsBlock::getAllBlocks()
      *
-     * @param  string  $rettype
-     * @param  mixed   $side
-     * @param  mixed   $visible
-     * @param  string  $orderby
-     * @param  integer $isactive
+     * @param  string $rettype
+     * @param  mixed  $side
+     * @param  mixed  $visible
+     * @param  string $orderby
+     * @param int     $isactive
      * @return array
      *
      * @deprecated
@@ -736,12 +736,12 @@ class XoopsBlock extends XoopsObject
     /**
      * XoopsBlock::getAllByGroupModule()
      *
-     * @param  mixed   $groupid
-     * @param  integer $module_id
-     * @param  mixed   $toponlyblock
-     * @param  mixed   $visible
-     * @param  string  $orderby
-     * @param  integer $isactive
+     * @param  mixed  $groupid
+     * @param int     $module_id
+     * @param  mixed  $toponlyblock
+     * @param  mixed  $visible
+     * @param  string $orderby
+     * @param int     $isactive
      * @return array
      *
      * @deprecated (This also appears, dead, in XoopsBlockHandler)
@@ -805,11 +805,11 @@ class XoopsBlock extends XoopsObject
     /**
      * XoopsBlock::getNonGroupedBlocks()
      *
-     * @param  integer $module_id
-     * @param  mixed   $toponlyblock
-     * @param  mixed   $visible
-     * @param  string  $orderby
-     * @param  integer $isactive
+     * @param int     $module_id
+     * @param  mixed  $toponlyblock
+     * @param  mixed  $visible
+     * @param  string $orderby
+     * @param int     $isactive
      * @return array
      *
      * @deprecated
@@ -894,7 +894,7 @@ class XoopsBlock extends XoopsObject
         if (!$result = $db->query($sql)) {
             return 0;
         }
-        list($count) = $db->fetchRow($result);
+        [$count] = $db->fetchRow($result);
 
         return $count;
     }

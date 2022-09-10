@@ -108,7 +108,7 @@ class XoopsImagesetimgHandler extends XoopsObjectHandler
     /**
      * Create a new {@link XoopsImageSetImg}
      *
-     * @param  boolean $isNew Flag the object as "new"
+     * @param bool $isNew Flag the object as "new"
      * @return XoopsImagesetimg
      **/
     public function create($isNew = true)
@@ -214,9 +214,9 @@ class XoopsImagesetimgHandler extends XoopsObjectHandler
      * Load {@link XoopsImageSetImg}s from the database
      *
      * @param CriteriaElement|CriteriaCompo $criteria  {@link CriteriaElement}
-     * @param boolean         $id_as_key Use the ID as key into the array
-     * @internal param bool $getbinary
+     * @param bool                          $id_as_key Use the ID as key into the array
      * @return array Array of {@link XoopsImageSetImg} objects
+     *@internal param bool $getbinary
      */
     public function getObjects(CriteriaElement $criteria = null, $id_as_key = false)
     {
@@ -262,7 +262,7 @@ class XoopsImagesetimgHandler extends XoopsObjectHandler
         if (!$result = $this->db->query($sql)) {
             return 0;
         }
-        list($count) = $this->db->fetchRow($result);
+        [$count] = $this->db->fetchRow($result);
 
         return $count;
     }

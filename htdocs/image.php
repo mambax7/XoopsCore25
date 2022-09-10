@@ -9,7 +9,24 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
+ * @param int      id             Xoops image id;
+ * @param string   url            relative to XOOPS_ROOT_PATH, path of local image starting with "/"
+ *                                 (e.g. /images/toast.jpg);
+ * @param string   src            relative to XOOPS_ROOT_PATH, path of local image starting with "/"
+ * @param int      width          (optional) maximum width of final image in pixels (e.g. 700);
+ * @param int      height         (optional) maximum height of final image in pixels (e.g. 700);
+ * @param string   color          (optional) background hex color for filling transparent PNGs (e.g. 900 or 16a942);
+ * @param string   cropratio      (optional) ratio of width to height to crop final image (e.g. 1:1 or 3:2);
+ * @param bool  nocache        (optional) don't read image from the cache;
+ * @param bool  noservercache  (optional) don't read image from the server cache;
+ * @param bool  nobrowsercache (optional) don't read image from the browser cache;
+ * @param int      quality        (optional, 0-100, default: 90) quality of output image;
+ * @param mixed    filter         (optional, imagefilter 2nd, 3rd, 4th, 5th arguments, more info on php.net manual)
+ *                                 a filter or an array of filters;
+ * @param int      radius         (optional, 1, 2, 3 or 4 integer values, CW) round corner radius
+ * @param float    angle          (optional), rotation angle)
+ *
+ *@copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
  * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             core
  * @since               2.5.7
@@ -21,23 +38,6 @@
  *
  *
  * Parameters need to be passed in through the URL's query string:
- * @param int      id             Xoops image id;
- * @param string   url            relative to XOOPS_ROOT_PATH, path of local image starting with "/"
- *                                 (e.g. /images/toast.jpg);
- * @param string   src            relative to XOOPS_ROOT_PATH, path of local image starting with "/"
- * @param int      width          (optional) maximum width of final image in pixels (e.g. 700);
- * @param int      height         (optional) maximum height of final image in pixels (e.g. 700);
- * @param string   color          (optional) background hex color for filling transparent PNGs (e.g. 900 or 16a942);
- * @param string   cropratio      (optional) ratio of width to height to crop final image (e.g. 1:1 or 3:2);
- * @param boolean  nocache        (optional) don't read image from the cache;
- * @param boolean  noservercache  (optional) don't read image from the server cache;
- * @param boolean  nobrowsercache (optional) don't read image from the browser cache;
- * @param int      quality        (optional, 0-100, default: 90) quality of output image;
- * @param mixed    filter         (optional, imagefilter 2nd, 3rd, 4th, 5th arguments, more info on php.net manual)
- *                                 a filter or an array of filters;
- * @param int      radius         (optional, 1, 2, 3 or 4 integer values, CW) round corner radius
- * @param float    angle          (optional), rotation angle)
- *
  */
 
 /* @example         image.php

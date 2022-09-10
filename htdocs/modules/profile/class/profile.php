@@ -102,7 +102,7 @@ class ProfileProfileHandler extends XoopsPersistableObjectHandler
      * We will create an empty profile if none exists. This behavior allows user objects
      * created outside of profile to be edited correctly in the profile module.
      *
-     * @param integer|null  $uid
+     * @param int|null      $uid
      * @param string[]|null $fields array of field names to fetch, null for all
      *
      * @return object {@link ProfileProfile}

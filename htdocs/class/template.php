@@ -285,9 +285,9 @@ class XoopsTpl extends Smarty
 /**
  * function to update compiled template file in templates_c folder
  *
- * @param  string  $tpl_id
- * @param  boolean $clear_old
- * @return boolean
+ * @param  string $tpl_id
+ * @param bool    $clear_old
+ * @return bool
  */
 function xoops_template_touch($tpl_id, $clear_old = true)
 {

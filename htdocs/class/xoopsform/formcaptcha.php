@@ -50,10 +50,10 @@ class XoopsFormCaptcha extends XoopsFormElement
 
     /**
      * Constructor
-     * @param string  $caption    Caption of the form element, default value is defined in captcha/language/
-     * @param string  $name       Name for the input box
-     * @param boolean $skipmember Skip CAPTCHA check for members deprecated
-     * @param array   $configs									 deprecated
+     * @param string $caption    Caption of the form element, default value is defined in captcha/language/
+     * @param string $name       Name for the input box
+     * @param bool   $skipmember Skip CAPTCHA check for members deprecated
+     * @param array  $configs    deprecated
      */
     public function __construct($caption = '', $name = 'xoopscaptcha', $skipmember = '', $configs = array())
     {

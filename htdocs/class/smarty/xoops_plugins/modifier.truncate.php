@@ -20,10 +20,10 @@
  * @author   Guy Rutenberg <guyrutenberg@gmail.com> based on the original
  *           truncate by Monte Ohrt <monte at ohrt dot com>
  * @param string
- * @param integer
+ * @param int
  * @param string
- * @param boolean
- * @param boolean
+ * @param bool
+ * @param bool
  * @return string
  */
 function smarty_modifier_truncate($string, $length = 80, $etc = '…', $break_words = false, $middle = false)

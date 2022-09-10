@@ -171,7 +171,7 @@ class XoopsImageHandler extends XoopsObjectHandler
     /**
      * Create a new {@link XoopsImage}
      *
-     * @param  boolean $isNew Flag the object as "new"
+     * @param bool $isNew Flag the object as "new"
      * @return XoopsImage
      **/
     public function create($isNew = true)
@@ -187,8 +187,8 @@ class XoopsImageHandler extends XoopsObjectHandler
     /**
      * Load a {@link XoopsImage} object from the database
      *
-     * @param  int     $id ID
-     * @param  boolean $getbinary
+     * @param  int $id ID
+     * @param bool $getbinary
      * @return XoopsImage {@link XoopsImage}, FALSE on fail
      **/
     public function get($id, $getbinary = true)
@@ -299,8 +299,8 @@ class XoopsImageHandler extends XoopsObjectHandler
      * Load {@link XoopsImage}s from the database
      *
      * @param  CriteriaElement|CriteriaCompo $criteria  {@link CriteriaElement}
-     * @param  boolean         $id_as_key Use the ID as key into the array
-     * @param  boolean         $getbinary
+     * @param bool                           $id_as_key Use the ID as key into the array
+     * @param bool                           $getbinary
      * @return array           Array of {@link XoopsImage} objects
      **/
     public function getObjects(CriteriaElement $criteria = null, $id_as_key = false, $getbinary = false)
@@ -352,7 +352,7 @@ class XoopsImageHandler extends XoopsObjectHandler
         if (!$result = $this->db->query($sql)) {
             return 0;
         }
-        list($count) = $this->db->fetchRow($result);
+        [$count] = $this->db->fetchRow($result);
 
         return $count;
     }

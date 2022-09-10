@@ -82,7 +82,7 @@ class SystemMaintenance
      *
      * @author slider84 of Team FrXoops
      *
-     * @return boolean
+     * @return bool
      */
     public function CleanAvatar()
     {
