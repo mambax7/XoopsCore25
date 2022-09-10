@@ -37,7 +37,7 @@
 class Config_File {
     /**#@+
      * Options
-     * @var boolean
+     * @var bool
      */
     /**
      * Controls whether variables with the same name overwrite each other.
@@ -56,7 +56,7 @@ class Config_File {
     var $read_hidden     =    true;
 
     /**
-     * Controls whether or not to fix mac or dos formatted newlines.
+     * Controls whether to fix Mac or Dos formatted newlines.
      * If set to true, \r or \r\n will be changed to \n.
      */
     var $fix_newlines =    true;
@@ -140,11 +140,10 @@ class Config_File {
         }
     }
 
-
     /**
      * Retrieves config info based on the key.
      *
-     * @param $file_name string config key (filename/section/var)
+     * @param string $file_name config key (filename/section/var)
      * @return string|array same as get()
      * @uses get() retrieves information from config file and returns it
      */
@@ -225,8 +224,8 @@ class Config_File {
     /**
      * Load a configuration file manually.
      *
-     * @param string $file_name file name to load
-     * @param boolean $prepend_path whether current config path should be
+     * @param string $file_name     file name to load
+     * @param bool   $prepend_path  whether current config path should be
      *                              prepended to the filename
      */
     function load_file($file_name, $prepend_path = true)
@@ -344,8 +343,8 @@ class Config_File {
     /**
      * @param array &$container
      * @param string $var_name
-     * @param mixed $var_value
-     * @param boolean $booleanize determines whether $var_value is converted to
+     * @param mixed  $var_value
+     * @param bool   $booleanize  determines whether $var_value is converted to
      *                            to true/false
      */
     function _set_config_var(&$container, $var_name, $var_value, $booleanize)
@@ -372,15 +371,15 @@ class Config_File {
         if (!isset($container[$var_name]) || $this->overwrite)
             $container[$var_name] = $var_value;
         else {
-            settype($container[$var_name], 'array');
+            $container[$var_name]   = (array)$container[$var_name];
             $container[$var_name][] = $var_value;
         }
     }
 
     /**
-     * @uses trigger_error() creates a PHP warning/error
      * @param string $error_msg
-     * @param integer $error_type one of
+     * @param int $error_type one of
+     * @uses trigger_error() creates a PHP warning/error
      */
     function _trigger_error_msg($error_msg, $error_type = E_USER_WARNING)
     {
