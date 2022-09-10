@@ -346,7 +346,7 @@ class Admin
      * Check for installed module and version and do addConfigBoxLine()
      *
      * @param string  $moddir     - module directory name
-     * @param integer $minversion - minimum acceptable module version
+     * @param int    $minversion - minimum acceptable module version
      *
      * @return bool true if requested version of the module is available
      */
