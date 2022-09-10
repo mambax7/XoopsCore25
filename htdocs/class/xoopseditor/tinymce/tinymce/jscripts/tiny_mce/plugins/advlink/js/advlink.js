@@ -426,7 +426,7 @@ function insertAction() {
     } else
         setAllAttribs(elm);
 
-    // Don't move caret if selection was image
+    // Don't move caret if selection was an image
     if (elm.childNodes.length != 1 || elm.firstChild.nodeName != 'IMG') {
         inst.focus();
         inst.selection.select(elm);

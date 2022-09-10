@@ -125,7 +125,7 @@ class Snoopy
     var $_submit_type = "application/x-www-form-urlencoded"; // default submit type
     var $_mime_boundary = ""; // MIME boundary for multipart/form-data submit type
     var $_redirectaddr = false; // will be set if page fetched is a redirect
-    var $_redirectdepth = 0; // increments on an http redirect
+    var $_redirectdepth = 0; // increments on an HTTP redirect
     var $_frameurls = array(); // frame src urls
     var $_framedepth = 0; // increments on frame depth
 
@@ -258,7 +258,7 @@ class Snoopy
 
     /*======================================================================*\
         Function:	submit
-        Purpose:	submit an http form
+        Purpose:	submit an HTTP form
         Input:		$URI	the location to post the data
                     $formvars	the formvars to use.
                         format: $formvars["var"] = "val";
@@ -865,7 +865,7 @@ class Snoopy
             return false;
         }
 
-        // check if there is a a redirect meta tag
+        // check if there is a redirect meta tag
 
         if (preg_match("'<meta[\s]*http-equiv[^>]*?content[\s]*=[\s]*[\"\']?\d+;[\s]*URL[\s]*=[\s]*([^\"\']*?)[\"\']?>'i", $results, $match)) {
             $this->_redirectaddr = $this->_expandlinks($match[1], $URI);
@@ -1005,7 +1005,7 @@ class Snoopy
             $this->headers[] = $result_headers[$currentHeader];
         }
 
-        // check if there is a a redirect meta tag
+        // check if there is a redirect meta tag
 
         if (preg_match("'<meta[\s]*http-equiv[^>]*?content[\s]*=[\s]*[\"\']?\d+;[\s]*URL[\s]*=[\s]*([^\"\']*?)[\"\']?>'i", $results, $match)) {
             $this->_redirectaddr = $this->_expandlinks($match[1], $URI);

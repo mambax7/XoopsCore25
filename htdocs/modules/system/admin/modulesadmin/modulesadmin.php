@@ -89,7 +89,7 @@ function xoops_module_install($dirname)
             $msgs[] = '<strong>' . _AUTHOR . ':</strong> ' . htmlspecialchars(trim($module->getInfo('author')));
         }
         $msgs[] = '</div><div class="logger">';
-        // Load module specific install script if any
+        // Load module specific installation script if any
         $install_script = $module->getInfo('onInstall');
         if ($install_script && trim($install_script) != '') {
             include_once XOOPS_ROOT_PATH . '/modules/' . $dirname . '/' . trim($install_script);
@@ -630,13 +630,13 @@ function xoops_module_uninstall($dirname)
             $msgs[] = '<strong>' . _AUTHOR . ':</strong> ' . htmlspecialchars(trim($module->getInfo('author')));
         }
         $msgs[] = '</div><div class="logger">';
-        // Load module specific install script if any
+        // Load module specific installation script if any
         $uninstall_script = $module->getInfo('onUninstall');
         if ($uninstall_script && trim($uninstall_script) != '') {
             include_once XOOPS_ROOT_PATH . '/modules/' . $dirname . '/' . trim($uninstall_script);
         }
         $func = "xoops_module_pre_uninstall_{$dirname}";
-        // If pre uninstall function is defined, execute
+        // If a pre-uninstall function is defined, execute
         if (function_exists($func)) {
             $result = $func($module);
             if (false === $result) {

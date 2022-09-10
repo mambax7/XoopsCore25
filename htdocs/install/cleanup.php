@@ -13,7 +13,7 @@
  *
  * This is intended to be called using Ajax after the page_end.php script has loaded.
  * This eliminates the problem of assets (.js, .css, .png, etc.) not being available
- * because the install folder has been renamed. All assets should be loaded by this
+ * because the /install folder has been renamed. All assets should be loaded by this
  * point, and no further installer action is expected.
  *
  * @copyright   (c) 2000-2016 XOOPS Project (www.xoops.org)

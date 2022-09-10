@@ -71,7 +71,7 @@
 
 1.53
 --------------------------------------
-- Fixed bug in search, some required fields (uid, uname, etc) were not allways present in queries (trabis)
+- Fixed bug in search, some required fields (uid, uname, etc.) were not always present in queries (trabis)
 - Fixed fields order in search.php (trabis)
 - Fixed Bug in registration Steps (trabis)
 - Added page title on userinfo.php for SEO (trabis)
@@ -102,7 +102,7 @@
 1.0
 --------------------------------------
 - Removed the "Allow to view account" feature as it only caused problems for anonymous
-- Register.php now requires a registration step in the database or it will redirect to the front page
+- Register.php now requires a registration step in the database, or it will redirect to the front page
 - Removed avatar preferences as they were duplicates of core
 
 0.2

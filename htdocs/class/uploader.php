@@ -561,7 +561,7 @@ class XoopsMediaUploader
     }
 
     /**
-     * Check whether or not the uploaded file type is allowed
+     * Check whether the uploaded file type is allowed
      *
      * @return bool
      */
@@ -591,7 +591,7 @@ class XoopsMediaUploader
     }
 
     /**
-     * Check whether or not the uploaded image type is valid
+     * Check whether the uploaded image type is valid
      *
      * @return bool
      */

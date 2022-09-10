@@ -180,7 +180,7 @@ CHANGES are moved into README after 2.57
  - added a feature to rescue
  - added to store user_agent
  - modified Anti-DoS routine radically
- - added each settings of "F5 attacks" and "high load crawlers"
+ - added each setting of "F5 attacks" and "high load crawlers"
  - fixed not to "Force intval" against array
  - modified a pattern finding UNION
 

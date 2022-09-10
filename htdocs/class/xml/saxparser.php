@@ -4,7 +4,7 @@
  * Location: <strong>xml/SaxParser.class</strong><br>
  * <br>
  * Provides basic functionality to read and parse XML documents.  Subclasses
- * must implement all the their custom handlers by using add* function methods.
+ * must implement all their custom handlers by using add* function methods.
  * They may also use the handle*() methods to parse a specific XML begin and end
  * tags, but this is not recommended as it is more difficult.<br>
  * <br>
@@ -213,7 +213,7 @@ class SaxParser
     ---------------------------------------------------------------------------*/
 
     /****************************************************************************
-     * Callback function that executes whenever a the start of a tag
+     * Callback function that executes whenever the start of a tag
      * occurs when being parsed.
      * @param int    $parser          The handle to the parser.
      * @param string $tagName         The name of the tag currently being parsed.

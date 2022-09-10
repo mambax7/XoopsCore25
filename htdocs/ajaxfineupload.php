@@ -71,7 +71,7 @@ $xoopsLogger->activated = false;
  *  aud     audience (asserted as our php script name)
  *  cat     category id the user has chosen and is authorized for
  *  uid     user id (asserted as the session specified user)
- *  handler handler class
+ *  handler Handler class
  *  moddir  module directory for handler
  *
  * We will assert that aud and uid agree with our expectations (for security)

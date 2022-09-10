@@ -236,7 +236,7 @@ class ModuleAdmin
     //******************************************************************************************************************
     // $value: value
     // $type: type of config:   1- "default": Just a line with value.
-    //                          2- "folder": check if this is an folder.
+    //                          2- "folder": check if this is a folder.
     //                          3- "chmod": check if this is the good chmod.
     //                                      For this type ("chmod"), the value is an array: array(path, chmod)
     //******************************************************************************************************************
@@ -429,7 +429,7 @@ class ModuleAdmin
     // $label: title of InfoBox Line
     // $text:
     // $type: type of config:   1- "default": Just a line with value.
-    //                          2- "information": check if this is an folder.
+    //                          2- "information": check if this is a folder.
     //                          3- "chmod": check if this is the good chmod.
     //                                      For this type ("chmod"), the value is an array: array(path, chmod)
     //******************************************************************************************************************

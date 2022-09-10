@@ -9,7 +9,7 @@ Version 3.5.11 (2014-05-08)
 	Added functionality to the media plugin to handle objects without source attributes correctly.
 	Fixed bug in paste plugin word import with lists that have strikethrough on numbers.
 	Fixed bug in word count plugin where characters with diacritical marks were split as seperate words.
-	Fixed bug in IE 11 where the selection of images would fail when they where at the end of blocks.
+	Fixed bug in IE 11 where the selection of images would fail when they were at the end of blocks.
 	Fixed bug where input method would produce new lines when inserting contents to an empty editor.
 	Fixed bug in non-editable plugin where backspace deletes too much text.
 	Fixed bug where formatting a nested list would break the list moving list items.
@@ -22,7 +22,7 @@ Version 3.5.10 (2013-10-24)
 	Fixed bug in paste plugin word import that was removing type from lists
 	Fixed bug where IE 11 wouldn't be properly detected if IE 10 emulation was enabled.
 Version 3.5.9 (2013-10-10)
-	Added IE 11 compatibility. IE 11 is treated as Gecko but it has still many IE bugs.
+	Added IE 11 compatibility. IE 11 is treated as Gecko, but it has still many IE bugs.
 	Fixed bug where importing CSS classes would fail if it contained @import rules to remote domain on Gecko.
 	Fixed bug in spelling plugin where misspelt words are not always marked.
 	Fixed bug where script tag was removed when nested inside a div or p.
@@ -38,7 +38,7 @@ Version 3.5.8 (2012-11-20)
 	Fixed bug where toolbar was annouced multiple times with JAWS on Firefox.
 	Fixed bug where the editor view whouldn't scroll to BR elements when using shift+enter or br enter mode.
 	Fixed bug where a JS error would be thrown when trying to paste table rows then the rows clipboard was empty.
-	Fixed bug with auto detection logic for youtube urls in the media plugin.
+	Fixed bug with auto-detection logic for YouTube urls in the media plugin.
 	Fixed bug where the formatter would throw errors if you used the jQuery version of TinyMCE and the latest jQuery.
 	Fixed bug where the latest WebKit versions would produce span elements when deleting text between blocks.
 	Fixed bug where the autolink plugin would produce DOM exceptions when pressing shift+enter inside a block element.
@@ -53,26 +53,26 @@ Version 3.5.7 (2012-09-20)
 	Fixed bug where caret formatting on IE wouldn't properly apply if you pressed enter/return.
 	Fixed bug where loading TinyMCE using an async script wouldn't properly initialize editors.
 	Fixed bug where some white space would be removed after inline elements before block elements.
-	Fixed bug where it wouldn't properly parse attributes with a single backslash as it's contents.
-	Fixed bug where noscript elements would loose it's contents on older IE versions.
+	Fixed bug where it wouldn't properly parse attributes with a single backslash as its contents.
+	Fixed bug where noscript elements would lose its contents on older IE versions.
 	Fixed bug where backspace inside empty blockquote wouldn't delete it properly.
 	Fixed bug where custom elements with . in their names wouldn't work properly.
-	Fixed bug where the custom_elements option didn't properly setup the block elements schema structure.
-	Fixed bug where the custom_elements option didn't auto populate the extended_valid_elements.
-	Fixed bug where the whole TD element would get blcok formatted when there where BR elements in it.
+	Fixed bug where the custom_elements option didn't properly set up the block elements schema structure.
+	Fixed bug where the custom_elements option didn't auto-populate the extended_valid_elements.
+	Fixed bug where the whole TD element would get blcok formatted when there were BR elements in it.
 	Fixed bug where IE 9 might crash if the editor was hidden and specific styles where applied to surrounding contents.
-	Fixed bug where shift+enter inside a table cell on Gecko would produce an zero width non breaking space between tr:s.
+	Fixed bug where shift+enter inside a table cell on Gecko would produce a zero width non-breaking space between tr:s.
 	Fixed bug where the advlink dialog wouldn't properly populate the anchors dropdown if the HTML5 schema was used.
 	Fixed issue with missing autofocus attribute on input element when using the HTML5 schema.
 	Fixed issue where enter inside a block contained within an LI element wouldn't produce a new LI.
 Version 3.5.6 (2012-07-26)
 	Added "text" as a valid option to the editor.getContent format option. Makes it easier to get a text representation of the editor contents.
 	Fixed bug where resizing an image to less that 0x0 pixels would display the ghost image at an incorrect position.
-	Fixed bug where the remove format button would produce extra paragraphs on WebKit if all of the contents was selected.
+	Fixed bug where the remove format button would produce extra paragraphs on WebKit if all the contents was selected.
 	Fixed issue where edge resize handles on images of wouldn't scale it with the same aspect ratio.
 	Fixed so force_p_newlines option works again since some users want mixed mode paragraphs.
 	Fixed so directionality plugin modifies the dir attribute of all selected blocks in the editor.
-	Fixed bug where backspace/delete of a custom element would move it's attributes to the parent block on Gecko.
+	Fixed bug where backspace/delete of a custom element would move its attributes to the parent block on Gecko.
 Version 3.5.5 (2012-07-19)
 	Added full resize support for images and tables on WebKit/Opera. It now behaves just like Gecko.
 	Added automatic embed support for Vimeo, Stream.cz and Google Maps in media plugin. Patch contributed by Jakub Matas.
@@ -89,23 +89,23 @@ Version 3.5.5 (2012-07-19)
 Version 3.5.4.1 (2012-06-24)
 	Fixed issue with Shift+A selecting all contents on Chrome.
 Version 3.5.4 (2012-06-21)
-	Added missing mouse events to HTML5 schema. Some events needs to be manually defined though since the spec is huge.
+	Added missing mouse events to HTML5 schema. Some events need to be manually defined though since the spec is huge.
 	Added image resizing for WebKit browsers by faking the whole resize behavior.
 	Fixed bug in context menu plugin where listener to hide menu wasn't removed correctly.
 	Fixed bug where media plugin wouldn't use placeholder size for the object/video elements.
 	Fixed bug where jQuery plugin would break attr function in jQuery 1.7.2.
 	Fixed bug where jQuery plugin would throw an error if you used the tinymce pseudo selector when TinyMCE wasn't loaded.
 	Fixed so encoding option gets applied when using jQuery val() or attr() to extract the contents.
-	Fixed so any non valid width/height passed to media plugin would get parsed to proper integer or percent values.
+	Fixed so any non-valid width/height passed to media plugin would get parsed to proper integer or percent values.
 Version 3.5.3 (2012-06-19)
 	Added missing wbr element to HTML5 schema.
 	Added new mceToggleFormat command. Enabled you to toggle a specific format on/off.
 	Fixed bug where undo/redo state didn't update correctly after executing an execCommand call.
-	Fixed bug where the editor would get auto focused on IE running in quirks mode.
+	Fixed bug where the editor would get auto-focused on IE running in quirks mode.
 	Fixed bug where pressing enter before an IMG or INPUT element wouldn't properly split the block.
 	Fixed bug where backspace would navigate back when selecting control types on IE.
 	Fixed bug where the editor remove method would unbind events for controls outside the editor instance UI.
-	Fixed bug where the autosave plugin would try to store a draft copy of editors that where removed.
+	Fixed bug where the auto-save plugin would try to store a draft copy of editors that where removed.
 	Fixed bug where floated elements wouldn't expand the block created when pressing enter on non IE browsers.
 	Fixed bug where the caret would be placed in the wrong location when pressing enter at the beginning of a block.
 	Fixed bug where it wasn't possible to block events using the handle_event_callback option.
@@ -123,7 +123,7 @@ Version 3.5.2 (2012-05-31)
 	Changed the theme_advanced_toolbar_align default value to "left".
 	Changed the theme_advanced_toolbar_location default value to "top".
 	Changed the theme_advanced_statusbar_location default value to "bottom".
-	Fixed bug where the simple link dialog would remove class and target attributes from links when updating them if the drop downs wasn't visible.
+	Fixed bug where the simple link dialog would remove class and target attributes from links when updating them, if the dropdown wasn't visible.
 	Fixed bug where the link/unlink buttons wouldn't get disabled once a link was created by the autolink plugin logic.
 	Fixed bug where the border attribute was missing in the HTML5 schema.
 	Fixed bug where the legacyoutput plugin would use inline styles for font color.

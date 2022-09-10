@@ -232,7 +232,7 @@ switch ($op) {
             } else {
                 /* @var XoopsMemberHandler $member_handler */
                 $member_handler = xoops_getHandler('member');
-                // make sure the username doesnt exist yet
+                // make sure the username doesn't exist yet
                 if ($member_handler->getUserCount(new Criteria('uname', $myts->addSlashes($_REQUEST['username']))) > 0) {
                     $adduser_errormsg = 'User name ' . htmlspecialchars($_REQUEST['username']) . ' already exists';
                 } else {

@@ -32,12 +32,12 @@
  * value, the main template will recover the original value automatically.
  *
  * While this can be useful in some cases (for example, when you include templates you have absolutely
- * no control over), some may consider this a limitation and it has the disadvantage of slowing down
+ * no control over), some may consider this a limitation, and it has the disadvantage of slowing down
  * the inclusion mechanism a lot.
  *
  * <var>includeq</var> fixes that: the code it generates doesn't contain the variables backup/recovery
  * mechanism and thus makes templates inclusion faster. Note that however, this new behavior may
- * create problems in some cases (but you can prevent them most of the times, for example by always
+ * create problems in some cases (but you can prevent them usually, for example, by always
  * using a <var>tmp_</var> prefix for the variables you create in included templates looping sections).
  * @param $tag_args
  * @param $comp

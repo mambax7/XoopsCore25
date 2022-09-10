@@ -26,7 +26,7 @@
  * default URL location will be returned.
  *
  * <b>Note:</b> the themes inheritance system can generate many filesystem accesses depending
- * on your themes configuration. Because of this, the use of the dynamic syntax with this plug-in
+ * on your theme's configuration. Because of this, the use of the dynamic syntax with this plug-in
  * is not possible right now.
  * @param $argStr
  * @param $smarty
