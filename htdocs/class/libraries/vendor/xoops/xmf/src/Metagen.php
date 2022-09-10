@@ -116,8 +116,8 @@ class Metagen
      * generateKeywords builds a set of keywords from text body
      *
      * @param string        $body      text to extract keywords from
-     * @param integer       $count     number of keywords to use
-     * @param integer       $minLength minimum length of word to consider as a keyword
+     * @param int           $count     number of keywords to use
+     * @param int           $minLength minimum length of word to consider as a keyword
      * @param string[]|null $forceKeys array of keywords to force use, or null for none
      *
      * @return array of keywords
@@ -177,7 +177,7 @@ class Metagen
      * generateDescription - generate a short description from a body of text
      *
      * @param string  $body      body text
-     * @param integer $wordCount maximum word count for description
+     * @param int    $wordCount maximum word count for description
      *
      * @return string
      */
@@ -247,7 +247,7 @@ class Metagen
      *
      * @param string $var to test
      *
-     * @return boolean
+     * @return bool
      *
      * @author psylove
      */
@@ -282,7 +282,7 @@ class Metagen
     /**
      * getSearchSummary splits a string into string no larger than a
      * specified length, and centered around the first occurrence
-     * of any of an array of needles, or starting at the beginning
+     * of an array of needles, or starting at the beginning
      * of the string if no needles are specified or found.
      *
      * The string will be broken on spaces and an ellipsis (…) will be
@@ -369,7 +369,7 @@ class Metagen
      * @param string $haystack the string to summarize
      * @param mixed  $needles  search term, array of search terms, or null
      *
-     * @return integer[] array of initial positions of substring of haystack
+     * @return int array of initial positions of substring of haystack
      */
     protected static function getNeedlePositions($haystack, $needles)
     {
@@ -392,7 +392,7 @@ class Metagen
      * purifyText
      *
      * @param string  $text    text to clean
-     * @param boolean $keyword replace some punctuation with white space
+     * @param bool   $keyword replace some punctuation with white space
      *
      * @return string cleaned text
      */
