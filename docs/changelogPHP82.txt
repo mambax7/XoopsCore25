@@ -1,9 +1,9 @@
-XOOPS 2.5.12 Changelog for PHP 8.1
+XOOPS 2.5.12 Changelog for PHP 8.1 and PHP 8.2
 
 ===================================
 2.5.12 Alpha 1         NOT RELEASED
 ===================================
-Fixes:
+PHP 8.1 Fixes:
 - Unknown: str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in file /kernel/object.php line 881 (mamba)
 - Unknown: preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in file /class/file/folder.php line 852 (mamba)
 - Unknown: preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in file /class/file/folder.php line 291 (mamba)
@@ -18,6 +18,9 @@ Fixes:
 - Unknown: mb_detect_encoding(): Passing null to parameter #1 ($string) of type string is deprecated in file /class/module.textsanitizer.php line 588
 - Unknown: mb_convert_encoding(): Passing null to parameter #1 ($string) of type array|string is deprecated in file /class/module.textsanitizer.php line 588
 - Unknown: htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in file /class/module.textsanitizer.php line 554
+
+PHP 8.2 Fixes:
+-
 
 TODO:
 
