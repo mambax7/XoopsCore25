@@ -1464,7 +1464,7 @@ class Smarty
         }
 
 
-        $smarty_compiler = new $this->compiler_class;
+        $smarty_compiler = new $this->compiler_class();
 
         $smarty_compiler->template_dir      = $this->template_dir;
         $smarty_compiler->compile_dir       = $this->compile_dir;

@@ -52,10 +52,10 @@ if (!function_exists('protector_oninstall_base')) {
 
             if (file_exists(XOOPS_ROOT_PATH . '/class/database/oldsqlutility.php')) {
                 include_once XOOPS_ROOT_PATH . '/class/database/oldsqlutility.php';
-                $sqlutil = new OldSqlUtility; //old code is -> $sqlutil =& new OldSqlUtility ; //hack by Trabis
+                $sqlutil = new OldSqlUtility(); //old code is -> $sqlutil =& new OldSqlUtility ; //hack by Trabis
             } else {
                 include_once XOOPS_ROOT_PATH . '/class/database/sqlutility.php';
-                $sqlutil = new SqlUtility; //old code is -> $sqlutil =& new SqlUtility ; //hack by Trabis
+                $sqlutil = new SqlUtility(); //old code is -> $sqlutil =& new SqlUtility ; //hack by Trabis
             }
 
             $sql_query = trim(file_get_contents($sql_file_path));
