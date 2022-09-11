@@ -50,6 +50,7 @@ function smarty_function_fetch($params, &$smarty)
         // not a local file
         if(preg_match('!^http://!i',$params['file'])) {
             // http fetch
+            /** @var array $uri_parts */
             if($uri_parts = parse_url($params['file'])) {
                 // set defaults
                 $host = $server_name = $uri_parts['host'];
@@ -181,7 +182,8 @@ function smarty_function_fetch($params, &$smarty)
                         $content .= fgets($fp,4096);
                     }
                     fclose($fp);
-                    $csplit = preg_split("!\r\n\r\n!",$content,2);
+                    /** @var array $csplit */
+                    $csplit = preg_split("!\r\n\r\n!", $content, 2);
 
                     $content = $csplit[1];
 

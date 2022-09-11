@@ -76,6 +76,7 @@ class XoopsTree
         if ($count == 0) {
             return $arr;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $arr[] = $myrow;
         }

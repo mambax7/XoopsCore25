@@ -316,12 +316,13 @@ if (!empty($imageId)) {
     }
     // Get the size and MIME type of the requested image
     $imageFilename = basename($imagePath);  // image filename
-    $imagesize = getimagesize($imagePath);
-    $imageWidth = $imagesize[0];
-    $imageHeight = $imagesize[1];
-    $imageMimetype = $imagesize['mime'];
+    /** @var array $imagesize */
+    $imagesize        = getimagesize($imagePath);
+    $imageWidth       = $imagesize[0];
+    $imageHeight      = $imagesize[1];
+    $imageMimetype    = $imagesize['mime'];
     $imageCreatedTime = filemtime($imagePath); // image creation date
-    $imageData = file_get_contents($imagePath);
+    $imageData        = file_get_contents($imagePath);
     switch ($imageMimetype) {
         case 'image/gif':
             $sourceImage = imagecreatefromgif($imagePath);
@@ -378,6 +379,7 @@ if (!$max_width && $max_height) {
 }
 
 // color
+/** @var string $color */
 $color = isset($_GET['color']) ? preg_replace('/[^0-9a-fA-F]/', '', (string)$_GET['color']) : false;
 
 // filter, radius, angle
@@ -402,6 +404,7 @@ if (empty($_GET['width']) && empty($_GET['height']) && empty($_GET['color']) && 
 $offset_x = 0;
 $offset_y = 0;
 if (isset($_GET['cropratio'])) {
+    /** @var array $crop_ratio */
     $crop_ratio = explode(':', (string)$_GET['cropratio']);
     if (count($crop_ratio) == 2) {
         $ratio_computed = $imageWidth / $imageHeight;
@@ -562,6 +565,7 @@ if (ENABLE_IMAGEFILTER && !empty($filter)) {
 
 // Round corners
 if (ENABLE_ROUNDCORNER && !empty($radius)) {
+    /** @var array $radii */
     $radii = explode(',', $radius);
     switch (count($radii)) {
         case 1:

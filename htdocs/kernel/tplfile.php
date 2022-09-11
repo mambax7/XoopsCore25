@@ -272,6 +272,7 @@ class XoopsTplfileHandler extends XoopsObjectHandler
             if (!$result = $this->db->query($sql)) {
                 return false;
             }
+            /** @var array $myrow */
             $myrow = $this->db->fetchArray($result);
             $tplfile->assignVar('tpl_source', $myrow['tpl_source']);
         }
@@ -423,6 +424,7 @@ class XoopsTplfileHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $tplfile = new XoopsTplfile();
             $tplfile->assignVars($myrow);
@@ -471,6 +473,7 @@ class XoopsTplfileHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             if ($myrow['tpl_module'] != '') {
                 $ret[$myrow['tpl_module']] = $myrow['count'];

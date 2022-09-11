@@ -286,6 +286,7 @@ class XoopsPrivmessageHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $pm = new XoopsPrivmessage();
             $pm->assignVars($myrow);

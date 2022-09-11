@@ -89,7 +89,7 @@ class XoopsFolderHandler
      * @var array
      * @access private
      */
-    public $errors = false;
+    public $errors = array();
 
     /**
      * holds array of complete directory paths.
@@ -221,7 +221,7 @@ class XoopsFolderHandler
         if (!is_array($data)) {
             return array();
         }
-        [$dirs, $files] = $data;
+       list($dirs, $files) = $data;
         $found = array();
         foreach ($files as $file) {
             if (preg_match("/^{$regexp_pattern}$/i", $file)) {
@@ -261,7 +261,7 @@ class XoopsFolderHandler
      */
     public function _findRecursive($pattern, $sort = false)
     {
-        [$dirs, $files] = $this->read($sort);
+       list($dirs, $files) = $this->read($sort);
         $found = array();
         foreach ($files as $file) {
             if (preg_match("/^{$pattern}$/i", $file)) {
@@ -426,7 +426,7 @@ class XoopsFolderHandler
      *
      * @param string   $path       The path to chmod
      * @param bool|int $mode       octal value 0755
-     * @param bool  $recursive     chmod recursively
+     * @param bool     $recursive  chmod recursively
      * @param array    $exceptions array of files, directories to skip
      *
      * @return bool Returns TRUE on success, FALSE on failure
@@ -449,8 +449,9 @@ class XoopsFolderHandler
             }
         }
         if (is_dir($path)) {
-            [$paths] = $this->tree($path);
+            list($paths) = $this->tree($path);
             foreach ($paths as $key => $fullpath) {
+                /** @var array $check */
                 $check = explode('/', $fullpath);
                 $count = count($check);
 
@@ -674,7 +675,7 @@ class XoopsFolderHandler
      */
     public function copy($options = array())
     {
-        $to = null;
+        $to             = null;
         if (is_string($options)) {
             $to      = $options;
             $options = array();
@@ -831,7 +832,7 @@ class XoopsFolderHandler
             $newparts[] = $part;
         }
         $newpath .= implode('/', $newparts);
-        if (strlen($path > 1) && $path[strlen($path) - 1] === '/') {
+        if (strlen($path) > 1 && $path[strlen($path) - 1] === '/') {
             $newpath .= '/';
         }
 

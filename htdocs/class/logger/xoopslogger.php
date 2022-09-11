@@ -111,6 +111,7 @@ class XoopsLogger
      */
     public function microtime()
     {
+        /** @var array $now */
         $now = explode(' ', microtime());
 
         return (float)$now[0] + (float)$now[1];

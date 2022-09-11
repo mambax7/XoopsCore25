@@ -639,7 +639,8 @@ class Smarty
         } else {
             if ($tpl_var != '' && isset($value)) {
                 if(!@is_array($this->_tpl_vars[$tpl_var])) {
-                    $this->_tpl_vars[$tpl_var] = (array)$this->_tpl_vars[$tpl_var];
+//mb                    $this->_tpl_vars[$tpl_var] = (array)$this->_tpl_vars[$tpl_var];
+                    $this->_tpl_vars[$tpl_var] = isset($this->_tpl_vars[$tpl_var]) ? $this->_tpl_vars[$tpl_var]: [];
                 }
                 if($merge && is_array($value)) {
                     foreach($value as $_mkey => $_mval) {
@@ -662,7 +663,8 @@ class Smarty
     {
         if ($tpl_var != '' && isset($value)) {
             if(!@is_array($this->_tpl_vars[$tpl_var])) {
-                $this->_tpl_vars[$tpl_var] = (array)$this->_tpl_vars[$tpl_var];
+//                $this->_tpl_vars[$tpl_var] = (array)$this->_tpl_vars[$tpl_var];
+                $this->_tpl_vars[$tpl_var] = isset($this->_tpl_vars[$tpl_var]) ? $this->_tpl_vars[$tpl_var]: [];
             }
             if ($merge && is_array($value)) {
                 foreach($value as $_key => $_val) {
@@ -1625,6 +1627,7 @@ class Smarty
     {
 
         // split tpl_path by the first colon
+        /** @var array $_resource_name_parts */
         $_resource_name_parts = explode(':', $params['resource_name'], 2);
 
         if (count($_resource_name_parts) == 1) {
@@ -1685,8 +1688,8 @@ class Smarty
     function _run_mod_handler()
     {
         $_args = func_get_args();
-        [$_modifier_name, $_map_array] = array_splice($_args, 0, 2);
-        [$_func_name, $_tpl_file, $_tpl_line] =
+       list($_modifier_name, $_map_array) = array_splice($_args, 0, 2);
+       list($_func_name, $_tpl_file, $_tpl_line) =
             $this->_plugins['modifier'][$_modifier_name];
 
         $_var = $_args[0];

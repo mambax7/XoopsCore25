@@ -362,6 +362,7 @@ class XoopsNotificationHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $notification = new XoopsNotification();
             $notification->assignVars($myrow);
@@ -702,6 +703,7 @@ class XoopsNotificationHandler extends XoopsObjectHandler
 
         // Add some tag substitutions here
 
+        /** @var array $not_config */
         $not_config = $module->getInfo('notification');
         $tags       = array();
         if (!empty($not_config)) {

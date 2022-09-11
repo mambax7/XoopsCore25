@@ -302,12 +302,12 @@ function profile_getFieldOptionForm(ProfileField $field, $action = false)
  * Get {@link XoopsThemeForm} for registering new users
  *
  * @param XoopsUser $user
- * @param           $profile
+ * @param ProfileProfile|XoopsObject|null $profile
  * @param XoopsUser $user {@link XoopsUser} to register
- * @param int       $step Which step we are at
+ * @param int|array $step Which step we are at
  *
- * @internal param \profileRegstep $next_step
  * @return object
+ * @internal param \profileRegstep $next_step
  */
 function profile_getRegisterForm(XoopsUser $user, $profile, $step = null)
 {
@@ -325,6 +325,7 @@ function profile_getRegisterForm(XoopsUser $user, $profile, $step = null)
         $GLOBALS['xoopsConfigUser'] = $config_handler->getConfigsByCat(XOOPS_CONF_USER);
     }
     $action    = $_SERVER['REQUEST_URI'];
+    /** @var array $step */
     $step_no   = $step['step_no'];
     $use_token = $step['step_no'] > 0;// ? true : false;
     $reg_form  = new XoopsThemeForm($step['step_name'], 'regform', $action, 'post', $use_token);
@@ -357,9 +358,11 @@ function profile_getRegisterForm(XoopsUser $user, $profile, $step = null)
 
     // Dynamic fields
     $profile_handler              = xoops_getModuleHandler('profile');
+    /** @var array $fields */
     $fields                       = $profile_handler->loadFields();
     $_SESSION['profile_required'] = array();
     foreach (array_keys($fields) as $i) {
+        /** @var array $step */
         if ($fields[$i]->getVar('step_id') == $step['step_id']) {
             $fieldinfo['element'] = $fields[$i]->getEditElement($user, $profile);
             //assign and check (=)
@@ -524,10 +527,13 @@ function profile_getUserForm(XoopsUser $user, ProfileProfile $profile = null, $a
             $fieldinfo['element']  = $fields[$i]->getEditElement($user, $profile);
             $fieldinfo['required'] = $fields[$i]->getVar('field_required');
 
-            $key              = @$all_categories[$fields[$i]->getVar('cat_id')]['cat_weight'] * $count_fields + $fields[$i]->getVar('cat_id');
-            $elements[$key][] = $fieldinfo;
-            $weights[$key][]  = $fields[$i]->getVar('field_weight');
-            $categories[$key] = @$all_categories[$fields[$i]->getVar('cat_id')];
+            $key = @$all_categories[$fields[$i]->getVar('cat_id')]['cat_weight'] * $count_fields + $fields[$i]->getVar('cat_id');
+            /** @var array $elements */
+            $elements[(int)$key][] = $fieldinfo;
+            /** @var array $weights */
+            $weights[(int)$key][] = $fields[$i]->getVar('field_weight');
+            /** @var array $categories */
+            $categories[(int)$key] = @$all_categories[$fields[$i]->getVar('cat_id')];
         }
     }
 

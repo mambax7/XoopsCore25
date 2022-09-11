@@ -233,6 +233,7 @@ class XoopsImagesetimgHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $imgsetimg = new XoopsImagesetimg();
             $imgsetimg->assignVars($myrow);
@@ -262,7 +263,7 @@ class XoopsImagesetimgHandler extends XoopsObjectHandler
         if (!$result = $this->db->query($sql)) {
             return 0;
         }
-        [$count] = $this->db->fetchRow($result);
+       list($count) = $this->db->fetchRow($result);
 
         return $count;
     }

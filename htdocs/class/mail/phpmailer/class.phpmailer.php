@@ -988,7 +988,7 @@ class PHPMailer
                         );
                     }
                 } else {
-                    [$name, $email] = explode('<', $address);
+                   list($name, $email) = explode('<', $address);
                     $email = trim(str_replace('>', '', $email));
                     if (static::validateAddress($email)) {
                         $addresses[] = array(
@@ -2400,9 +2400,10 @@ class PHPMailer
                     $body = file_get_contents($signed);
                     @unlink($signed);
                     //The message returned by openssl contains both headers and body, so need to split them up
-                    $parts = explode("\n\n", $body, 2);
+                    /** @var array $parts */
+                    $parts            = explode("\n\n", $body, 2);
                     $this->MIMEHeader .= $parts[0] . $this->LE . $this->LE;
-                    $body = $parts[1];
+                    $body             = $parts[1];
                 } else {
                     @unlink($file);
                     @unlink($signed);
@@ -3822,8 +3823,9 @@ class PHPMailer
                 return base64_encode($signature);
             }
         } else {
+            /** @var array $pinfo */
             $pinfo = openssl_pkey_get_details($privKey);
-            $hash = hash('sha256', $signHeader);
+            $hash  = hash('sha256', $signHeader);
             //'Magic' constant for SHA256 from RFC3447
             //@link https://tools.ietf.org/html/rfc3447#page-43
             $t = '3031300d060960864801650304020105000420' . $hash;
@@ -3850,7 +3852,7 @@ class PHPMailer
         $signHeader = preg_replace('/\r\n\s+/', ' ', $signHeader);
         $lines = explode("\r\n", $signHeader);
         foreach ($lines as $key => $line) {
-            [$heading, $value] = explode(':', $line, 2);
+           list($heading, $value) = explode(':', $line, 2);
             $heading = strtolower($heading);
             $value = preg_replace('/\s{2,}/', ' ', $value); // Compress useless spaces
             $lines[$key] = $heading . ':' . trim($value); // Don't forget to remove WSP around the value

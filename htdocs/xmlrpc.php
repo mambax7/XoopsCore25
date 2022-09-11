@@ -38,6 +38,7 @@ if (!$parser->parse()) {
     if (!is_object($module)) {
         $response->add(new XoopsXmlRpcFault(110));
     } else {
+        /** @var array $methods */
         $methods = explode('.', $parser->getMethodName());
         switch ($methods[0]) {
             case 'blogger':

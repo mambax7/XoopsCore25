@@ -536,6 +536,7 @@ function b_system_notification_show()
     // Additional form data
     $block['target_page'] = 'notification_update.php';
     // FIXME: better or more standardized way to do this?
+    /** @var array $script_url */
     $script_url                  = explode('/', $_SERVER['PHP_SELF']);
     $script_name                 = $script_url[count($script_url) - 1];
     $block['redirect_script']    = $script_name;

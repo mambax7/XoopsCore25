@@ -31,20 +31,25 @@ if ('system' === $xoopsModule->getVar('dirname')) {
     }
     /* @var  XoopsCommentHandler $comment_handler */
     $comment_handler = xoops_getHandler('comment');
-    $comment         = $comment_handler->get($com_id);
-    $module_handler  = xoops_getHandler('module');
+    /** @var XoopsComment $comment */
+    $comment        = $comment_handler->get($com_id);
+    $module_handler = xoops_getHandler('module');
     /** @var \XoopsModule $module */
     $module          = $module_handler->get($comment->getVar('com_modid'));
-    $comment_config  = $module->getInfo('comments');
-    $com_modid       = $module->getVar('mid');
-    $redirect_page   = XOOPS_URL . '/modules/system/admin.php?fct=comments&com_modid=' . $com_modid . '&com_itemid';
-    $moddir          = $module->getVar('dirname');
+    /** @var array $comment_config */
+    $comment_config = $module->getInfo('comments');
+    $com_modid      = $module->getVar('mid');
+    $redirect_page  = XOOPS_URL . '/modules/system/admin.php?fct=comments&com_modid=' . $com_modid . '&com_itemid';
+    $moddir         = $module->getVar('dirname');
     unset($comment);
 } else {
     $com_id = Request::getInt('com_id', 0, 'POST');
     if (XOOPS_COMMENT_APPROVENONE == $xoopsModuleConfig['com_rule']) {
         exit();
     }
+
+
+    /** @var array $comment_config */
     $comment_config = $xoopsModule->getInfo('comments');
     $com_modid      = $xoopsModule->getVar('mid');
     $redirect_page  = $comment_config['pageName'] . '?';
@@ -96,7 +101,7 @@ if (!empty($_POST)) {
         xoops_loadLanguage('user');
         $myts = MyTextSanitizer::getInstance();
 
-        // Check user name
+        // Check username
         $search_arr  = array(
             '&nbsp;',
             "\t",
@@ -248,6 +253,7 @@ switch ($op) {
         $call_updatefunc  = false;
         // RMV-NOTIFY - this can be set to 'comment' or 'comment_submit'
         $notify_event = false;
+        /** @var XoopsComment $comment */
         if (!empty($com_id)) {
             $comment     = $comment_handler->get($com_id);
             $accesserror = false;
@@ -391,20 +397,18 @@ switch ($op) {
                 }
             }
             // call custom approve function if any
-            if (false !== $call_approvefunc && isset($comment_config['callback']['approve']) && trim($comment_config['callback']['approve']) != '') {
+            if (false !== $call_approvefunc && false !== $comment_config && isset($comment_config['callback']['approve']) && trim($comment_config['callback']['approve']) != '') {
                 $skip = false;
-                if (!function_exists($comment_config['callback']['approve'])) {
-                    if (isset($comment_config['callbackFile'])) {
-                        $callbackfile = trim($comment_config['callbackFile']);
-                        if ($callbackfile != '' && file_exists($GLOBALS['xoops']->path('modules/' . $moddir . '/' . $callbackfile))) {
-                            include_once $GLOBALS['xoops']->path('modules/' . $moddir . '/' . $callbackfile);
-                        }
-                        if (!function_exists($comment_config['callback']['approve'])) {
-                            $skip = true;
-                        }
-                    } else {
+                if (!function_exists($comment_config['callback']['approve'])) if (isset($comment_config['callbackFile'])) {
+                    $callbackfile = trim($comment_config['callbackFile']);
+                    if ($callbackfile != '' && file_exists($GLOBALS['xoops']->path('modules/' . $moddir . '/' . $callbackfile))) {
+                        include_once $GLOBALS['xoops']->path('modules/' . $moddir . '/' . $callbackfile);
+                    }
+                    if (!function_exists($comment_config['callback']['approve'])) {
                         $skip = true;
                     }
+                } else {
+                    $skip = true;
                 }
                 if (!$skip) {
                     $comment_config['callback']['approve']($comment);
@@ -412,7 +416,7 @@ switch ($op) {
             }
 
             // call custom update function if any
-            if (false !== $call_updatefunc && isset($comment_config['callback']['update']) && trim($comment_config['callback']['update']) != '') {
+            if (false !== $call_updatefunc && false !== $comment_config && isset($comment_config['callback']['update']) && trim($comment_config['callback']['update']) != '') {
                 $skip = false;
                 if (!function_exists($comment_config['callback']['update'])) {
                     if (isset($comment_config['callbackFile'])) {
@@ -472,6 +476,7 @@ switch ($op) {
                     $not_module =& $xoopsModule;
                 }
                 if (!isset($comment_url)) {
+                    /** @var array $com_config */
                     $com_config  =& $not_module->getInfo('comments');
                     $comment_url = $com_config['pageName'] . '?';
                     if (isset($com_config['extraParams']) && is_array($com_config['extraParams'])) {

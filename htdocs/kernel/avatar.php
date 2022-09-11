@@ -308,6 +308,7 @@ class XoopsAvatarHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $avatar = new XoopsAvatar();
             $avatar->assignVars($myrow);
@@ -388,6 +389,7 @@ class XoopsAvatarHandler extends XoopsObjectHandler
         if (!$result = $this->db->query($sql)) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $ret[] = &$myrow['user_id'];
         }

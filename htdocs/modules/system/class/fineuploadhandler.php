@@ -300,8 +300,9 @@ abstract class SystemFineUploadHandler
         $method = $_SERVER["REQUEST_METHOD"];
         if ($method == "DELETE") {
             $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+            /** @var array $tokens */
             $tokens = explode('/', $url);
-            $uuid = $tokens[sizeof($tokens)-1];
+            $uuid   = $tokens[sizeof($tokens)-1];
         } elseif ($method == "POST") {
             $uuid = $_REQUEST['qquuid'];
         } else {

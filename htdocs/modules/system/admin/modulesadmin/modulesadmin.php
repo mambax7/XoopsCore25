@@ -291,6 +291,7 @@ function xoops_module_install($dirname)
                 if ($configs !== false) {
                     if ($module->getVar('hascomments') != 0) {
                         include_once XOOPS_ROOT_PATH . '/include/comment_constants.php';
+                        /** @var array $configs */
                         $configs[] = array(
                             'name'        => 'com_rule',
                             'title'       => '_CM_COMRULES',
@@ -350,6 +351,7 @@ function xoops_module_install($dirname)
                     $options['_NOT_CONFIG_ENABLEINLINE'] = XOOPS_NOTIFICATION_ENABLEINLINE;
                     $options['_NOT_CONFIG_ENABLEBOTH']   = XOOPS_NOTIFICATION_ENABLEBOTH;
 
+                    /** @var array $configs */
                     $configs[] = array(
                         'name'        => 'notification_enabled',
                         'title'       => '_NOT_CONFIG_ENABLE',
@@ -375,6 +377,7 @@ function xoops_module_install($dirname)
                         unset($events);
                     }
                     unset($categories);
+                    /** @var array $configs */
                     $configs[] = array(
                         'name'        => 'notification_events',
                         'title'       => '_NOT_CONFIG_EVENTS',

@@ -318,6 +318,7 @@ class XoopsModule extends XoopsObject
         if ($this->getVar('hassearch') != 1) {
             return false;
         }
+        /** @var array $search */
         $search =& $this->getInfo('search');
         if ($this->getVar('hassearch') != 1 || !isset($search['file']) || !isset($search['func']) || $search['func'] == '' || $search['file'] == '') {
             return false;
@@ -759,11 +760,12 @@ class XoopsModuleHandler extends XoopsObjectHandler
     public function getByDirname($dirname)
     {
         $dirname = basename($dirname);
-        //could not we check for spaces instead??
+        //couldn't we check for spaces instead??
         if (strpos(strtolower($dirname), ' union ')) {
             return false;
         }
         static $_cachedModule_mid;
+        /** @var array $_cachedModule_dirname */
         static $_cachedModule_dirname;
         if (!empty($_cachedModule_dirname[$dirname])) {
             return $_cachedModule_dirname[$dirname];
@@ -858,7 +860,8 @@ class XoopsModuleHandler extends XoopsObjectHandler
         $sql = sprintf('SELECT block_id FROM %s WHERE module_id = %u', $this->db->prefix('block_module_link'), $module->getVar('mid'));
         if ($result = $this->db->query($sql)) {
             $block_id_arr = array();
-            while (false !== ($myrow = $this->db->fetchArray($result))) {
+            /** @var array $myrow */
+        while (false !== ($myrow = $this->db->fetchArray($result))) {
                 $block_id_arr[] = $myrow['block_id'];
             }
         }
@@ -882,11 +885,11 @@ class XoopsModuleHandler extends XoopsObjectHandler
             }
         }
 
-        if (!empty($this->_cachedModule_dirname[$module->getVar('dirname')])) {
-            unset($this->_cachedModule_dirname[$module->getVar('dirname')]);
+        if (!empty($this->_cachedModule_dirname[(string)$module->getVar('dirname')])) {
+            unset($this->_cachedModule_dirname[(string)$module->getVar('dirname')]);
         }
-        if (!empty($this->_cachedModule_mid[$module->getVar('mid')])) {
-            unset($this->_cachedModule_mid[$module->getVar('mid')]);
+        if (!empty($this->_cachedModule_mid[(string)$module->getVar('mid')])) {
+            unset($this->_cachedModule_mid[(string)$module->getVar('mid')]);
         }
 
         return true;
@@ -914,6 +917,7 @@ class XoopsModuleHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $module = new XoopsModule();
             $module->assignVars($myrow);
@@ -943,7 +947,7 @@ class XoopsModuleHandler extends XoopsObjectHandler
         if (!$result = $this->db->query($sql)) {
             return 0;
         }
-        [$count] = $this->db->fetchRow($result);
+       list($count) = $this->db->fetchRow($result);
 
         return $count;
     }

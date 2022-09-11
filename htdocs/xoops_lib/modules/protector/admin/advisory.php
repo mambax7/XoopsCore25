@@ -13,6 +13,7 @@ echo "<br>\n<div style='border: 2px solid #2F5376;padding:8px;width:95%;' class=
 
 // calculate the relative path between XOOPS_ROOT_PATH and XOOPS_TRUST_PATH
 $root_paths  = explode('/', XOOPS_ROOT_PATH);
+/** @var array $trust_paths */
 $trust_paths = explode('/', XOOPS_TRUST_PATH);
 foreach ($root_paths as $i => $rpath) {
     if ($rpath != $trust_paths[$i]) {

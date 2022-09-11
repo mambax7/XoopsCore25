@@ -289,6 +289,7 @@ class Config_File {
 
             if ( substr($line, 0, 1) == '[' && preg_match('!^\[(.*?)\]!', $line, $match) ) {
                 /* section found */
+                /** @var string $section_name */
                 if (substr($match[1], 0, 1) == '.') {
                     /* hidden section */
                     if ($this->read_hidden) {
@@ -349,6 +350,7 @@ class Config_File {
      */
     function _set_config_var(&$container, $var_name, $var_value, $booleanize)
     {
+        /** @var string $var_name */
         if (substr($var_name, 0, 1) == '.') {
             if (!$this->read_hidden)
                 return;

@@ -98,9 +98,10 @@ class XoopsCacheMemcache extends XoopsCacheEngine
         if (!is_array($this->settings['servers'])) {
             $this->settings['servers'] = array($this->settings['servers']);
         }
-        $this->memcache = null;
+//        $this->memcache = null;
         $this->memcache = new Memcache();
         foreach ($this->settings['servers'] as $server) {
+            /** @var array $parts */
             $parts = explode(':', $server);
             $host  = $parts[0];
             $port  = 11211;

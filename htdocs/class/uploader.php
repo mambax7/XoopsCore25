@@ -524,6 +524,7 @@ class XoopsMediaUploader
         if (!isset($this->maxWidth)) {
             return true;
         }
+        /** @var array $dimension */
         if (false !== $dimension = getimagesize($this->mediaTmpName)) {
             if ($dimension[0] > $this->maxWidth) {
                 $this->setErrors(sprintf(_ER_UP_FILEWIDTHTOOLARGE, $this->maxWidth, $dimension[0]));
@@ -547,6 +548,7 @@ class XoopsMediaUploader
         if (!isset($this->maxHeight)) {
             return true;
         }
+        /** @var array $dimension */
         if (false !== $dimension = getimagesize($this->mediaTmpName)) {
             if ($dimension[1] > $this->maxHeight) {
                 $this->setErrors(sprintf(_ER_UP_FILEHEIGHTTOOLARGE, $this->maxHeight, $dimension[1]));

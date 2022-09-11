@@ -157,6 +157,7 @@ class XoopsRankHandler extends XoopsObjectHandler
             return $ret;
         }
         $myts = MyTextSanitizer::getInstance();
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $ret[$myrow['rank_id']] = $myts->htmlSpecialChars($myrow['rank_title']);
         }
@@ -291,6 +292,7 @@ class XoUserHandler extends XoopsObjectHandler
         }
         $result = $this->db->query($sql, $limit, $start);
         $ret    = array();
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $object = $this->create(false);
             $object->assignVars($myrow);
@@ -332,6 +334,7 @@ if (!Request::hasVar('user_submit', 'POST')) {
     include_once $GLOBALS['xoops']->path('class/xoopsformloader.php');
 
     $form = new XoopsThemeForm(_MA_USER_FINDUS, 'user_findform', 'findusers.php', 'post', true);
+    /** @var int $mode */
     $mode = Request::getInt('mode', 0);
     if (FINDUSERS_MODE_ADVANCED == $mode) {
         foreach ($items_match as $var => $title) {

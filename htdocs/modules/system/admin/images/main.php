@@ -556,8 +556,10 @@ switch ($op) {
         $form->addElement(new XoopsFormText(_IMGMAXHEIGHT, 'imgcat_maxheight', 3, 4, $imagecategory->getVar('imgcat_maxheight')));
         $form->addElement(new XoopsFormText(_AM_SYSTEM_IMAGES_IMGCATWEIGHT, 'imgcat_weight', 3, 4, $imagecategory->getVar('imgcat_weight')));
         $form->addElement(new XoopsFormRadioYN(_AM_SYSTEM_IMAGES_IMGCATDISPLAY, 'imgcat_display', $imagecategory->getVar('imgcat_display'), _YES, _NO));
+
+        /** @var array $storetype */
         $storetype = array('db' => _AM_SYSTEM_IMAGES_INDB, 'file' => _AM_SYSTEM_IMAGES_ASFILE);
-        $form->addElement(new XoopsFormLabel(_AM_SYSTEM_IMAGES_IMGCATSTRTYPE, $storetype[$imagecategory->getVar('imgcat_storetype')]));
+        $form->addElement(new XoopsFormLabel(_AM_SYSTEM_IMAGES_IMGCATSTRTYPE, $storetype[(string)$imagecategory->getVar('imgcat_storetype')]));
         $form->addElement(new XoopsFormHidden('imgcat_id', $imgcat_id));
         $form->addElement(new XoopsFormHidden('op', 'updatecat'));
         $form->addElement(new XoopsFormHidden('fct', 'images'));

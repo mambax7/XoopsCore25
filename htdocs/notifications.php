@@ -88,6 +88,8 @@ switch ($op) {
                 // topic ID doesn't give us the ID of the forum which is
                 // a required argument...
                 // Get the lookup function, if exists
+
+                /** @var array $not_config */
                 $not_config  = $module->getInfo('notification');
                 $lookup_func = '';
                 if (!empty($not_config['lookup_file'])) {

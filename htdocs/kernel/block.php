@@ -624,6 +624,7 @@ class XoopsBlock extends XoopsObject
         $sql .= " ORDER BY $orderby";
         $result = $db->query($sql);
         $added  = array();
+        /** @var array $myrow */
         while (false !== ($myrow = $db->fetchArray($result))) {
             if (!in_array($myrow['bid'], $added)) {
                 if (!$asobject) {
@@ -676,24 +677,28 @@ class XoopsBlock extends XoopsObject
             case 'object':
                 $sql    = 'SELECT * FROM ' . $db->prefix('newblocks') . '' . $where_query;
                 $result = $db->query($sql);
-                while (false !== ($myrow = $db->fetchArray($result))) {
+                /** @var array $myrow */
+        while (false !== ($myrow = $db->fetchArray($result))) {
                     $ret[] = new XoopsBlock($myrow);
                 }
                 break;
             case 'list':
                 $sql    = 'SELECT * FROM ' . $db->prefix('newblocks') . '' . $where_query;
                 $result = $db->query($sql);
+                /** @var array $myrow */
                 while (false !== ($myrow = $db->fetchArray($result))) {
-                    $block                      = new XoopsBlock($myrow);
-                    $title                      = $block->getVar('title');
-                    $title                      = empty($title) ? $block->getVar('name') : $title;
-                    $ret[$block->getVar('bid')] = $title;
+                    $block = new XoopsBlock($myrow);
+                    $title = $block->getVar('title');
+                    $title = empty($title) ? $block->getVar('name') : $title;
+                    /** @var array $ret */
+                    $ret[(int)$block->getVar('bid')] = $title;
                 }
                 break;
             case 'id':
                 $sql    = 'SELECT bid FROM ' . $db->prefix('newblocks') . '' . $where_query;
                 $result = $db->query($sql);
-                while (false !== ($myrow = $db->fetchArray($result))) {
+                /** @var array $myrow */
+        while (false !== ($myrow = $db->fetchArray($result))) {
                     $ret[] = $myrow['bid'];
                 }
                 break;
@@ -722,6 +727,7 @@ class XoopsBlock extends XoopsObject
         }
         $result = $db->query($sql);
         $ret    = array();
+        /** @var array $myrow */
         while (false !== ($myrow = $db->fetchArray($result))) {
             if ($asobject) {
                 $ret[] = new XoopsBlock($myrow);
@@ -762,7 +768,8 @@ class XoopsBlock extends XoopsObject
             }
             $result   = $db->query($sql);
             $blockids = array();
-            while (false !== ($myrow = $db->fetchArray($result))) {
+            /** @var array $myrow */
+        while (false !== ($myrow = $db->fetchArray($result))) {
                 $blockids[] = $myrow['gperm_itemid'];
             }
             if (empty($blockids)) {
@@ -793,6 +800,7 @@ class XoopsBlock extends XoopsObject
         }
         $sql .= ' ORDER BY ' . $orderby;
         $result = $db->query($sql);
+        /** @var array $myrow */
         while (false !== ($myrow = $db->fetchArray($result))) {
             $block              = new XoopsBlock($myrow);
             $ret[$myrow['bid']] = &$block;
@@ -821,14 +829,16 @@ class XoopsBlock extends XoopsObject
         $bids = array();
         $sql  = 'SELECT DISTINCT(bid) from ' . $db->prefix('newblocks');
         if ($result = $db->query($sql)) {
-            while (false !== ($myrow = $db->fetchArray($result))) {
+            /** @var array $myrow */
+        while (false !== ($myrow = $db->fetchArray($result))) {
                 $bids[] = $myrow['bid'];
             }
         }
         $sql     = 'SELECT DISTINCT(p.gperm_itemid) from ' . $db->prefix('group_permission') . ' p, ' . $db->prefix('groups') . " g WHERE g.groupid=p.gperm_groupid AND p.gperm_name='block_read'";
         $grouped = array();
         if ($result = $db->query($sql)) {
-            while (false !== ($myrow = $db->fetchArray($result))) {
+            /** @var array $myrow */
+        while (false !== ($myrow = $db->fetchArray($result))) {
                 $grouped[] = $myrow['gperm_itemid'];
             }
         }
@@ -856,7 +866,8 @@ class XoopsBlock extends XoopsObject
             $sql .= ' AND b.bid IN (' . implode(',', $non_grouped) . ')';
             $sql .= ' ORDER BY ' . $orderby;
             $result = $db->query($sql);
-            while (false !== ($myrow = $db->fetchArray($result))) {
+            /** @var array $myrow */
+        while (false !== ($myrow = $db->fetchArray($result))) {
                 $block              = new XoopsBlock($myrow);
                 $ret[$myrow['bid']] =& $block;
                 unset($block);
@@ -894,7 +905,7 @@ class XoopsBlock extends XoopsObject
         if (!$result = $db->query($sql)) {
             return 0;
         }
-        [$count] = $db->fetchRow($result);
+        list($count) = $db->fetchRow($result);
 
         return $count;
     }
@@ -1107,6 +1118,7 @@ class XoopsBlockHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $block = new XoopsBlock();
             $block->assignVars($myrow);

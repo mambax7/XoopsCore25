@@ -323,6 +323,7 @@ class XoopsImageHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $image = new XoopsImage();
             $image->assignVars($myrow);
@@ -352,7 +353,7 @@ class XoopsImageHandler extends XoopsObjectHandler
         if (!$result = $this->db->query($sql)) {
             return 0;
         }
-        [$count] = $this->db->fetchRow($result);
+       list($count) = $this->db->fetchRow($result);
 
         return $count;
     }

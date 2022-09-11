@@ -64,7 +64,8 @@ class XoopsModelRead extends XoopsModelAbstract
         $ret    = array();
         if (false !== $result) {
             if ($asObject) {
-                while (false !== ($myrow = $this->handler->db->fetchArray($result))) {
+                /** @var array $myrow */
+        while (false !== ($myrow = $this->handler->db->fetchArray($result))) {
                     $object = $this->handler->create(false);
                     $object->assignVars($myrow);
                     if ($id_as_key) {
@@ -76,7 +77,8 @@ class XoopsModelRead extends XoopsModelAbstract
                 }
             } else {
                 $object = $this->handler->create(false);
-                while (false !== ($myrow = $this->handler->db->fetchArray($result))) {
+                /** @var array $myrow */
+        while (false !== ($myrow = $this->handler->db->fetchArray($result))) {
                     $object->assignVars($myrow);
                     if ($id_as_key) {
                         $ret[$myrow[$this->handler->keyName]] = $object->getValues(array_keys($myrow));
@@ -145,6 +147,7 @@ class XoopsModelRead extends XoopsModelAbstract
         }
 
         $myts = MyTextSanitizer::getInstance();
+        /** @var array $myrow */
         while (false !== ($myrow = $this->handler->db->fetchArray($result))) {
             // identifiers should be textboxes, so sanitize them like that
             $ret[$myrow[$this->handler->keyName]] = empty($this->handler->identifierName) ? 1 : $myts->htmlSpecialChars($myrow[$this->handler->identifierName]);
@@ -172,6 +175,7 @@ class XoopsModelRead extends XoopsModelAbstract
         if (!$result = $this->handler->db->query($sql, $limit, $start)) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->handler->db->fetchArray($result))) {
             $ret[] = $myrow[$this->handler->keyName];
         }
@@ -219,6 +223,7 @@ class XoopsModelRead extends XoopsModelAbstract
     {
         $GLOBALS['xoopsLogger']->addDeprecated(__CLASS__ . '::' . __FUNCTION__ . '() is deprecated.');
         $ret = array();
+        /** @var array $myrow */
         while (false !== ($myrow = $this->handler->db->fetchArray($result))) {
             $obj = $this->handler->create(false);
             $obj->assignVars($myrow);

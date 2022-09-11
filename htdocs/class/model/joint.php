@@ -106,7 +106,8 @@ class XoopsModelJoint extends XoopsModelAbstract
         $result = $this->handler->db->query($sql, $limit, $start);
         $ret    = array();
         if ($asObject) {
-            while (false !== ($myrow = $this->handler->db->fetchArray($result))) {
+            /** @var array $myrow */
+        while (false !== ($myrow = $this->handler->db->fetchArray($result))) {
                 $object = $this->handler->create(false);
                 $object->assignVars($myrow);
                 $ret[$myrow[$this->handler->keyName]] = $object;
@@ -114,7 +115,8 @@ class XoopsModelJoint extends XoopsModelAbstract
             }
         } else {
             $object = $this->handler->create(false);
-            while (false !== ($myrow = $this->handler->db->fetchArray($result))) {
+            /** @var array $myrow */
+        while (false !== ($myrow = $this->handler->db->fetchArray($result))) {
                 $object->assignVars($myrow);
                 $ret[$myrow[$this->handler->keyName]] = $object->getValues(array_keys($myrow));
             }

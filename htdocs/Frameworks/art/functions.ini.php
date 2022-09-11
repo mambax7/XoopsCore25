@@ -231,6 +231,7 @@ if (!defined('FRAMEWORKS_ART_FUNCTIONS_INI')):
         if (DIRECTORY_SEPARATOR !== '/') {
             $current_path = str_replace(strpos($current_path, '\\\\', 2) ? '\\\\' : DIRECTORY_SEPARATOR, '/', $current_path);
         }
+        /** @var array $url_arr */
         $url_arr = explode('/', strstr($current_path, '/modules/'));
 
         return $url_arr[2];

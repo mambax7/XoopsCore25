@@ -80,6 +80,7 @@ function &notificationCategoryInfo($category_name = '', $module_id = null)
         $module_handler = xoops_getHandler('module');
         $module         = $module_handler->get($module_id);
     }
+    /** @var array $not_config */
     $not_config = &$module->getInfo('notification');
     if (empty($category_name)) {
         return $not_config['category'];
@@ -151,7 +152,8 @@ function &notificationEvents($category_name, $enabled_only, $module_id = null)
         $module_handler = xoops_getHandler('module');
         $module         = $module_handler->get($module_id);
     }
-    $not_config     = $module->getInfo('notification');
+    /** @var array $not_config */
+    $not_config = $module->getInfo('notification');
     /* @var XoopsConfigHandler $config_handler */
     $config_handler = xoops_getHandler('config');
     $mod_config     = $config_handler->getConfigsByCat(0, $module_id);
@@ -190,6 +192,7 @@ function &notificationEvents($category_name, $enabled_only, $module_id = null)
     // Insert comment info if applicable
 
     if ($module->getVar('hascomments')) {
+        /** @var array $com_config */
         $com_config = $module->getInfo('comments');
         if (!empty($category['item_name']) && $category['item_name'] == $com_config['itemName']) {
             if (!is_dir($dir = XOOPS_ROOT_PATH . '/language/' . $xoopsConfig['language'] . '/mail_template/')) {
@@ -344,6 +347,7 @@ function &notificationSubscribableCategoryInfo($module_id = null)
     $all_categories =& notificationCategoryInfo('', $module_id);
 
     // FIXME: better or more standardized way to do this?
+    /** @var array $script_url */
     $script_url  = explode('/', $_SERVER['PHP_SELF']);
     $script_name = $script_url[count($script_url) - 1];
 

@@ -49,8 +49,9 @@ function langDropdown()
             $content .= '</select>';
         } elseif (defined('EASIESTML_LANGS') && defined('EASIESTML_LANGNAMES')) {
             $easiestml_langs = explode(',', EASIESTML_LANGS);
-            $langnames       = explode(',', EASIESTML_LANGNAMES);
-            $lang_options    = '';
+            /** @var array $langnames */
+            $langnames    = explode(',', EASIESTML_LANGNAMES);
+            $lang_options = '';
 
             $content .= '<select name="mlanguages" id="mlanguages">';
             $content .= '<option value="">{#xoopsmlcontent_dlg.sellang}</option>';

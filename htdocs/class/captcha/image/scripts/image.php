@@ -204,6 +204,7 @@ class XoopsCaptchaImageHandler
         $FontSize      = $this->config['fontsize_max'];
         for ($Angle = -30; $Angle <= 30; ++$Angle) {
             for ($i = 65; $i <= 90; ++$i) {
+                /** @var array $CharDetails */
                 $CharDetails   = imageftbbox($FontSize, $Angle, $this->font, chr($i), array());
                 $_MaxCharWidth = abs($CharDetails[0] + $CharDetails[2]);
                 if ($_MaxCharWidth > $MaxCharWidth) {
@@ -243,6 +244,7 @@ class XoopsCaptchaImageHandler
     public function createFromFile()
     {
         if ($RandImage = $this->loadBackground()) {
+            /** @var array $ImageType */
             $ImageType = @getimagesize($RandImage);
             switch (@$ImageType[2]) {
                 case 1:
@@ -284,6 +286,7 @@ class XoopsCaptchaImageHandler
             // select random font size
             $FontSize = mt_rand($this->config['fontsize_min'], $this->config['fontsize_max']);
 
+            /** @var array $CharDetails */
             $CharDetails = imageftbbox($FontSize, $Angle, $this->font, $this->code[$i], array());
             $CharHeight  = abs($CharDetails[1] + $CharDetails[5]);
 

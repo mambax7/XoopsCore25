@@ -30,24 +30,29 @@ $filters = array(
     'com_order' => FILTER_VALIDATE_INT,
     'com_id' => FILTER_VALIDATE_INT);
 
+/** @var array $result */
 if (!empty($_POST)) {
     $result = filter_input_array(INPUT_POST, $filters);
 } else {
     $result = filter_input_array(INPUT_GET, $filters);
 }
-$com_mode  = $result['com_mode'] ?: 'flat';
-$com_order = $result['com_order'] ?: XOOPS_COMMENT_OLD1ST;
-$com_id    = $result['com_id'] ?: 0;
-if ($result['op']) {
-    $op = $result['op'];
-}
 
+if (is_array($result)) {
+    $com_mode  = $result['com_mode'] ?: 'flat';
+    $com_order = $result['com_order'] ?: XOOPS_COMMENT_OLD1ST;
+    /** @var string|int $com_id */
+    $com_id = $result['com_id'] ?: 0;
+    if ($result['op']) {
+        $op = $result['op'];
+    }
+}
 if ('system' === $xoopsModule->getVar('dirname')) {
     $comment_handler = xoops_getHandler('comment');
     $comment         = $comment_handler->get($com_id);
     $module_handler  = xoops_getHandler('module');
     /** @var \XoopsModule $module */
     $module         = $module_handler->get($comment->getVar('com_modid'));
+    /** @var array $comment_config */
     $comment_config = $module->getInfo('comments');
     $com_modid      = $module->getVar('mid');
     $redirect_page  = XOOPS_URL . '/modules/system/admin.php?fct=comments&com_modid=' . $com_modid . '&com_itemid';
@@ -57,6 +62,7 @@ if ('system' === $xoopsModule->getVar('dirname')) {
     if (XOOPS_COMMENT_APPROVENONE == $xoopsModuleConfig['com_rule']) {
         exit();
     }
+    /** @var array $comment_config */
     $comment_config        = $xoopsModule->getInfo('comments');
     $com_modid             = $xoopsModule->getVar('mid');
     $redirect_page         = $comment_config['pageName'] . '?';
@@ -209,25 +215,30 @@ switch ($op) {
         // construct a comment tree
         include_once $GLOBALS['xoops']->path('class/tree.php');
         $xot            = new XoopsObjectTree($thread_comments, 'com_id', 'com_pid', 'com_rootid');
+        /** @var array $child_comments */
         $child_comments =& $xot->getAllChild($com_id);
         // add itself here
         $child_comments[$com_id] = &$comment;
         $msgs                    = array();
-        $deleted_num             = array();
+        /** @var array $deleted_num */
+        $deleted_num = array();
         /* @var XoopsMemberHandler $member_handler */
-        $member_handler          = xoops_getHandler('member');
+        $member_handler = xoops_getHandler('member');
         foreach (array_keys($child_comments) as $i) {
             if (!$comment_handler->delete($child_comments[$i])) {
                 $msgs[] = _CM_COMDELETENG . ' (ID: ' . $child_comments[$i]->getVar('com_id') . ')';
             } else {
                 $msgs[] = _CM_COMDELETED . ' (ID: ' . $child_comments[$i]->getVar('com_id') . ')';
                 // store poster ID and deleted post number into array for later use
+                /** @var string|int $poster_id */
                 $poster_id = $child_comments[$i]->getVar('com_uid');
                 if ($poster_id > 0) {
                     $deleted_num[$poster_id] = !isset($deleted_num[$poster_id]) ? 1 : ($deleted_num[$poster_id] + 1);
                 }
             }
         }
+
+
         foreach ($deleted_num as $user_id => $post_num) {
             // update user posts
             $com_poster = $member_handler->getUser($user_id);

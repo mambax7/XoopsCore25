@@ -46,6 +46,7 @@ function smarty_function_xoUserInfo($params, &$smarty)
     /** @var array $usersInfo uid indexed cache of user data */
     static $usersInfo = array();
 
+    /** @var int $uid */
     $uid = 0;
     if (!empty($params['uid'])) {
         $uid = (int)$params['uid'];

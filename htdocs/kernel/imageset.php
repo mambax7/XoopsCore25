@@ -226,6 +226,7 @@ class XoopsImageSetHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $imgset = new XoopsImageSet();
             $imgset->assignVars($myrow);

@@ -138,6 +138,7 @@ class XoopsAuthProvisionning
         $newuser->setVar('uorder', $this->com_order);
         $tab_mapping = explode('|', $this->ldap_field_mapping);
         foreach ($tab_mapping as $mapping) {
+            /** @var array $fields */
             $fields = explode('=', trim($mapping));
             if ($fields[0] && $fields[1]) {
                 $newuser->setVar(trim($fields[0]), utf8_decode($datas[trim($fields[1])][0]));
@@ -174,6 +175,7 @@ class XoopsAuthProvisionning
         $xoopsUser->setVar('pass', password_hash(stripcslashes($pwd), PASSWORD_DEFAULT));
         $tab_mapping = explode('|', $this->ldap_field_mapping);
         foreach ($tab_mapping as $mapping) {
+            /** @var array $fields */
             $fields = explode('=', trim($mapping));
             if ($fields[0] && $fields[1]) {
                 $xoopsUser->setVar(trim($fields[0]), utf8_decode($datas[trim($fields[1])][0]));

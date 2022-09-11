@@ -51,7 +51,9 @@ if ($op === 'main') {
 
     $redirect = Request::getUrl('xoops_redirect', '', 'GET');
     if (!empty($redirect)) {
-        $urlParts = parse_url($redirect);
+        /** @var array $urlParts */
+        $urlParts      = parse_url($redirect);
+        /** @var array $xoopsUrlParts */
         $xoopsUrlParts = parse_url(XOOPS_URL);
         if (false !== $urlParts) {
             // make sure $redirect is somewhere inside XOOPS_URL

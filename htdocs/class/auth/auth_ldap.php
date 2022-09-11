@@ -265,7 +265,8 @@ class XoopsAuthLdap extends XoopsAuth
             }
             $filter = $this->getFilter($uname);
             $sr     = ldap_search($this->_ds, $this->ldap_base_dn, $filter);
-            $info   = ldap_get_entries($this->_ds, $sr);
+            /** @var array $info */
+            $info = ldap_get_entries($this->_ds, $sr);
             if ($info['count'] > 0) {
                 $userDN = $info[0]['dn'];
             } else {
@@ -308,7 +309,8 @@ class XoopsAuthLdap extends XoopsAuth
     {
         $provisHandler = XoopsAuthProvisionning::getInstance($this);
         $sr            = ldap_read($this->_ds, $userdn, '(objectclass=*)');
-        $entries       = ldap_get_entries($this->_ds, $sr);
+        /** @var array $entries */
+        $entries = ldap_get_entries($this->_ds, $sr);
         if ($entries['count'] > 0) {
             $xoopsUser = $provisHandler->sync($entries[0], $uname, $pwd);
         } else {

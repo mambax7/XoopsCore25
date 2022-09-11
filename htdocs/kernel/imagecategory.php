@@ -320,6 +320,7 @@ class XoopsImagecategoryHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $imgcat = new XoopsImagecategory();
             $imgcat->assignVars($myrow);

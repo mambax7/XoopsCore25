@@ -35,6 +35,9 @@ include_once $GLOBALS['xoops']->path('class/template.php');
 class xos_logos_PageBuilder
 {
     public $theme  = false;
+    /**
+     * @var array
+     */
     public $blocks = array();
 
     /**
@@ -119,7 +122,6 @@ class xos_logos_PageBuilder
                 $template->caching,
                 $template->cache_lifetime);
         } else {
-            $template = null;
             $template = new XoopsTpl();
         }
         $xoopsblock = new XoopsBlock();
@@ -128,6 +130,8 @@ class xos_logos_PageBuilder
         $xoopsPreload->triggerEvent('core.class.theme_blocks.retrieveBlocks', array(&$this, &$template, &$block_arr));
         foreach ($block_arr as $block) {
             $side = $oldzones[$block->getVar('side')];
+
+            /** @var array $var */
             if ($var = $this->buildBlock($block, $template)) {
                 $this->blocks[$side][$var['id']] = $var;
             }

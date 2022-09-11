@@ -268,6 +268,7 @@ class XoopsTplsetHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $tplset = new XoopsTplset();
             $tplset->assignVars($myrow);

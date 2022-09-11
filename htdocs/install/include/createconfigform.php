@@ -274,6 +274,7 @@ function createThemeform($config)
             $label_content .= '<div class="theme_preview" id="'.$theme.'" style="display:none;">';
         }
         if (file_exists(XOOPS_ROOT_PATH . "/themes/$theme/theme.ini")) {
+            /** @var array $theme_ini */
             $theme_ini = parse_ini_file(XOOPS_ROOT_PATH . "/themes/$theme/theme.ini");
             if ($theme_ini['screenshot'] == '') {
                 $theme_ini['screenshot'] = 'screenshot.png';

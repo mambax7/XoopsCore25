@@ -38,6 +38,7 @@ if (!$tpl->is_cached('db:system_rss.tpl')) {
     $tpl->assign('channel_generator', 'XOOPS');
     $tpl->assign('channel_language', _LANGCODE);
     $tpl->assign('image_url', XOOPS_URL . '/images/logo.png');
+    /** @var array $dimension */
     $dimension = getimagesize(XOOPS_ROOT_PATH . '/images/logo.png');
     if (empty($dimension[0])) {
         $width = 88;

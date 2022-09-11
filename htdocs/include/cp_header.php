@@ -26,7 +26,8 @@ include_once $GLOBALS['xoops']->path('include/cp_functions.php');
 /* @var XoopsGroupPermHandler $moduleperm_handler */
 $moduleperm_handler = xoops_getHandler('groupperm');
 if ($xoopsUser) {
-    $url_arr        = explode('/', strstr($_SERVER['REQUEST_URI'], '/modules/'));
+    /** @var array $url_arr */
+    $url_arr = explode('/', strstr($_SERVER['REQUEST_URI'], '/modules/'));
     /* @var XoopsModuleHandler $module_handler */
     $module_handler = xoops_getHandler('module');
     $xoopsModule    = $module_handler->getByDirname($url_arr[2]);

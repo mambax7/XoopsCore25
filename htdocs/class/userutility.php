@@ -278,6 +278,7 @@ class XoopsUserUtility
             if (!$result = $xoopsDB->query($sql)) {
                 return $users;
             }
+            /** @var array $row */
             while (false !== ($row = $xoopsDB->fetchArray($result))) {
                 $uid = $row['uid'];
                 if ($usereal && $row['name']) {

@@ -500,8 +500,11 @@ class ModuleAdmin
         $this->addAssets();
         $path         = XOOPS_URL . '/Frameworks/moduleclasses/icons/32/';
         $date         = preg_replace('/-\\\/', '/', $this->_obj->getInfo('release_date')); // make format a little more forgiving
+        /** @var array $date */
         $date         = explode('/', $date);
+        /** @var array $author */
         $author       = explode(',', $this->_obj->getInfo('author'));
+        /** @var array $nickname */
         $nickname     = explode(',', $this->_obj->getInfo('nickname'));
         $release_date = formatTimestamp(mktime(0, 0, 0, $date[1], $date[2], $date[0]), 's');
         $module_dir   = $this->_obj->getVar('dirname');

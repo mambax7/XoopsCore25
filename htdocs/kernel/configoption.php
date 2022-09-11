@@ -250,6 +250,7 @@ class XoopsConfigOptionHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $confoption = new XoopsConfigOption();
             $confoption->assignVars($myrow);
@@ -278,7 +279,8 @@ class XoopsConfigOptionHandler extends XoopsObjectHandler
             $sql .= ' ' . $criteria->renderWhere();
         }
         $result = $this->db->query($sql);
-        $row = $this->db->fetchArray($result);
+        /** @var array $row */
+        $row   = $this->db->fetchArray($result);
         $count = $row['count'];
         $this->db->freeRecordSet($result);
         return (int)$count;

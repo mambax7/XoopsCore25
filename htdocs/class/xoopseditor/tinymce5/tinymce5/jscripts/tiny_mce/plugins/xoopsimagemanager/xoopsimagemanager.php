@@ -509,8 +509,9 @@ if ($op === 'editcat') {
     $form->addElement(new XoopsFormText(_IMGMAXHEIGHT, 'imgcat_maxheight', 3, 4, $imagecategory->getVar('imgcat_maxheight')));
     $form->addElement(new XoopsFormText(_MD_IMGCATWEIGHT, 'imgcat_weight', 3, 4, $imagecategory->getVar('imgcat_weight')));
     $form->addElement(new XoopsFormRadioYN(_MD_IMGCATDISPLAY, 'imgcat_display', $imagecategory->getVar('imgcat_display'), _YES, _NO));
+    /** @var array $storetype */
     $storetype = array('db' => _MD_INDB, 'file' => _MD_ASFILE);
-    $form->addElement(new XoopsFormLabel(_MD_IMGCATSTRTYPE, $storetype[$imagecategory->getVar('imgcat_storetype')]));
+    $form->addElement(new XoopsFormLabel(_MD_IMGCATSTRTYPE, $storetype[(string)$imagecategory->getVar('imgcat_storetype')]));
     $form->addElement(new XoopsFormHidden('imgcat_id', $imgcat_id));
     $form->addElement(new XoopsFormHidden('op', 'updatecat'));
     $form->addElement(new XoopsFormButton('', 'imgcat_button', _SUBMIT, 'submit'));

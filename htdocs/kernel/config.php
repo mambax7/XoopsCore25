@@ -121,8 +121,8 @@ class XoopsConfigHandler
                 }
             }
         }
-        if (!empty($this->_cachedConfigs[$config->getVar('conf_modid')][$config->getVar('conf_catid')])) {
-            unset($this->_cachedConfigs[$config->getVar('conf_modid')][$config->getVar('conf_catid')]);
+        if (!empty($this->_cachedConfigs[(int)$config->getVar('conf_modid')][$config->getVar('conf_catid')])) {
+            unset($this->_cachedConfigs[(int)$config->getVar('conf_modid')][$config->getVar('conf_catid')]);
         }
 
         return true;
@@ -151,8 +151,8 @@ class XoopsConfigHandler
                 $this->_oHandler->delete($options[$i]);
             }
         }
-        if (!empty($this->_cachedConfigs[$config->getVar('conf_modid')][$config->getVar('conf_catid')])) {
-            unset($this->_cachedConfigs[$config->getVar('conf_modid')][$config->getVar('conf_catid')]);
+        if (!empty($this->_cachedConfigs[(int)$config->getVar('conf_modid')][$config->getVar('conf_catid')])) {
+            unset($this->_cachedConfigs[(int)$config->getVar('conf_modid')][$config->getVar('conf_catid')]);
         }
 
         return true;

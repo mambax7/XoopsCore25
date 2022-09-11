@@ -164,6 +164,7 @@ class PathStuffController
             }
             if (isset($request['COOKIE_DOMAIN'])) {
                 $tempCookieDomain = trim($request['COOKIE_DOMAIN']);
+                /** @var array $tempParts */
                 $tempParts = parse_url($tempCookieDomain);
                 if (!empty($tempParts['host'])) {
                     $tempCookieDomain = $tempParts['host'];
@@ -324,6 +325,7 @@ class PathStuffController
         }
         clearstatcache();
         if (is_writable($path)) {
+            /** @var array $info */
             $info = stat($path);
             if ($info['mode'] & 0002) {
                 return 'w';

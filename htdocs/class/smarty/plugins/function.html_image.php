@@ -95,6 +95,7 @@ function smarty_function_html_image($params, &$smarty)
     }
     
     if(!isset($params['width']) || !isset($params['height'])) {
+        /** @var array $_image_data */
         if(!$_image_data = @getimagesize($_image_path)) {
             if(!file_exists($_image_path)) {
                 $smarty->trigger_error("html_image: unable to find '$_image_path'", E_USER_NOTICE);

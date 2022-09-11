@@ -36,6 +36,7 @@ if (XOOPS_COMMENT_APPROVENONE != $xoopsModuleConfig['com_rule']) {
 
     xoops_loadLanguage('comment');
 
+    /** @var array $comment_config */
     $comment_config = $xoopsModule->getInfo('comments');
     $com_itemid     = (trim($comment_config['itemName']) != '' && isset($_GET[$comment_config['itemName']])) ? (int)$_GET[$comment_config['itemName']] : 0;
     if ($com_itemid > 0) {
@@ -263,6 +264,7 @@ if (XOOPS_COMMENT_APPROVENONE != $xoopsModuleConfig['com_rule']) {
 
             // add module specific extra params
             if ('system' !== $xoopsModule->getVar('dirname')) {
+                /** @var array $comment_config */
                 $comment_config = $xoopsModule->getInfo('comments');
                 if (isset($comment_config['extraParams']) && is_array($comment_config['extraParams'])) {
                     $myts = MyTextSanitizer::getInstance();

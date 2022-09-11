@@ -145,6 +145,7 @@ class Snoopy
     {
 
         //preg_match("|^([^:]+)://([^:/]+)(:[\d]+)*(.*)|",$URI,$URI_PARTS);
+        /** @var array $URI_PARTS */
         $URI_PARTS = parse_url($URI);
         if (!empty($URI_PARTS["user"]))
             $this->user = $URI_PARTS["user"];
@@ -687,6 +688,7 @@ class Snoopy
 
         $match = preg_replace("|/[^\/\.]+\.[^\/\.]+$|", "", $match[0]);
         $match = preg_replace("|/$|", "", $match);
+        /** @var array $match_part */
         $match_part = parse_url($match);
         $match_root =
             $match_part["scheme"] . "://" . $match_part["host"];
@@ -971,6 +973,7 @@ class Snoopy
 
         $results = implode("\r\n", $results);
 
+        /** @var array $result_headers */
         $result_headers = file((string)$headerfile);
 
         $this->_redirectaddr = false;

@@ -252,13 +252,15 @@ function checkFileWriteablity($files)
                 $dGidStr = (string) $dirStat['gid'];
                 if (function_exists('posix_getpwuid')) {
                     $tempUsr = posix_getpwuid($uid);
-                    $uidStr = isset($tempUsr['name']) ? $tempUsr['name'] : (string) $uid;
+                    /** @var array $tempUsr */
+                    $uidStr  = isset($tempUsr['name']) ? $tempUsr['name'] : (string) $uid;
                     $tempUsr = posix_getpwuid($dirStat['uid']);
                     $dUidStr = isset($tempUsr['name']) ? $tempUsr['name'] : (string) $dirStat['uid'];
                 }
                 if (function_exists('posix_getgrgid')) {
+                    /** @var array $tempGrp */
                     $tempGrp = posix_getgrgid($gid);
-                    $gidStr = isset($tempGrp['name']) ? $tempGrp['name'] : (string) $gid;
+                    $gidStr  = isset($tempGrp['name']) ? $tempGrp['name'] : (string) $gid;
                     $tempGrp = posix_getgrgid($dirStat['gid']);
                     $dGidStr = isset($tempGrp['name']) ? $tempGrp['name'] : (string) $dirStat['gid'];
                 }

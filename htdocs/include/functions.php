@@ -624,7 +624,9 @@ function checkEmail($email, $antispam = false)
     if (!$email || !preg_match('/^[^@]{1,64}@[^@]{1,255}$/', $email)) {
         return false;
     }
+    /** @var array $email_array */
     $email_array      = explode('@', $email);
+    /** @var array $local_array */
     $local_array      = explode('.', $email_array[0]);
     $local_arrayCount = count($local_array);
     for ($i = 0; $i < $local_arrayCount; ++$i) {
@@ -633,6 +635,7 @@ function checkEmail($email, $antispam = false)
         }
     }
     if (!preg_match("/^\[?[0-9\.]+\]?$/", $email_array[1])) {
+        /** @var array $domain_array */
         $domain_array = explode('.', $email_array[1]);
         if (count($domain_array) < 2) {
             return false; // Not enough parts to domain
@@ -678,7 +681,7 @@ function xoops_getbanner()
 
     $db      = XoopsDatabaseFactory::getDatabaseConnection();
     $bresult = $db->query('SELECT COUNT(*) FROM ' . $db->prefix('banner'));
-    [$numrows] = $db->fetchRow($bresult);
+   list($numrows) = $db->fetchRow($bresult);
     if ($numrows > 1) {
         --$numrows;
         $bannum = mt_rand(0, $numrows);
@@ -687,7 +690,7 @@ function xoops_getbanner()
     }
     if ($numrows > 0) {
         $bresult = $db->query('SELECT * FROM ' . $db->prefix('banner'), 1, $bannum);
-        [$bid, $cid, $imptotal, $impmade, $clicks, $imageurl, $clickurl, $date, $htmlbanner, $htmlcode] = $db->fetchRow($bresult);
+       list($bid, $cid, $imptotal, $impmade, $clicks, $imageurl, $clickurl, $date, $htmlbanner, $htmlcode) = $db->fetchRow($bresult);
         if ($xoopsConfig['my_ip'] == xoops_getenv('REMOTE_ADDR')) {
             // EMPTY
         } else {
@@ -1230,8 +1233,9 @@ function xoops_getModuleOption($option, $dirname = '')
  */
 function xoops_getBaseDomain($url)
 {
+    /** @var array $parts */
     $parts = parse_url($url);
-    $host = '';
+    $host  = '';
     if (!empty($parts['host'])) {
         $host = $parts['host'];
         if (strtolower($host) === 'localhost') {
@@ -1260,7 +1264,8 @@ function xoops_getBaseDomain($url)
 function xoops_getUrlDomain($url)
 {
     $domain = '';
-    $_URL   = parse_url($url);
+    /** @var array $_URL */
+    $_URL = parse_url($url);
 
     if (!empty($_URL) || !empty($_URL['host'])) {
         $domain = $_URL['host'];

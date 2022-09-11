@@ -125,10 +125,11 @@ function protector_postcommon()
 
     // check session hi-jacking
     $masks = @$conf['session_fixed_topbit'];
+    /** @var array $maskArray */
     $maskArray = explode('/', $masks);
-    $ipv4Mask = empty($maskArray[0]) ? 24 : $maskArray[0];
-    $ipv6Mask = (!isset($maskArray[1])) ? 56 : $maskArray[1];
-    $ip = \Xmf\IPAddress::fromRequest();
+    $ipv4Mask  = empty($maskArray[0]) ? 24 : $maskArray[0];
+    $ipv6Mask  = (!isset($maskArray[1])) ? 56 : $maskArray[1];
+    $ip        = \Xmf\IPAddress::fromRequest();
     $maskCheck = true;
     if (isset($_SESSION['protector_last_ip'])) {
         $maskCheck = $ip->sameSubnet($_SESSION['protector_last_ip'], $ipv4Mask, $ipv6Mask);

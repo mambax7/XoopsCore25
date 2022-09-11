@@ -37,6 +37,10 @@ class FormDhtmlTextArea extends XoopsEditor
      * @access private
      */
     public $_hiddenText = 'xoopsHiddenText';
+    /**
+     * @var \XoopsFormDhtmlTextArea
+     */
+    public $renderer;
 
     /**
      * FormDhtmlTextArea::__construct()

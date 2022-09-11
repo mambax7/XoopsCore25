@@ -207,12 +207,15 @@ switch ($op) {
             redirect_header('admin.php?fct=maintenance', 2, _AM_SYSTEM_MAINTENANCE_DUMP_ERROR_TABLES_OR_MODULES);
         }
 
+        /** @var array $result */
         if ($dump_tables !== false) {
             $result = $dump->dump_tables($dump_tables, $drop);
         } elseif ($dump_modules !== false) {
             $result = $dump->dump_modules($dump_modules, $drop);
         }
-        $xoopsTpl->assign('result_dump', $result[1]);
+        if (false !== $result && is_array($result) && isset($result[1])) {
+            $xoopsTpl->assign('result_dump', $result[1]);
+        }
         break;
 }
 

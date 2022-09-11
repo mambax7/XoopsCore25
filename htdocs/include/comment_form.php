@@ -133,6 +133,7 @@ $cform->addElement(new XoopsFormHidden('com_mode', $com_mode));
 
 // add module specific extra params
 if ('system' !== $xoopsModule->getVar('dirname')) {
+    /** @var array $comment_config */
     $comment_config = $xoopsModule->getInfo('comments');
     if (isset($comment_config['extraParams']) && is_array($comment_config['extraParams'])) {
         $myts = MyTextSanitizer::getInstance();

@@ -44,6 +44,8 @@ if (false !== $user) {
     if (0 == $user->getVar('level')) {
         redirect_header(XOOPS_URL . '/index.php', 5, _US_NOACTTPADM);
     }
+
+    /** @var array $xoopsConfig */
     if ($xoopsConfig['closesite'] == 1) {
         $allowed = false;
         foreach ($user->getGroups() as $group) {
@@ -94,8 +96,9 @@ if (false !== $user) {
 
     if (!empty($redirect) && !strpos($redirect, 'register')) {
         $xoops_redirect = rawurldecode($redirect);
-        $parsed         = parse_url(XOOPS_URL);
-        $url            = isset($parsed['scheme']) ? $parsed['scheme'] . '://' : 'http://';
+        /** @var array $parsed */
+        $parsed = parse_url(XOOPS_URL);
+        $url    = isset($parsed['scheme']) ? $parsed['scheme'] . '://' : 'http://';
         if (isset($parsed['host'])) {
             $url .= $parsed['host'];
             if (isset($parsed['port'])) {

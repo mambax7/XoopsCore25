@@ -305,7 +305,7 @@ class Protector
 
         if ($unique_check) {
             $result = mysqli_query($this->_conn, 'SELECT ip,type FROM ' . XOOPS_DB_PREFIX . '_' . $this->mydirname . '_log ORDER BY timestamp DESC LIMIT 1');
-            [$last_ip, $last_type] = mysqli_fetch_row($result);
+           list($last_ip, $last_type) = mysqli_fetch_row($result);
             if ($last_ip == $ip && $last_type == $type) {
                 $this->_logged = true;
 
@@ -354,7 +354,7 @@ class Protector
      */
     public function get_bwlimit()
     {
-        [$expire] = @file(Protector::get_filepath4bwlimit());
+       list($expire) = @file(Protector::get_filepath4bwlimit());
         $expire = min((int)$expire, time() + 300);
 
         return $expire;
@@ -422,7 +422,7 @@ class Protector
         $filepath4badips = @file(Protector::get_filepath4badips());
 
         if (is_array($filepath4badips) && isset($filepath4badips[0])) {
-            [$bad_ips_serialized] = $filepath4badips;
+            list($bad_ips_serialized) = $filepath4badips;
         }
         $bad_ips = empty($bad_ips_serialized) ? array() : @unserialize($bad_ips_serialized, array('allowed_classes' => false));
         if (!is_array($bad_ips) || isset($bad_ips[0])) {
@@ -465,7 +465,7 @@ class Protector
         $filepath4group1ips = @file(Protector::get_filepath4group1ips());
 
         if (is_array($filepath4group1ips) && isset($filepath4group1ips[0])) {
-            [$group1_ips_serialized] = $filepath4group1ips;
+           list($group1_ips_serialized) = $filepath4group1ips;
         }
 
         $group1_ips = empty($group1_ips_serialized) ? array() : @unserialize($group1_ips_serialized, array('allowed_classes' => false));
@@ -837,19 +837,20 @@ class Protector
     }
 
     /**
-     * @param $current
-     * @param $indexes
+     * @param array $current
+     * @param array $indexes
      *
      * @return bool
      */
     public function &get_ref_from_base64index(&$current, $indexes)
     {
+        $ret = false;
         foreach ($indexes as $index) {
             $index = base64_decode($index);
             if (!is_array($current)) {
-                return false;
+                return $ret;
             }
-            $current =& $current[$index];
+            $current =& $current[(string)$index];
         }
 
         return $current;
@@ -1195,7 +1196,7 @@ class Protector
         // bandwidth limitation
         if (@$this->_conf['bwlimit_count'] >= 10) {
             $result = $xoopsDB->query('SELECT COUNT(*) FROM ' . $xoopsDB->prefix($this->mydirname . '_access'));
-            [$bw_count] = $xoopsDB->fetchRow($result);
+           list($bw_count) = $xoopsDB->fetchRow($result);
             if ($bw_count > $this->_conf['bwlimit_count']) {
                 $this->write_file_bwlimit(time() + $this->_conf['dos_expire']);
             }
@@ -1205,7 +1206,7 @@ class Protector
         $result = $xoopsDB->query(
             'SELECT COUNT(*) FROM ' . $xoopsDB->prefix($this->mydirname . '_access')
             . " WHERE ip={$ip4sql} AND request_uri={$uri4sql}");
-        [$f5_count] = $xoopsDB->fetchRow($result);
+       list($f5_count) = $xoopsDB->fetchRow($result);
         if ($f5_count > $this->_conf['dos_f5count']) {
 
             // delayed insert
@@ -1264,7 +1265,7 @@ class Protector
         $result = $xoopsDB->query(
             'SELECT COUNT(*) FROM ' . $xoopsDB->prefix($this->mydirname . '_access') . " WHERE ip={$ip4sql}"
         );
-        [$crawler_count] = $xoopsDB->fetchRow($result);
+       list($crawler_count) = $xoopsDB->fetchRow($result);
 
         // delayed insert
         $xoopsDB->queryF($sql4insertlog);
@@ -1349,7 +1350,7 @@ class Protector
         $sql = 'SELECT COUNT(*) FROM ' . $xoopsDB->prefix($this->mydirname . '_access') . " WHERE ip={$ip4sql} AND malicious_actions like 'BRUTE FORCE:%'";
         $result = $xoopsDB->query($sql);
         if ($xoopsDB->isResultSet($result)) {
-            [$bf_count] = $xoopsDB->fetchRow($result);}
+           list($bf_count) = $xoopsDB->fetchRow($result);}
         else{
             \trigger_error("Query Failed! SQL: $sql- Error: " . $xoopsDB->error(), E_USER_ERROR);
         }
@@ -1379,6 +1380,7 @@ class Protector
             }
         } else {
             // http_host
+            /** @var array $path_array */
             $path_array = parse_url(XOOPS_URL);
             $http_host  = empty($path_array['host']) ? 'www.xoops.org' : $path_array['host'];
 
