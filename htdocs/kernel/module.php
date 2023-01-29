@@ -33,7 +33,7 @@ class XoopsModule extends XoopsObject
      *
      * @var array
      */
-    public $adminmenu;
+    public $adminmenu = array();
     /**
      *
      * @var array
@@ -254,7 +254,7 @@ class XoopsModule extends XoopsObject
     /**
      * Get the admin menu for the module
      *
-     * @return string
+     * @return array
      */
     public function &getAdminMenu()
     {
