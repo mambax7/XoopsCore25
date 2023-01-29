@@ -430,6 +430,8 @@ class ProfileField extends XoopsObject
  */
 class ProfileFieldHandler extends XoopsPersistableObjectHandler
 {
+    public $table_link;
+
     /**
      * @param null|XoopsDatabase $db
      */
