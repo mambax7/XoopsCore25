@@ -143,7 +143,9 @@ class XoopsTplsetHandler extends XoopsObjectHandler
         $id     = (int)$id;
         if ($id > 0) {
             $sql = 'SELECT * FROM ' . $this->db->prefix('tplset') . ' WHERE tplset_id=' . $id;
-            if (!$result = $this->db->query($sql)) {
+            $result = $this->db->query($sql);
+            if (!$this->db->isResultSet($result)) {
+                //    \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
                 return $tplset;
             }
             $numrows = $this->db->getRowsNum($result);
@@ -172,7 +174,9 @@ class XoopsTplsetHandler extends XoopsObjectHandler
         $tplset_name = trim($tplset_name);
         if ($tplset_name != '') {
             $sql = 'SELECT * FROM ' . $this->db->prefix('tplset') . ' WHERE tplset_name=' . $this->db->quoteString($tplset_name);
-            if (!$result = $this->db->query($sql)) {
+            $result = $this->db->query($sql);
+            if (!$this->db->isResultSet($result)) {
+                //    \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
                 return $tplset;
             }
             $numrows = $this->db->getRowsNum($result);
@@ -265,7 +269,8 @@ class XoopsTplsetHandler extends XoopsObjectHandler
             $start = $criteria->getStart();
         }
         $result = $this->db->query($sql, $limit, $start);
-        if (!$result) {
+        if (!$this->db->isResultSet($result)) {
+            //    \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
             return $ret;
         }
         while (false !== ($myrow = $this->db->fetchArray($result))) {
@@ -294,12 +299,14 @@ class XoopsTplsetHandler extends XoopsObjectHandler
         if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
         }
-        if (!$result = $this->db->query($sql)) {
+        $result = $this->db->query($sql);
+        if (!$this->db->isResultSet($result)) {
+            //            \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
             return 0;
         }
         list($count) = $this->db->fetchRow($result);
 
-        return $count;
+        return (int)$count;
     }
 
     /**

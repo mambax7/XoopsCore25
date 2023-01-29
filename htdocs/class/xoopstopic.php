@@ -89,7 +89,11 @@ class XoopsTopic
     {
         $topicid = (int)$topicid;
         $sql     = 'SELECT * FROM ' . $this->table . ' WHERE topic_id=' . $topicid . '';
-        $array   = $this->db->fetchArray($this->db->query($sql));
+        $result = $this->db->query($sql);
+        if (!$this->db->isResultSet($result)) {
+            \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
+        }
+        $array   = $this->db->fetchArray($result);
         $this->makeTopic($array);
     }
 
@@ -117,7 +121,7 @@ class XoopsTopic
      */
     public function store()
     {
-        $myts   = MyTextSanitizer::getInstance();
+        $myts   = \MyTextSanitizer::getInstance();
         $title  = '';
         $imgurl = '';
         if (isset($this->topic_title) && $this->topic_title != '') {
@@ -239,7 +243,7 @@ class XoopsTopic
      */
     public function topic_title($format = 'S')
     {
-        $myts = MyTextSanitizer::getInstance();
+        $myts = \MyTextSanitizer::getInstance();
         switch ($format) {
             case 'S':
             case 'E':
@@ -261,7 +265,7 @@ class XoopsTopic
      */
     public function topic_imgurl($format = 'S')
     {
-        $myts = MyTextSanitizer::getInstance();
+        $myts = \MyTextSanitizer::getInstance();
         switch ($format) {
             case 'S':
             case 'E':
@@ -383,9 +387,13 @@ class XoopsTopic
      */
     public function getTopicsList()
     {
-        $result = $this->db->query('SELECT topic_id, topic_pid, topic_title FROM ' . $this->table);
+        $sql = 'SELECT topic_id, topic_pid, topic_title FROM ' . $this->table;
+        $result = $this->db->query($sql);
+        if (!$this->db->isResultSet($result)) {
+            \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
+        }
         $ret    = array();
-        $myts   = MyTextSanitizer::getInstance();
+        $myts   = \MyTextSanitizer::getInstance();
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $ret[$myrow['topic_id']] = array('title' => $myts->htmlSpecialChars($myrow['topic_title']), 'pid' => $myrow['topic_pid']);
         }
@@ -402,8 +410,11 @@ class XoopsTopic
     public function topicExists($pid, $title)
     {
         $sql = 'SELECT COUNT(*) from ' . $this->table . ' WHERE topic_pid = ' . (int)$pid . " AND topic_title = '" . trim($title) . "'";
-        $rs  = $this->db->query($sql);
-        list($count) = $this->db->fetchRow($rs);
+        $result  = $this->db->query($sql);
+        if (!$this->db->isResultSet($result)) {
+            \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
+        }
+        list($count) = $this->db->fetchRow($result);
         if ($count > 0) {
             return true;
         } else {

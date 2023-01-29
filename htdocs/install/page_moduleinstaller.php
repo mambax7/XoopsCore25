@@ -47,9 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $xoopsConfig    = $config_handler->getConfigsByCat(XOOPS_CONF);
 
     $msgs = array();
-    foreach ($_REQUEST['modules'] as $dirname => $installmod) {
-        if ($installmod) {
-            $msgs[] = xoops_module_install($dirname);
+    if (isset($_REQUEST['modules']) && is_array($_REQUEST['modules'])) {
+        foreach ($_REQUEST['modules'] as $dirname => $installmod) {
+            if ($installmod) {
+                $msgs[] = xoops_module_install($dirname);
+            }
         }
     }
 
@@ -136,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $content .= '</div>';
             $content .= '<div class="col-md-7">';
             $content .= '<h3>' . $module->getInfo('name');
-            $content .= ' <small> ' . number_format(round($module->getInfo('version'), 2), 2)
+            $content .= ' <small> ' . $module->getInfo('version')
                 . ' (' . $module->getInfo('dirname') . ')' . '</small>' . '</h3>';
             $content .= '<i>' . $module->getInfo('description') . '</i>';
             $content .= '</div>';

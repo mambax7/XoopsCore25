@@ -61,6 +61,9 @@ class XoopsModelRead extends XoopsModelAbstract
             $start = $criteria->getStart();
         }
         $result = $this->handler->db->query($sql, $limit, $start);
+        if (!$this->handler->db->isResultSet($result)) {
+            \trigger_error("Query Failed! SQL: $sql- Error: " . $this->handler->db->error(), E_USER_ERROR);
+        }
         $ret    = array();
         if (false !== $result) {
             if ($asObject) {
@@ -120,6 +123,8 @@ class XoopsModelRead extends XoopsModelAbstract
         $ret = array();
         if ($criteria == null) {
             $criteria = new CriteriaCompo();
+            $criteria->setLimit($limit);
+            $criteria->setStart($start);
         }
 
         $sql = "SELECT `{$this->handler->keyName}`";
@@ -132,15 +137,18 @@ class XoopsModelRead extends XoopsModelAbstract
             if ($sort = $criteria->getSort()) {
                 $sql .= ' ORDER BY ' . $sort . ' ' . $criteria->getOrder();
             }
-            $limit = $criteria->getLimit();
-            $start = $criteria->getStart();
+            if ((0 == $limit) && (0 == $start)) {
+                $limit = $criteria->getLimit();
+                $start = $criteria->getStart();
+            }
         }
         $result = $this->handler->db->query($sql, $limit, $start);
-        if (!$result) {
-            return $ret;
-        }
+        if (!$this->handler->db->isResultSet($result)) {
+        //    \trigger_error("Query Failed! SQL: $sql- Error: " . $this->handler->db->error(), E_USER_ERROR);
+            return $ret;        
+            }
 
-        $myts = MyTextSanitizer::getInstance();
+        $myts = \MyTextSanitizer::getInstance();
         while (false !== ($myrow = $this->handler->db->fetchArray($result))) {
             // identifiers should be textboxes, so sanitize them like that
             $ret[$myrow[$this->handler->keyName]] = empty($this->handler->identifierName) ? 1 : $myts->htmlSpecialChars($myrow[$this->handler->identifierName]);
@@ -165,9 +173,12 @@ class XoopsModelRead extends XoopsModelAbstract
             $limit = $criteria->getLimit();
             $start = $criteria->getStart();
         }
-        if (!$result = $this->handler->db->query($sql, $limit, $start)) {
-            return $ret;
-        }
+        $result = $this->handler->db->query($sql, $limit, $start);
+        if (!$this->handler->db->isResultSet($result)) {
+        //    \trigger_error("Query Failed! SQL: $sql- Error: " . $this->handler->db->error(), E_USER_ERROR);
+            return $ret;    
+         }
+
         while (false !== ($myrow = $this->handler->db->fetchArray($result))) {
             $ret[] = $myrow[$this->handler->keyName];
         }

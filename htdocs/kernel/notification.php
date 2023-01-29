@@ -33,6 +33,15 @@ include_once $GLOBALS['xoops']->path('include/notification_functions.php');
  */
 class XoopsNotification extends XoopsObject
 {
+    //PHP 8.2 Dynamic properties deprecated
+    public $not_id;
+    public $not_modid;
+    public $not_category;
+    public $not_itemid;
+    public $not_event;
+    public $not_uid;
+    public $not_mode;
+
     /**
      * Constructor
      **/
@@ -247,7 +256,7 @@ class XoopsNotificationHandler extends XoopsObjectHandler
      *
      * @param int $id ID
      *
-     * @return XoopsNotification|false {@link XoopsNotification}, FALSE on fail
+     * @return XoopsNotification|false {@link XoopsNotification}, false on fail
      **/
     public function get($id)
     {
@@ -255,7 +264,9 @@ class XoopsNotificationHandler extends XoopsObjectHandler
         $id           = (int)$id;
         if ($id > 0) {
             $sql = 'SELECT * FROM ' . $this->db->prefix('xoopsnotifications') . ' WHERE not_id=' . $id;
-            if (!$result = $this->db->query($sql)) {
+            $result = $this->db->query($sql);
+            if (!$this->db->isResultSet($result)) {
+                //    \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
                 return $notification;
             }
             $numrows = $this->db->getRowsNum($result);
@@ -350,7 +361,8 @@ class XoopsNotificationHandler extends XoopsObjectHandler
             $start = $criteria->getStart();
         }
         $result = $this->db->query($sql, $limit, $start);
-        if (!$result) {
+        if (!$this->db->isResultSet($result)) {
+            //    \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
             return $ret;
         }
         while (false !== ($myrow = $this->db->fetchArray($result))) {
@@ -381,12 +393,14 @@ class XoopsNotificationHandler extends XoopsObjectHandler
         if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
         }
-        if (!$result = $this->db->query($sql)) {
+        $result = $this->db->query($sql);
+        if (!$this->db->isResultSet($result)) {
+            //            \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
             return 0;
         }
         list($count) = $this->db->fetchRow($result);
 
-        return $count;
+        return (int)$count;
     }
 
     /**
@@ -468,11 +482,11 @@ class XoopsNotificationHandler extends XoopsObjectHandler
     /**
      * Subscribe for notification for an event(s)
      *
-     * @param string   $category  category of notification
-     * @param int      $item_id   ID of the item
-     * @param mixed    $events    event string or array of events
+     * @param string $category  category of notification
+     * @param int    $item_id   ID of the item
+     * @param mixed  $events    event string or array of events
      * @param int|null $mode      force a particular notification mode
-     *                            (e.g. once_only) (default to current user preference)
+     *                          (e.g. once_only) (default to current user preference)
      * @param int|null $module_id ID of the module (default to current module)
      * @param int|null $user_id   ID of the user (default to current user)
      *                          *
@@ -576,17 +590,16 @@ class XoopsNotificationHandler extends XoopsObjectHandler
      * @param int    $module_id Module ID
      * @param int    $item_id   Item ID
      * @param string $order     Sort order
-     *
-     * @param mixed   $status
+     * @param int    $mode notification mode    (see include/notification_constants.php)
      *
      * @return array Array of {@link XoopsNotification} objects
      */
-    public function getByItemId($module_id, $item_id, $order = null, $status = null)
+    public function getByItemId($module_id, $item_id, $order = null, $mode = null)
     {
-        $criteria = new CriteriaCompo(new Criteria('com_modid', (int)$module_id));
-        $criteria->add(new Criteria('com_itemid', (int)$item_id));
-        if (isset($status)) {
-            $criteria->add(new Criteria('com_status', (int)$status));
+        $criteria = new CriteriaCompo(new Criteria('not_modid', (string)$module_id));
+        $criteria->add(new Criteria('not_itemid', (string)$item_id));
+        if (isset($mode)) {
+            $criteria->add(new Criteria('not_mode', (string)$mode));
         }
         if (isset($order)) {
             $criteria->setOrder($order);

@@ -28,6 +28,18 @@ defined('XOOPS_ROOT_PATH') || exit('Restricted access');
  **/
 class XoopsTplfile extends XoopsObject
 {
+    //PHP 8.2 Dynamic properties deprecated
+    public $tpl_id;
+    public $tpl_refid;
+    public $tpl_tplset;
+    public $tpl_file;
+    public $tpl_desc;
+    public $tpl_lastmodified;
+    public $tpl_lastimported;
+    public $tpl_module;
+    public $tpl_type;
+    public $tpl_source;
+
     /**
      * Constructor
      *
@@ -228,7 +240,9 @@ class XoopsTplfileHandler extends XoopsObjectHandler
             } else {
                 $sql = 'SELECT f.*, s.tpl_source FROM ' . $this->db->prefix('tplfile') . ' f LEFT JOIN ' . $this->db->prefix('tplsource') . ' s  ON s.tpl_id=f.tpl_id WHERE f.tpl_id=' . $id;
             }
-            if (!$result = $this->db->query($sql)) {
+            $result = $this->db->query($sql);
+            if (!$this->db->isResultSet($result)) {
+                //    \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
                 return $tplfile;
             }
             $numrows = $this->db->getRowsNum($result);
@@ -257,7 +271,9 @@ class XoopsTplfileHandler extends XoopsObjectHandler
 
         if (!$tplfile->getVar('tpl_source')) {
             $sql = 'SELECT tpl_source FROM ' . $this->db->prefix('tplsource') . ' WHERE tpl_id=' . $tplfile->getVar('tpl_id');
-            if (!$result = $this->db->query($sql)) {
+            $result = $this->db->query($sql);
+            if (!$this->db->isResultSet($result)) {
+                //    \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
                 return false;
             }
             $myrow = $this->db->fetchArray($result);
@@ -408,7 +424,8 @@ class XoopsTplfileHandler extends XoopsObjectHandler
             $start = $criteria->getStart();
         }
         $result = $this->db->query($sql, $limit, $start);
-        if (!$result) {
+        if (!$this->db->isResultSet($result)) {
+            //    \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
             return $ret;
         }
         while (false !== ($myrow = $this->db->fetchArray($result))) {
@@ -437,12 +454,14 @@ class XoopsTplfileHandler extends XoopsObjectHandler
         if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
         }
-        if (!$result = $this->db->query($sql)) {
+        $result = $this->db->query($sql);
+        if (!$this->db->isResultSet($result)) {
+//            \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
             return 0;
         }
         list($count) = $this->db->fetchRow($result);
 
-        return $count;
+        return (int)$count;
     }
 
     /**
@@ -456,7 +475,8 @@ class XoopsTplfileHandler extends XoopsObjectHandler
         $ret    = array();
         $sql    = 'SELECT tpl_module, COUNT(tpl_id) AS count FROM ' . $this->db->prefix('tplfile') . " WHERE tpl_tplset='" . $tplset . "' GROUP BY tpl_module";
         $result = $this->db->query($sql);
-        if (!$result) {
+        if (!$this->db->isResultSet($result)) {
+            //    \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
             return $ret;
         }
         while (false !== ($myrow = $this->db->fetchArray($result))) {

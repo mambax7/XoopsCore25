@@ -37,6 +37,7 @@ xoops_loadLanguage('global');
  */
 class XoopsTpl extends Smarty
 {
+    public $currentTheme;
     /**
      * XoopsTpl constructor.
      */
@@ -291,7 +292,7 @@ class XoopsTpl extends Smarty
 function xoops_template_touch($tpl_id, $clear_old = true)
 {
     $tplfile_handler = xoops_getHandler('tplfile');
-    $tplfile         = $tplfile_handler->get($tpl_id);
+    $tplfile         = $tplfile_handler->get((int)$tpl_id);
 
     if (is_object($tplfile)) {
         $file = $tplfile->getVar('tpl_file', 'n');

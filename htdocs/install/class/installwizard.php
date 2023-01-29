@@ -30,6 +30,7 @@ class XoopsInstallWizard
     public $currentPage = 'langselect';
     public $pageIndex   = 0;
     public $configs     = array();
+    public $form;
 
     /**
      * @return bool
@@ -191,7 +192,7 @@ class XoopsInstallWizard
      */
     public function baseLocation()
     {
-        $proto = (@$_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+        $proto = ((isset($_SERVER['HTTPS']) && @$_SERVER['HTTPS'] === 'on')) ? 'https' : 'http';
         $host  = $_SERVER['HTTP_HOST'];
         $base  = substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/'));
 

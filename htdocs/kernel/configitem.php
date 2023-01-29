@@ -44,6 +44,17 @@ class XoopsConfigItem extends XoopsObject
      * @access    private
      */
     public $_confOptions = array();
+    //PHP 8.2 Dynamic properties deprecated
+    public $conf_id;
+    public $conf_modid;
+    public $conf_catid;
+    public $conf_name;
+    public $conf_title;
+    public $conf_value;
+    public $conf_desc;
+    public $conf_formtype;
+    public $conf_valuetype;
+    public $conf_order;
 
     /**
      * Constructor
@@ -211,12 +222,12 @@ class XoopsConfigItem extends XoopsObject
         switch ($this->getVar('conf_valuetype')) {
             case 'array':
                 if (!is_array($value)) {
-                    $value = explode('|', trim($value));
+                    $value = explode('|', trim((string)$value));
                 }
                 $this->setVar('conf_value', serialize($value), $force_slash);
                 break;
             case 'text':
-                $this->setVar('conf_value', trim($value), $force_slash);
+                $this->setVar('conf_value', trim((string)$value), $force_slash);
                 break;
             default:
                 $this->setVar('conf_value', $value, $force_slash);
@@ -296,7 +307,7 @@ class XoopsConfigItemHandler extends XoopsObjectHandler
      * Load a config from the database
      *
      * @param  int $id ID of the config
-     * @return XoopsConfigItem|false reference to the config, FALSE on fail
+     * @return XoopsConfigItem|false reference to the config, false on fail
      */
     public function get($id)
     {
@@ -304,7 +315,9 @@ class XoopsConfigItemHandler extends XoopsObjectHandler
         $id     = (int)$id;
         if ($id > 0) {
             $sql = 'SELECT * FROM ' . $this->db->prefix('config') . ' WHERE conf_id=' . $id;
-            if (!$result = $this->db->query($sql)) {
+            $result = $this->db->query($sql);
+            if (!$this->db->isResultSet($result)) {
+                //    \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
                 return $config;
             }
             $numrows = $this->db->getRowsNum($result);
@@ -441,6 +454,6 @@ class XoopsConfigItemHandler extends XoopsObjectHandler
         }
         list($count) = $this->db->fetchRow($result);
 
-        return $count;
+        return (int)$count;
     }
 }

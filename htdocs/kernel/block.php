@@ -30,6 +30,29 @@ defined('XOOPS_ROOT_PATH') || exit('Restricted access');
  */
 class XoopsBlock extends XoopsObject
 {
+    //PHP 8.2 Dynamic properties deprecated
+    public $bid;
+    public $mid;
+    public $func_num;
+    public $options;
+    public $name;
+    //public $position;
+    public $title;
+    public $content;
+    public $side;
+    public $weight;
+    public $visible;
+    public $block_type;
+    public $c_type;
+    public $isactive;
+    public $dirname;
+    public $func_file;
+    public $show_func;
+    public $edit_func;
+    public $template;
+    public $bcachetime;
+    public $last_modified;
+
     /**
      * constructor
      *
@@ -322,12 +345,12 @@ class XoopsBlock extends XoopsObject
 
                     return str_replace('{X_SITEURL}', XOOPS_URL . '/', $content);
                 } elseif ($c_type === 'S') {
-                    $myts    = MyTextSanitizer::getInstance();
+                    $myts    = \MyTextSanitizer::getInstance();
                     $content = str_replace('{X_SITEURL}', XOOPS_URL . '/', $this->getVar('content', 'n'));
 
                     return $myts->displayTarea($content, 0, 1);
                 } else {
-                    $myts    = MyTextSanitizer::getInstance();
+                    $myts    = \MyTextSanitizer::getInstance();
                     $content = str_replace('{X_SITEURL}', XOOPS_URL . '/', $this->getVar('content', 'n'));
 
                     return $myts->displayTarea($content, 0, 0);
@@ -421,7 +444,7 @@ class XoopsBlock extends XoopsObject
     /**
      * Store Block Data to Database
      *
-     * @return bool
+     * @return int $id
      *
      * @deprecated
      */
@@ -429,7 +452,10 @@ class XoopsBlock extends XoopsObject
     {
         /** @var XoopsBlockHandler $blkhandler */
         $blkhandler = xoops_getHandler('block');
-        return $blkhandler->insert($this);
+        if (false === $blkhandler->insert($this)) {
+            return false;
+        }
+        return (int) $this->bid();
     }
 
     /**
@@ -504,7 +530,7 @@ class XoopsBlock extends XoopsObject
      * @param string $content
      * @param string $contentdb
      *
-     * @return string
+     * @return string|null
      *
      * @deprecated
      */
@@ -541,18 +567,18 @@ class XoopsBlock extends XoopsObject
 
     /**
      * get all the blocks that match the supplied parameters
-     * @param int|array   $groupid groupid (can be an array)
-     * @param bool        $asobject
-     * @param string|null $side    0: sideblock - left
-     *                             1: sideblock - right
-     *                             2: sideblock - left and right
-     *                             3: centerblock - left
-     *                             4: centerblock - right
-     *                             5: centerblock - center
-     *                             6: centerblock - left, right, center
+     * @param int|array $groupid  groupid (can be an array)
+     * @param bool   $asobject
+     * @param null|int $side    0: sideblock - left
+     *                         1: sideblock - right
+     *                         2: sideblock - left and right
+     *                         3: centerblock - left
+     *                         4: centerblock - right
+     *                         5: centerblock - center
+     *                         6: centerblock - left, right, center
      * @param int|null    $visible 0: not visible 1: visible
-     * @param string      $orderby order of the blocks
-     * @param int         $isactive
+     * @param string $orderby  order of the blocks
+     * @param int    $isactive
      * @returns array of block objects
      *
      * @deprecated
@@ -597,6 +623,9 @@ class XoopsBlock extends XoopsObject
         }
         $sql .= " ORDER BY $orderby";
         $result = $db->query($sql);
+        if (!$db->isResultSet($result)) {
+            \trigger_error("Query Failed! SQL: $sql- Error: " . $db->error(), E_USER_ERROR);
+        }
         $added  = array();
         while (false !== ($myrow = $db->fetchArray($result))) {
             if (!in_array($myrow['bid'], $added)) {
@@ -650,6 +679,9 @@ class XoopsBlock extends XoopsObject
             case 'object':
                 $sql    = 'SELECT * FROM ' . $db->prefix('newblocks') . '' . $where_query;
                 $result = $db->query($sql);
+                if (!$db->isResultSet($result)) {
+                    \trigger_error("Query Failed! SQL: $sql- Error: " . $db->error(), E_USER_ERROR);
+                }
                 while (false !== ($myrow = $db->fetchArray($result))) {
                     $ret[] = new XoopsBlock($myrow);
                 }
@@ -657,6 +689,9 @@ class XoopsBlock extends XoopsObject
             case 'list':
                 $sql    = 'SELECT * FROM ' . $db->prefix('newblocks') . '' . $where_query;
                 $result = $db->query($sql);
+                if (!$db->isResultSet($result)) {
+                    \trigger_error("Query Failed! SQL: $sql- Error: " . $db->error(), E_USER_ERROR);
+                }
                 while (false !== ($myrow = $db->fetchArray($result))) {
                     $block                      = new XoopsBlock($myrow);
                     $title                      = $block->getVar('title');
@@ -667,6 +702,9 @@ class XoopsBlock extends XoopsObject
             case 'id':
                 $sql    = 'SELECT bid FROM ' . $db->prefix('newblocks') . '' . $where_query;
                 $result = $db->query($sql);
+                if (!$db->isResultSet($result)) {
+                    \trigger_error("Query Failed! SQL: $sql- Error: " . $db->error(), E_USER_ERROR);
+                }
                 while (false !== ($myrow = $db->fetchArray($result))) {
                     $ret[] = $myrow['bid'];
                 }
@@ -695,6 +733,9 @@ class XoopsBlock extends XoopsObject
             $sql = 'SELECT bid FROM ' . $db->prefix('newblocks') . ' WHERE mid=' . $moduleid;
         }
         $result = $db->query($sql);
+        if (!$db->isResultSet($result)) {
+            \trigger_error("Query Failed! SQL: $sql- Error: " . $db->error(), E_USER_ERROR);
+        }
         $ret    = array();
         while (false !== ($myrow = $db->fetchArray($result))) {
             if ($asobject) {
@@ -711,11 +752,11 @@ class XoopsBlock extends XoopsObject
      * XoopsBlock::getAllByGroupModule()
      *
      * @param int|int[] $groupid
-     * @param integer   $module_id
-     * @param mixed     $toponlyblock
-     * @param mixed     $visible
-     * @param string    $orderby
-     * @param integer   $isactive
+     * @param  integer $module_id
+     * @param  mixed   $toponlyblock
+     * @param  mixed   $visible
+     * @param  string  $orderby
+     * @param  integer $isactive
      * @return array
      *
      * @deprecated (This also appears, dead, in XoopsBlockHandler)
@@ -735,6 +776,9 @@ class XoopsBlock extends XoopsObject
                 }
             }
             $result   = $db->query($sql);
+            if (!$db->isResultSet($result)) {
+                \trigger_error("Query Failed! SQL: $sql- Error: " . $db->error(), E_USER_ERROR);
+            }
             $blockids = array();
             while (false !== ($myrow = $db->fetchArray($result))) {
                 $blockids[] = $myrow['gperm_itemid'];
@@ -767,6 +811,9 @@ class XoopsBlock extends XoopsObject
         }
         $sql .= ' ORDER BY ' . $orderby;
         $result = $db->query($sql);
+        if (!$db->isResultSet($result)) {
+            \trigger_error("Query Failed! SQL: $sql- Error: " . $db->error(), E_USER_ERROR);
+        }
         while (false !== ($myrow = $db->fetchArray($result))) {
             $block              = new XoopsBlock($myrow);
             $ret[$myrow['bid']] = &$block;
@@ -794,14 +841,18 @@ class XoopsBlock extends XoopsObject
         $ret  = array();
         $bids = array();
         $sql  = 'SELECT DISTINCT(bid) from ' . $db->prefix('newblocks');
-        if ($result = $db->query($sql)) {
+        $result = $db->query($sql);
+        if ($db->isResultSet($result)) {
+            // \trigger_error("Query Failed! SQL: $sql- Error: " . $db->error(), E_USER_ERROR);
             while (false !== ($myrow = $db->fetchArray($result))) {
                 $bids[] = $myrow['bid'];
             }
         }
         $sql     = 'SELECT DISTINCT(p.gperm_itemid) from ' . $db->prefix('group_permission') . ' p, ' . $db->prefix('groups') . " g WHERE g.groupid=p.gperm_groupid AND p.gperm_name='block_read'";
         $grouped = array();
-        if ($result = $db->query($sql)) {
+        $result  = $db->query($sql);
+        if ($db->isResultSet($result)) {
+            //  \trigger_error("Query Failed! SQL: $sql- Error: " . $db->error(), E_USER_ERROR);
             while (false !== ($myrow = $db->fetchArray($result))) {
                 $grouped[] = $myrow['gperm_itemid'];
             }
@@ -830,6 +881,9 @@ class XoopsBlock extends XoopsObject
             $sql .= ' AND b.bid IN (' . implode(',', $non_grouped) . ')';
             $sql .= ' ORDER BY ' . $orderby;
             $result = $db->query($sql);
+            if (!$db->isResultSet($result)) {
+                \trigger_error("Query Failed! SQL: $sql- Error: " . $db->error(), E_USER_ERROR);
+            }
             while (false !== ($myrow = $db->fetchArray($result))) {
                 $block              = new XoopsBlock($myrow);
                 $ret[$myrow['bid']] =& $block;
@@ -846,7 +900,7 @@ class XoopsBlock extends XoopsObject
      * @param  mixed $moduleId
      * @param  mixed $funcNum
      * @param  mixed $showFunc
-     * @return int
+     * @return array|int
      *
      * @deprecated
      */
@@ -865,7 +919,9 @@ class XoopsBlock extends XoopsObject
         } else {
             $sql = sprintf('SELECT COUNT(*) FROM %s WHERE mid = %d AND func_num = %d', $db->prefix('newblocks'), $moduleId, $funcNum);
         }
-        if (!$result = $db->query($sql)) {
+        $result = $db->query($sql);
+        if (!$db->isResultSet($result)) {
+            //            \trigger_error("Query Failed! SQL: $sql- Error: " . $db->error(), E_USER_ERROR);
             return 0;
         }
         list($count) = $db->fetchRow($result);
@@ -911,7 +967,7 @@ class XoopsBlockHandler extends XoopsObjectHandler
      *
      * @see XoopsBlock
      * @param  int $id bid of the block to retrieve
-     * @return XoopsBlock reference to the block
+     * @return XoopsBlock|false reference to the block
      **/
     public function get($id)
     {
@@ -919,7 +975,9 @@ class XoopsBlockHandler extends XoopsObjectHandler
         $id    = (int)$id;
         if ($id > 0) {
             $sql = 'SELECT * FROM ' . $this->db->prefix('newblocks') . ' WHERE bid=' . $id;
-            if ($result = $this->db->query($sql)) {
+            $result = $this->db->query($sql);
+            if ($this->db->isResultSet($result)) {
+                // \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
                 $numrows = $this->db->getRowsNum($result);
                 if ($numrows == 1) {
                     $block = new XoopsBlock();
@@ -1078,7 +1136,8 @@ class XoopsBlockHandler extends XoopsObjectHandler
             $start = $criteria->getStart();
         }
         $result = $this->db->query($sql, $limit, $start);
-        if (!$result) {
+        if (!$this->db->isResultSet($result)) {
+            // \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
             return $ret;
         }
         while (false !== ($myrow = $this->db->fetchArray($result))) {
@@ -1117,8 +1176,8 @@ class XoopsBlockHandler extends XoopsObjectHandler
     /* These are not deprecated, they are dead and should be removed */
     /**
      * @param mixed $moduleid
-     * @param bool  $asobject
-     * @param bool  $id_as_key
+     * @param bool $asobject
+     * @param bool $id_as_key
      * @return bool
      * @deprecated
      */
@@ -1131,11 +1190,11 @@ class XoopsBlockHandler extends XoopsObjectHandler
 
     /**
      * @param int|int[] $groupid
-     * @param int       $module_id
-     * @param bool      $toponlyblock
+     * @param int    $module_id
+     * @param bool   $toponlyblock
      * @param bool|null $visible
-     * @param string    $orderby
-     * @param int       $isactive
+     * @param string $orderby
+     * @param int    $isactive
      *
      * @return bool
      * @deprecated

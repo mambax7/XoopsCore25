@@ -55,7 +55,9 @@ class Upgrade_231 extends XoopsUpgrade
             'bio' => 'users');
         foreach ($fields as $field => $table) {
             $sql = 'SHOW COLUMNS FROM `' . $GLOBALS['xoopsDB']->prefix($table) . "` LIKE '{$field}'";
-            if (!$result = $GLOBALS['xoopsDB']->queryF($sql)) {
+            $result = $GLOBALS['xoopsDB']->queryF($sql);
+            if (!$GLOBALS['xoopsDB']->isResultSet($result)) {
+                //    \trigger_error("Query Failed! SQL: $sql- Error: " . $GLOBALS['xoopsDB']->error(), E_USER_ERROR);
                 return false;
             }
             while (false !== ($row = $GLOBALS['xoopsDB']->fetchArray($result))) {
