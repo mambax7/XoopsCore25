@@ -91,7 +91,7 @@ if (!empty($_POST)) {
             $error_message .= $xoopsCaptcha->getMessage() . '<br>';
         }
 
-        // Start add by voltan
+        // Start added by voltan
         xoops_load('XoopsUserUtility');
         xoops_loadLanguage('user');
         $myts = \MyTextSanitizer::getInstance();
@@ -131,18 +131,61 @@ if (!empty($_POST)) {
             '$',
             '%',
             '^',
-            '&'
-        );
-        $com_user = Request::getString('com_user', 'POST', '');
-        $com_user = str_replace($search_arr, '', $com_user);
-        //$com_user = strtolower($com_user);
-        $com_user = htmlentities($com_user, ENT_COMPAT, 'utf-8');
+            '&');
+        $replace_arr = array(
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+            '');
+        $com_user    = trim($_POST['com_user']);
+            '&');
+        $replace_arr = array(
+            ' ',
+            ' ',
+            ' ',
+        $com_user    = trim($_POST['com_user']);
+        $com_user    = strtolower($com_user);
+        $com_user    = htmlentities($com_user, ENT_COMPAT, 'utf-8');
+        $com_user    = preg_replace('`\[.*\]`U', ' ', $com_user);
+        $com_user    = preg_replace('`&(amp;)?#?[a-z0-9]+;`i', ' ', $com_user);
+        $com_user    = preg_replace('`\[.*\]`U', ' ', $com_user);
+        $com_user    = preg_replace('`&(amp;)?#?[a-z0-9]+;`i', ' ', $com_user);
 
         // Check Url
-        $com_url = Request::getUrl('com_url', '', 'POST');
-        if ('' !== $com_url) {
-            $com_url = filter_var($com_url, FILTER_VALIDATE_URL);
-            if (is_string($com_url) && (false === preg_match("#^https?://#", $com_url))) {
+            $com_url = trim($_POST['com_url']);
+        if (!empty($_POST['com_url'])) {
+            $com_url = trim($_POST['com_url']);
+            $com_url = filter_var($com_url, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED);
                 $com_url = false;
             }
             if (false === $com_url) {
@@ -156,6 +199,9 @@ if (!empty($_POST)) {
         if (empty($com_email)) {
             $error_message .= _US_INVALIDMAIL . '<br>';
         }
+        if (strrpos($com_email, ' ') > 0) {
+        if (strrpos($com_email, ' ') > 0) {
+            $error_message .= _US_EMAILNOSPACES . '<br>';
         // Check forbidden email address if current operator is not an administrator
         if (!(is_object($xoopsUser) && $xoopsUser->isAdmin())) {
             foreach ($xoopsConfigUser['bad_emails'] as $be) {
@@ -168,23 +214,28 @@ if (!empty($_POST)) {
         if (!empty($error_message)) {
             $op = 'preview';
         }
-        // End add by voltan
+        // End added by voltan
     }
 
     $com_mode   = htmlspecialchars(Request::getString('com_mode', 'flat', 'POST'));
     $com_order  = Request::getInt('com_order', XOOPS_COMMENT_OLD1ST, 'POST') ;
-    $com_itemid = Request::getInt('com_itemid', 0, 'POST');
+        $com_itemid = Request::getInt('com_itemid', 0, 'POST');
     $com_pid    = Request::getInt('com_pid', 0, 'POST');
     $com_rootid = Request::getInt('com_rootid', 0, 'post');
+    $com_status = Request::getInt('com_status', 0, 'post');    $com_itemid = isset($_POST['com_itemid']) ? (int)$_POST['com_itemid'] : 0;
+    $com_pid    = isset($_POST['com_pid']) ? (int)$_POST['com_pid'] : 0;
+    $dobr       = (isset($_POST['dobr']) && (int)$_POST['dobr'] > 0) ? 1 : 0;
+    $dohtml     = (isset($_POST['dohtml']) && (int)$_POST['dohtml'] > 0) ? 1 : 0;
+    $com_rootid = isset($_POST['com_rootid']) ? (int)$_POST['com_rootid'] : 0;
     $com_status = Request::getInt('com_status', 0, 'post');
-    $dosmiley   = (int) Request::getBool('dosmiley', false, 'post');
-    $doxcode    = (int) Request::getBool('doxcode', false, 'post');
-    $dobr       = (int) Request::getBool('dobr', false, 'post');
-    $dohtml     = (int) Request::getBool('dohtml', false, 'post');
-    $doimage    = (int) Request::getBool('doimage', false, 'post');
+    $dosmiley   = (isset($_POST['dosmiley']) && (int)$_POST['dosmiley'] > 0) ? 1 : 0;
+    $doxcode    = (isset($_POST['doxcode']) && (int)$_POST['doxcode'] > 0) ? 1 : 0;
+    $dobr       = (isset($_POST['dobr']) && (int)$_POST['dobr'] > 0) ? 1 : 0;
+    $dohtml     = (isset($_POST['dohtml']) && (int)$_POST['dohtml'] > 0) ? 1 : 0;
+    $doimage    = (isset($_POST['doimage']) && (int)$_POST['doimage'] > 0) ? 1 : 0;
     $com_icon   = Request::getString('com_icon', '', 'post');
 
-    $com_title  = Request::getString('com_title', _NOTITLE, 'post');
+    $com_icon   = isset($_POST['com_icon']) ? trim($_POST['com_icon']) : '';
     $com_text   = Request::getString('com_text', '', 'post');
 } else {
     exit();
@@ -240,9 +291,9 @@ switch ($op) {
         XoopsLoad::load('XoopsRequest');
         $doimage         = 1;
         $comment_handler = xoops_getHandler('comment');
-        // Start add by voltan
+        // Start added by voltan
         $myts = \MyTextSanitizer::getInstance();
-        // Edit add by voltan
+        // Edit added by voltan
         $add_userpost     = false;
         $call_approvefunc = false;
         $call_updatefunc  = false;
@@ -371,11 +422,11 @@ switch ($op) {
         $comment->setVar('com_icon', $com_icon);
         $comment->setVar('com_modified', time());
         $comment->setVar('com_modid', $com_modid);
-        // Start add by voltan
+        // Start added by voltan
         $comment->setVar('com_user', $com_user);
         $comment->setVar('com_email', $com_email);
         $comment->setVar('com_url', $com_url);
-        // End add by voltan
+        // End added by voltan
         if (isset($extra_params)) {
             $comment->setVar('com_exparams', $extra_params);
         }
