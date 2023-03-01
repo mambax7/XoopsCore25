@@ -30,7 +30,7 @@ xoops_loadLanguage('global');
  * @author              Kazumi Ono <onokazu@xoops.org>
  * @copyright       (c) 2000-2022 XOOPS Project (https://xoops.org)
  */
-class XoopsTpl extends SmartyBC
+class XoopsTpl extends Smarty
 {
     /** @var xos_opal_Theme */
     public $currentTheme;
@@ -163,7 +163,7 @@ class XoopsTpl extends SmartyBC
     {
         $compile_id = $this->compile_id;
         $this->setCompileId($module_dirname, $template_set, $theme_set);
-        return $this->clear_compiled_tpl(null, $compile_id);
+        return $this->clearCompiledTemplate(null, $compile_id);
     }
 
     /**
@@ -310,7 +310,7 @@ function xoops_template_clear_module_cache($mid)
         $xoopsTpl->caching = 2;
         for ($i = 0; $i < $count; ++$i) {
             if ($block_arr[$i]->getVar('template') != '') {
-                $xoopsTpl->clear_cache('db:' . $block_arr[$i]->getVar('template'), 'blk_' . $block_arr[$i]->getVar('bid'));
+                $xoopsTpl->clearCache('db:' . $block_arr[$i]->getVar('template'), 'blk_' . $block_arr[$i]->getVar('bid'));
             }
         }
     }

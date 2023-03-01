@@ -67,30 +67,30 @@ function make_sidebar($side)
         }
         $btpl = $block_arr[$i]->getVar('template');
         if ($btpl != '') {
-            if (empty($bcachetime) || !$xoopsTpl->is_cached('db:' . $btpl)) {
+            if (empty($bcachetime) || !$xoopsTpl->isCached('db:' . $btpl)) {
                 $xoopsLogger->addBlock($block_arr[$i]->getVar('name'));
                 $bresult =& $block_arr[$i]->buildBlock();
                 if (!$bresult) {
                     continue;
                 }
-                $xoopsTpl->assign_by_ref('block', $bresult);
+                $xoopsTpl->assignByRef('block', $bresult);
                 $bcontent =& $xoopsTpl->fetch('db:' . $btpl);
-                $xoopsTpl->clear_assign('block');
+                $xoopsTpl->clearAssign('block');
             } else {
                 $xoopsLogger->addBlock($block_arr[$i]->getVar('name'), true, $bcachetime);
                 $bcontent =& $xoopsTpl->fetch('db:' . $btpl);
             }
         } else {
             $bid = $block_arr[$i]->getVar('bid');
-            if (empty($bcachetime) || !$xoopsTpl->is_cached('db:system_dummy.tpl', 'blk_' . $bid)) {
+            if (empty($bcachetime) || !$xoopsTpl->isCached('db:system_dummy.tpl', 'blk_' . $bid)) {
                 $xoopsLogger->addBlock($block_arr[$i]->getVar('name'));
                 $bresult = &$block_arr[$i]->buildBlock();
                 if (!$bresult) {
                     continue;
                 }
-                $xoopsTpl->assign_by_ref('dummy_content', $bresult['content']);
+                $xoopsTpl->assignByRef('dummy_content', $bresult['content']);
                 $bcontent =& $xoopsTpl->fetch('db:system_dummy.tpl', 'blk_' . $bid);
-                $xoopsTpl->clear_assign('block');
+                $xoopsTpl->clearAssign('block');
             } else {
                 $xoopsLogger->addBlock($block_arr[$i]->getVar('name'), true, $bcachetime);
                 $bcontent =& $xoopsTpl->fetch('db:system_dummy.tpl', 'blk_' . $bid);
@@ -145,30 +145,30 @@ function make_cblock()
             }
             $btpl = $block_arr[$i]->getVar('template');
             if ($btpl != '') {
-                if (empty($bcachetime) || !$xoopsTpl->is_cached('db:' . $btpl)) {
+                if (empty($bcachetime) || !$xoopsTpl->isCached('db:' . $btpl)) {
                     $xoopsLogger->addBlock($block_arr[$i]->getVar('name'));
                     $bresult =& $block_arr[$i]->buildBlock();
                     if (!$bresult) {
                         continue;
                     }
-                    $xoopsTpl->assign_by_ref('block', $bresult);
+                    $xoopsTpl->assignByRef('block', $bresult);
                     $bcontent =& $xoopsTpl->fetch('db:' . $btpl);
-                    $xoopsTpl->clear_assign('block');
+                    $xoopsTpl->clearAssign('block');
                 } else {
                     $xoopsLogger->addBlock($block_arr[$i]->getVar('name'), true, $bcachetime);
                     $bcontent =& $xoopsTpl->fetch('db:' . $btpl);
                 }
             } else {
                 $bid = $block_arr[$i]->getVar('bid');
-                if (empty($bcachetime) || !$xoopsTpl->is_cached('db:system_dummy.tpl', 'blk_' . $bid)) {
+                if (empty($bcachetime) || !$xoopsTpl->isCached('db:system_dummy.tpl', 'blk_' . $bid)) {
                     $xoopsLogger->addBlock($block_arr[$i]->getVar('name'));
                     $bresult =& $block_arr[$i]->buildBlock();
                     if (!$bresult) {
                         continue;
                     }
-                    $xoopsTpl->assign_by_ref('dummy_content', $bresult['content']);
+                    $xoopsTpl->assignByRef('dummy_content', $bresult['content']);
                     $bcontent =& $xoopsTpl->fetch('db:system_dummy.tpl', 'blk_' . $bid);
-                    $xoopsTpl->clear_assign('block');
+                    $xoopsTpl->clearAssign('block');
                 } else {
                     $xoopsLogger->addBlock($block_arr[$i]->getVar('name'), true, $bcachetime);
                     $bcontent =& $xoopsTpl->fetch('db:system_dummy.tpl', 'blk_' . $bid);

@@ -82,7 +82,7 @@ switch ($op) {
                                            <img src="./images/icons/edit.png" border="0" alt="' . _AM_SYSTEM_SMILIES_EDIT . '" title="' . _AM_SYSTEM_SMILIES_EDIT . '"></a>
                                            <a href="admin.php?fct=smilies&amp;op=smilies_delete&amp;smilies_id=' . $smilies_id . '">
                                            <img src="./images/icons/delete.png" border="0" alt="' . _AM_SYSTEM_SMILIES_DELETE . '" title="' . _AM_SYSTEM_SMILIES_DELETE . '"></a>';
-                $xoopsTpl->append_by_ref('smilies', $smilies);
+                $xoopsTpl->appendByRef('smilies', $smilies);
                 unset($smilies);
             }
         }
