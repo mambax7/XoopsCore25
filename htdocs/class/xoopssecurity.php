@@ -59,7 +59,14 @@ class XoopsSecurity
             $expire  = @ini_get('session.gc_maxlifetime');
             $timeout = ($expire > 0) ? $expire : 900;
         }
+//        $token_id = md5(uniqid(mt_rand(), true));
+        // Check if OpenSSL is available
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            $token_id = bin2hex(openssl_random_pseudo_bytes(16));
+        } else {
+            // Fallback to a less secure method
         $token_id = md5(uniqid(mt_rand(), true));
+        }
         // save token data on the server
         if (!isset($_SESSION[$name . '_SESSION'])) {
             $_SESSION[$name . '_SESSION'] = array();
