@@ -86,7 +86,7 @@ class XoopsSecurity
         global $xoopsLogger;
         $token = ($token !== false) ? $token : (isset($_REQUEST[$name . '_REQUEST']) ? $_REQUEST[$name . '_REQUEST'] : '');
         if (empty($token) || empty($_SESSION[$name . '_SESSION'])) {
-            $xoopsLogger->addExtra('Token Validation', 'No valid token found in request/session');
+            $xoopsLogger->addExtra(_TOKEN_VALIDATION, _VALID_TOKEN_NOT_FOUND_IN_SESSION);
 
             return false;
         }
@@ -99,19 +99,19 @@ class XoopsSecurity
                         // token should be valid once, so clear it once validated
                         unset($token_data[$i]);
                     }
-                    $xoopsLogger->addExtra('Token Validation', 'Valid token found');
+                    $xoopsLogger->addExtra(_TOKEN_VALIDATION, _VALID_TOKEN_FOUND);
                     $validFound = true;
                 } else {
-                    $str = 'Valid token expired';
+                    $str = _VALID_TOKEN_EXPIRED;
                     $this->setErrors($str);
-                    $xoopsLogger->addExtra('Token Validation', $str);
+                    $xoopsLogger->addExtra(_TOKEN_VALIDATION, $str);
                 }
             }
         }
         if (!$validFound && !isset($str)) {
-            $str = 'No valid token found';
+            $str = _VALID_TOKEN_NOT_FOUND;
             $this->setErrors($str);
-            $xoopsLogger->addExtra('Token Validation', $str);
+            $xoopsLogger->addExtra(_TOKEN_VALIDATION, $str);
         }
         $this->garbageCollection($name);
 

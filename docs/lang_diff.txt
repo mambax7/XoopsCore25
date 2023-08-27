@@ -13,6 +13,11 @@ htdocs/language/english/global.php
 - added define('_PRINT', 'Print');
 - added define('_PDF', 'PDF');
 - added define('_OFF', 'Off');
+- added define('_VALID_TOKEN_NOT_FOUND_IN_SESSION', 'No valid token found in request/session');
+- added define('_VALID_TOKEN_FOUND', 'Valid token found');
+- added define('_VALID_TOKEN_EXPIRED', 'Valid token expired');
+- added define('_VALID_TOKEN_NOT_FOUND', 'No valid token found');
+- added define('_TOKEN_VALIDATION', 'Token Validation');
 
 ================================
 2021/09/02: Version 2.5.11-Betas
