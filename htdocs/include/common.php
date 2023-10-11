@@ -22,12 +22,12 @@ global $xoops, $xoopsPreload, $xoopsLogger, $xoopsErrorHandler, $xoopsSecurity, 
  *
  * Please remove these functions from your code
  */
-if (!function_exists('get_magic_quotes_gpc')) {
-    function get_magic_quotes_gpc() { return false; }
-}
-if (!function_exists('get_magic_quotes_runtime')) {
-    function get_magic_quotes_runtime() { return false; }
-}
+//if (!function_exists('get_magic_quotes_gpc')) {
+//    function get_magic_quotes_gpc() { return false; }
+//}
+//if (!function_exists('get_magic_quotes_runtime')) {
+//    function get_magic_quotes_runtime() { return false; }
+//}
 /* end BC polyfill */
 
 /**
@@ -161,7 +161,7 @@ if (!ini_get('date.timezone')) {
 $xoops->gzipCompression();
 
 /**
- * Start of Error Reportings.
+ * Start of Error Reporting.
  */
 if ($xoopsConfig['debug_mode'] == 1 || $xoopsConfig['debug_mode'] == 2) {
     xoops_loadLanguage('logger');
@@ -262,8 +262,13 @@ if (!empty($_SESSION['xoopsUserId'])) {
         if (((int)$xoopsUser->getVar('last_login') + 60 * 5) < time()) {
             $sql = 'UPDATE ' . $xoopsDB->prefix('users') . " SET last_login = '" . time()
                    . "' WHERE uid = " . $_SESSION['xoopsUserId'];
-            @$xoopsDB->queryF($sql);
+            try {
+                $xoopsDB->queryF($sql);
+            } catch (Exception $e) {
+                // Handle the exception or log the error message
         }
+        }
+
         //$sess_handler->update_cookie();
         if (isset($_SESSION['xoopsUserGroups'])) {
             $xoopsUser->setGroups($_SESSION['xoopsUserGroups']);

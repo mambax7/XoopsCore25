@@ -264,3 +264,9 @@ define('_PRINT', 'Print');
 define('_PDF', 'PDF');
 define('_OFF', 'Off');
 define('_DB_QUERY_ERROR', 'Query Failed! SQL: %s - Error: ');
+
+define('_VALID_TOKEN_NOT_FOUND_IN_SESSION', 'No valid token found in request/session');
+define('_VALID_TOKEN_FOUND', 'Valid token found');
+define('_VALID_TOKEN_EXPIRED', 'Valid token expired');
+define('_VALID_TOKEN_NOT_FOUND', 'No valid token found');
+define('_TOKEN_VALIDATION', 'Token Validation');

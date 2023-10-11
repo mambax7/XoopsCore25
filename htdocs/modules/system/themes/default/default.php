@@ -50,7 +50,7 @@ class XoopsGuiDefault extends XoopsSystemGui
     {
         parent::header();
 
-        global $xoopsConfig, $xoopsUser, $xoopsModule, $xoTheme, $xoopsTpl, $xoopsDB;
+        global $xoopsConfig, $xoopsUser, $xoopsModule, $xoTheme, $xoopsTpl, $xoopsDB, $adminmenu;
         $tpl =& $this->template;
 
         $xoTheme->addScript('browse.php?Frameworks/jquery/jquery.js');
@@ -114,6 +114,9 @@ class XoopsGuiDefault extends XoopsSystemGui
             $modid   = 1;
             $moddir  = 'system';
 
+            if (empty($adminmenu) && null !== $GLOBALS['xoopsModule']){
+                $adminmenu = $GLOBALS['xoopsModule']->getAdminMenu();
+            }
             $mod_options = $adminmenu;
             foreach (array_keys($mod_options) as $item) {
                 $mod_options[$item]['link'] = empty($mod_options[$item]['absolute']) ? XOOPS_URL . '/modules/' . $moddir . '/' . $mod_options[$item]['link'] : $mod_options[$item]['link'];

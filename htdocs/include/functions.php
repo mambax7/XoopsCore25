@@ -415,11 +415,11 @@ function xoops_confirm($hiddens, $action, $msg, $submit = '', $addtoken = true)
     foreach ($hiddens as $name => $value) {
         if (is_array($value)) {
             foreach ($value as $caption => $newvalue) {
-                $tempHiddens .= '<input type="radio" name="' . $name . '" value="' . htmlspecialchars($newvalue) . '" /> ' . $caption;
+                $tempHiddens .= '<input type="radio" name="' . $name . '" value="' . htmlspecialchars($newvalue, ENT_QUOTES | ENT_HTML5) . '" /> ' . $caption;
             }
             $tempHiddens .= '<br>';
         } else {
-            $tempHiddens .= '<input type="hidden" name="' . $name . '" value="' . htmlspecialchars($value) . '" />';
+            $tempHiddens .= '<input type="hidden" name="' . $name . '" value="' . htmlspecialchars($value, ENT_QUOTES | ENT_HTML5) . '" />';
         }
     }
     $confirmTpl->assign('hiddens', $tempHiddens);
@@ -439,11 +439,11 @@ function xoops_confirm($hiddens, $action, $msg, $submit = '', $addtoken = true)
         foreach ($hiddens as $name => $value) {
             if (is_array($value)) {
                 foreach ($value as $caption => $newvalue) {
-                    echo '<input type="radio" name="' . $name . '" value="' . htmlspecialchars($newvalue) . '" /> ' . $caption;
+                    echo '<input type="radio" name="' . $name . '" value="' . htmlspecialchars($newvalue, ENT_QUOTES | ENT_HTML5) . '" /> ' . $caption;
                 }
                 echo '<br>';
             } else {
-                echo '<input type="hidden" name="' . $name . '" value="' . htmlspecialchars($value) . '" />';
+                echo '<input type="hidden" name="' . $name . '" value="' . htmlspecialchars($value, ENT_QUOTES | ENT_HTML5) . '" />';
             }
         }
         if ($addtoken != false) {
@@ -1105,6 +1105,19 @@ function xoops_utf8_encode(&$text)
 }
 
 /**
+ * xoops_utf8_decode()
+ *
+ * @param mixed $text
+ * @return string
+ */
+function xoops_utf8_decode(&$text)
+{
+    xoops_load('XoopsLocal');
+
+    return XoopsLocal::utf8_decode($text);
+}
+
+/**
  * xoops_convert_encoding()
  *
  * @param mixed $text
@@ -1307,6 +1320,71 @@ function makeSet(&$name, $default)
         $name = $default;
     }
     return $name;
+}
+
+
+function customLog($message) {
+    if (defined('XOOPS_DEBUG') && XOOPS_DEBUG) {
+        $logDir = XOOPS_ROOT_PATH . '/log/';
+        $logFile = XOOPS_ROOT_PATH . '/log/' . 'log.txt';
+
+        // Checking whether file exists or not
+        if (!file_exists($logDir)) {
+            // Create a new file or directory
+            if (!mkdir($logDir, 0777, true) && !is_dir($logDir)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $logDir));
+            }
+        }
+
+        // Get the current date and time
+        $timestamp = date('Y-m-d H:i:s');
+
+        // Get the calling file and line number
+        $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
+        $file = $caller['file'];
+        $line = $caller['line'];
+
+        // Create the log entry with timestamp, file, and line
+        $logEntry = "[$timestamp] [$file:$line] $message" . PHP_EOL;
+
+       // ray("[$timestamp] [$file:$line] $message");
+        $callTrace = generateCallTrace();
+//        ray('callTrace: ' . $callTrace);
+       // ray()->trace();
+
+        $logEntry .= "\r" . ' ======================================================' . "\n";
+
+
+        // Temporarily turn off error reporting
+        $previousErrorReporting = error_reporting(0);
+
+        // Your code to log the message
+        file_put_contents($logFile, $logEntry, FILE_APPEND);
+
+        // Restore the original error reporting level
+        error_reporting($previousErrorReporting);
+    }
+}
+
+
+function generateCallTrace()
+{
+    if (defined('XOOPS_DEBUG') && XOOPS_DEBUG) {
+        $e = new Exception();
+        $trace = explode("\n", $e->getTraceAsString());
+        // reverse array to make steps line up chronologically
+        $trace = array_reverse($trace);
+        array_shift($trace); // remove {main}
+        array_pop($trace); // remove call to this method
+        $length = count($trace);
+        $result = array();
+
+        for ($i = 0; $i < $length; $i++) {
+            $result[] = ($i + 1) . ')' . substr($trace[$i], strpos($trace[$i], ' ')); // replace '#someNum' with '$i)', set the right ordering
+        }
+
+        return "\t" . implode("\n\t", $result);
+    }
 }
 
 include_once __DIR__ . '/functions.encoding.php';

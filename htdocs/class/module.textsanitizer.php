@@ -286,7 +286,7 @@ class MyTextSanitizer
     {
         $smileys = $this->getSmileys();
         foreach ($smileys as $smile) {
-            $message = str_replace($smile['code'], '<img class="imgsmile" src="' . XOOPS_UPLOAD_URL . '/' . htmlspecialchars($smile['smile_url']) . '" alt="" />', $message);
+            $message = str_replace($smile['code'], '<img class="imgsmile" src="' . XOOPS_UPLOAD_URL . '/' . htmlspecialchars($smile['smile_url'], ENT_QUOTES) . '" alt="" />', $message);
         }
 
         return $message;
@@ -315,9 +315,11 @@ class MyTextSanitizer
     public function makeClickable($text)
     {
         $pattern = "/(^|[^]_a-z0-9-=\"'\/:\.])([-_a-z0-9\'+*$^&%=~!?{}]++(?:\.[-_a-z0-9\'+*$^&%=~!?{}]+)*+)@((?:(?![-.])[-a-z0-9.]+(?<![-.])\.[a-z]{2,6}|\d{1,3}(?:\.\d{1,3}){3})(?::\d++)?)/i";
-        $text = preg_replace_callback($pattern, 'self::makeClickableCallbackEmailAddress', $text);
+//        $text = preg_replace_callback($pattern, 'self::makeClickableCallbackEmailAddress', $text);
+        $text = preg_replace_callback($pattern, function($matches) { return $this->makeClickableCallbackEmailAddress($matches); }, $text);
+
         //TODO after moving to PHP 7+ as minimum version, let's convert it to this
-//        $text = preg_replace_callback($pattern, self::class . '::makeClickableCallbackEmailAddress', $text);
+//        $text = preg_replace_callback($pattern, [self::class, 'makeClickableCallbackEmailAddress'], $text);
 
 
         $pattern = "/(?:\s+|^)(https?:\/\/)([-A-Z0-9.\_*?&:;=#\/\[\]\%@]+)/i";
@@ -369,9 +371,9 @@ class MyTextSanitizer
         $replacements[] = '<a href="\\2" rel="external" title="">\\3</a>';
         $patterns[]     = "/\[url=(['\"]?)([^'\"<>]*)\\1](.*)\[\/url\]/sU";
         $replacements[] = '<a href="http://\\2" rel="noopener external" title="">\\3</a>';
-        $patterns[]     = "/\[color=(['\"]?)([a-zA-Z0-9]*)\\1](.*)\[\/color\]/sU";
-        $replacements[] = '<span style="color: #\\2;">\\3</span>';
-        $patterns[]     = "/\[size=(['\"]?)([a-z0-9-]*)\\1](.*)\[\/size\]/sU";
+        $patterns[]     = "/\[color=(['\"]?)([a-zA-Z0-9#]*)\\1](.*)\[\/color\]/sU";
+        $replacements[] = '<span style="color: \\2;">\\3</span>';
+        $patterns[]     = "/\[size=(['\"]?)([a-zA-Z0-9.#]*)\\1](.*)\[\/size\]/sU";
         $replacements[] = '<span style="font-size: \\2;">\\3</span>';
         $patterns[]     = "/\[font=(['\"]?)([^;<>\*\(\)\"']*)\\1](.*)\[\/font\]/sU";
         $replacements[] = '<span style="font-family: \\2;">\\3</span>';
@@ -478,9 +480,9 @@ class MyTextSanitizer
      */
     public function addSlashes($text)
     {
-        if (!@get_magic_quotes_gpc()) {
-            $text = addslashes($text);
-        }
+//        if (!@get_magic_quotes_gpc()) {
+//            $text = addslashes($text);
+//        }
 
         return $text;
     }
@@ -752,9 +754,9 @@ class MyTextSanitizer
      */
     public function stripSlashesGPC($text)
     {
-        if (@get_magic_quotes_gpc()) {
-            $text = stripslashes($text);
-        }
+//        if (@get_magic_quotes_gpc()) {
+//            $text = stripslashes($text);
+//        }
 
         return $text;
     }
@@ -1036,9 +1038,9 @@ class MyTextSanitizer
     public function oopsStripSlashesRT($text)
     {
         $GLOBALS['xoopsLogger']->addDeprecated(__CLASS__ . '::' . __FUNCTION__ . ' is deprecated');
-        if (get_magic_quotes_runtime()) {
-            $text = stripslashes($text);
-        }
+//        if (get_magic_quotes_runtime()) {
+//            $text = stripslashes($text);
+//        }
 
         return $text;
     }

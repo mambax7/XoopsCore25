@@ -302,7 +302,7 @@ class Criteria extends CriteriaElement
      * Constructor
      *
      * @param string $column
-     * @param string $value
+     * @param int|string $value
      * @param string $operator
      * @param string $prefix
      * @param string $function

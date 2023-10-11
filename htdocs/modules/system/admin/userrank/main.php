@@ -212,7 +212,7 @@ switch ($op) {
             }
             if ($userrank_Handler->delete($obj)) {
                 $urlfile = XOOPS_UPLOAD_PATH . '/' . $obj->getVar('rank_image');
-                if (is_file($urlfile)) {
+                if (\is_file($urlfile)) {
                     chmod($urlfile, 0777);
                     unlink($urlfile);
                 }

@@ -162,7 +162,8 @@ class XoopsFormRendererLegacy implements XoopsFormRendererInterface
         // fonts
         $ret .= $this->renderFormDhtmlTATypography($element);
         // length checker
-        $ret .= "<button type='button' class='btn btn-default' onclick=\"XoopsCheckLength('" . $element->getName() . "', '" . @$element->configs['maxlength'] . "', '" . _XOOPS_FORM_ALT_LENGTH . "', '" . _XOOPS_FORM_ALT_LENGTH_MAX . "');\" title='" . _XOOPS_FORM_ALT_CHECKLENGTH . "'><span class='fa fa-check-square-o' aria-hidden='true'></span></button>&nbsp;";
+        $maxlength = isset($element->configs['maxlength']) ? $element->configs['maxlength'] : 0;
+        $ret .= "<button type='button' class='btn btn-default' onclick=\"XoopsCheckLength('" . $element->getName() . "', '" . $maxlength . "', '" . _XOOPS_FORM_ALT_LENGTH . "', '" . _XOOPS_FORM_ALT_LENGTH_MAX . "');\" title='" . _XOOPS_FORM_ALT_CHECKLENGTH . "'><span class='fa fa-check-square-o' aria-hidden='true'></span></button>&nbsp;";
         $ret .= "<br>\n";
         // the textarea box
         $ret .= "<textarea id='" . $element->getName() . "' name='" . $element->getName() . "' title='" . $element->getTitle() . "' onselect=\"xoopsSavePosition('" . $element->getName() . "');\" onclick=\"xoopsSavePosition('" . $element->getName() . "');\" onkeyup=\"xoopsSavePosition('" . $element->getName() . "');\" cols='" . $element->getCols() . "' rows='" . $element->getRows() . "'" . $element->getExtra() . '>' . $element->getValue() . "</textarea><br>\n";
@@ -220,7 +221,14 @@ EOJS;
         $extensions = array_filter($myts->config['extensions']);
         foreach (array_keys($extensions) as $key) {
             $extension = $myts->loadExtension($key);
-            @list($encode, $js) = $extension->encode($textarea_id);
+            $result = $extension->encode($textarea_id);
+            if (is_array($result) && count($result) >= 2) {
+                list($encode, $js) = $result;
+            } else {
+                // Handle error, set $encode and $js to some default or null values
+                $encode = null;
+                $js = null;
+            }
             if (empty($encode)) {
                 continue;
             }

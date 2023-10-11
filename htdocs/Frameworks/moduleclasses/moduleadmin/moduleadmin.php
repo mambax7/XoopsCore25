@@ -503,7 +503,15 @@ class ModuleAdmin
         $date         = explode('/', $date);
         $author       = explode(',', $this->_obj->getInfo('author'));
         $nickname     = explode(',', $this->_obj->getInfo('nickname'));
+//        $release_date = formatTimestamp(mktime(0, 0, 0, $date[1], $date[2], $date[0]), 's');
+        // Check if the array has the required indices
+        if (isset($date[0], $date[1], $date[2])) {
         $release_date = formatTimestamp(mktime(0, 0, 0, $date[1], $date[2], $date[0]), 's');
+        } else {
+            // Log an error or set a default value
+            $release_date = "Unknown";
+            error_log("Invalid release_date format: " . $this->_obj->getInfo('release_date'));
+        }
         $module_dir   = $this->_obj->getVar('dirname');
         $module_info  = "<div id=\"about\"><label class=\"label_after\">" . _AM_MODULEADMIN_ABOUT_DESCRIPTION . "</label>\n"
                       . "<text>" . $this->_obj->getInfo('description') . "</text><br>\n"

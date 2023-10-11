@@ -86,7 +86,7 @@ function xoops_module_install($dirname)
         }
         $msgs[] = '<strong>' . _VERSION . ':</strong> ' . $module->getInfo('version');
         if ($module->getInfo('author') !== false && trim($module->getInfo('author')) != '') {
-            $msgs[] = '<strong>' . _AUTHOR . ':</strong> ' . htmlspecialchars(trim($module->getInfo('author')));
+            $msgs[] = '<strong>' . _AUTHOR . ':</strong> ' . htmlspecialchars(trim($module->getInfo('author')), ENT_QUOTES | ENT_HTML5);
         }
         $msgs[] = '</div><div class="logger">';
         // Load module specific install script if any
@@ -264,7 +264,7 @@ function xoops_module_install($dirname)
                                 $tplfile->setVar('tpl_file', $block['template']);
                                 $tplfile->setVar('tpl_module', $dirname);
                                 $tplfile->setVar('tpl_type', 'block');
-                                $tplfile->setVar('tpl_desc', $block['description'], true);
+                                $tplfile->setVar('tpl_desc', (isset($block['description']) ? $block['description'] : ''), true);
                                 $tplfile->setVar('tpl_lastimported', 0);
                                 $tplfile->setVar('tpl_lastmodified', time());
                                 if (!$tplfile_handler->insert($tplfile)) {
@@ -627,7 +627,7 @@ function xoops_module_uninstall($dirname)
         }
         $msgs[] = '<strong>' . _VERSION . ':</strong> ' . $module->getInfo('version');
         if ($module->getInfo('author') !== false && trim($module->getInfo('author')) != '') {
-            $msgs[] = '<strong>' . _AUTHOR . ':</strong> ' . htmlspecialchars(trim($module->getInfo('author')));
+            $msgs[] = '<strong>' . _AUTHOR . ':</strong> ' . htmlspecialchars(trim($module->getInfo('author')), ENT_QUOTES | ENT_HTML5);
         }
         $msgs[] = '</div><div class="logger">';
         // Load module specific install script if any
@@ -787,7 +787,7 @@ function xoops_module_uninstall($dirname)
 
 /**
  * @param $dirname
- * @return string
+ * @return string|array
  */
 function xoops_module_update($dirname)
 {
@@ -875,6 +875,8 @@ function xoops_module_update($dirname)
             }
         }
         */
+
+        // ------------------------- TEMPLATES ------------------------------------
         // irmtfan bug fix: remove codes for delete templates
         $templates = $module->getInfo('templates');
         if ($templates !== false) {
@@ -930,6 +932,9 @@ function xoops_module_update($dirname)
                 // irmtfan bug fix: remove codes for delete templates
             }
         }
+
+        // ------------------------- BLOCKS ------------------------------------
+
         $blocks = $module->getInfo('blocks');
         $msgs[] = _AM_SYSTEM_MODULES_BLOCKS_REBUILD;
         if ($blocks !== false) {
@@ -1103,6 +1108,8 @@ function xoops_module_update($dirname)
         $template->setCompileId();
         //        $GLOBALS['xoopsTpl']->setCompileId();
         //        $xoopsTpl->setCompileId();
+
+        // ------------------------- MODULE CONFIG ------------------------------------
 
         // first delete all config entries
         /* @var XoopsConfigHandler $config_handler */
@@ -1450,7 +1457,7 @@ function xoops_module_log_header($module, $title)
     }
     $msgs[] = '<strong>' . _VERSION . ':</strong> ' . $module->getInfo('version');
     if ($module->getInfo('author') !== false && trim($module->getInfo('author')) != '') {
-        $msgs[] = '<strong>' . _AUTHOR . ':</strong> ' . htmlspecialchars(trim($module->getInfo('author')));
+        $msgs[] = '<strong>' . _AUTHOR . ':</strong> ' . htmlspecialchars(trim($module->getInfo('author')), ENT_QUOTES | ENT_HTML5);
     }
     $msgs[] = '</div>';
 

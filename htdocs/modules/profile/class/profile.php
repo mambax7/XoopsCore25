@@ -43,7 +43,7 @@ class ProfileProfile extends XoopsObject
      */
     public function init($fields)
     {
-        if (is_array($fields) && count($fields) > 0) {
+        if ($fields && \is_array($fields)) {
             foreach (array_keys($fields) as $key) {
                 $this->initVar($key, $fields[$key]->getVar('field_valuetype'), $fields[$key]->getVar('field_default', 'n'), $fields[$key]->getVar('field_required'), $fields[$key]->getVar('field_maxlength'));
             }
@@ -101,7 +101,7 @@ class ProfileProfileHandler extends XoopsPersistableObjectHandler
      * We will create an empty profile if none exists. This behavior allows user objects
      * created outside of profile to be edited correctly in the profile module.
      *
-     * @param integer|null  $uid
+     * @param int|null      $uid
      * @param string[]|null $fields array of field names to fetch, null for all
      *
      * @return object {@link ProfileProfile}

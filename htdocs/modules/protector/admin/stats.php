@@ -33,11 +33,10 @@ function dumpArray($array, $wrap = null)
     return $string;
 }
 
-$queryFormat = "SELECT `type`, '%s' as age, COUNT(*) as count FROM `" . $xoopsDB->prefix($mydirname . "_log")
-    . "` WHERE `timestamp` > NOW() - INTERVAL %d SECOND GROUP BY `type`, 2 ";
+$queryFormat = "SELECT `type`, '%s' as age, COUNT(*) as count FROM `" . $xoopsDB->prefix($mydirname . '_log')
+               . '` WHERE `timestamp` > NOW() - INTERVAL %d SECOND GROUP BY `type`, 2 ';
 
-$sql = '';
-$sql .= sprintf($queryFormat, 'month', 30*24*60*60);
+$sql    = sprintf($queryFormat, 'month', 30 * 24 * 60 * 60);
 $sql .= 'UNION ALL ';
 $sql .= sprintf($queryFormat, 'week', 7*24*60*60);
 $sql .= 'UNION ALL ';

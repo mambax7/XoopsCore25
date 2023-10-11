@@ -20,6 +20,9 @@
  *
  * @todo                Not well written, just keep as it is. Refactored in 3.0
  */
+
+use Xmf\Debug;
+
 defined('XOOPS_ROOT_PATH') || exit('Restricted access');
 
 /**
@@ -111,6 +114,7 @@ class XoopsLogger
      */
     public function microtime()
     {
+        /** @var array $now */
         $now = explode(' ', microtime());
 
         return (float)$now[0] + (float)$now[1];
@@ -193,7 +197,7 @@ class XoopsLogger
     public function addDeprecated($msg)
     {
         if ($this->activated) {
-            $backTrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+            $backTrace = \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             $miniTrace = ' trace: ';
             foreach ($backTrace as $i => $trace) {
                 $miniTrace .= $trace['file'] . ':' . $trace['line'] . ' ';
@@ -206,6 +210,22 @@ class XoopsLogger
         }
     }
 
+    public static function writeLog($errorMsg)
+    {
+        $logDir  = XOOPS_ROOT_PATH . '/log/';
+        $logFile = XOOPS_ROOT_PATH . '/log/' . 'log.txt';
+
+        // Checking whether file exists or not
+        if (!file_exists($logDir)) {
+            // Create a new file or directory
+            if (!mkdir($logDir, 0777, true) && !is_dir($logDir)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $logDir));
+            }
+        }
+
+        \file_put_contents($logFile, $errorMsg, FILE_APPEND);
+    }
+
     /**
      * Error handling callback (called by the zend engine)
      *
@@ -216,6 +236,25 @@ class XoopsLogger
      */
     public function handleError($errno, $errstr, $errfile, $errline)
     {
+        //---------------- START --------------------
+        $errorMsgDate = date('Y-m-d H-i-s') . ' ' . $errstr . "\r";
+        self::writeLog($errorMsgDate);
+
+        $errorMsg = '';
+        self::writeLog(print_r(compact('errno', 'errstr', 'errfile', 'errline'), true));
+        $trace    = \debug_backtrace();
+        array_shift($trace);
+        foreach ($trace as $step) {
+            if (isset($step['file'])) {
+                $errorMsg .= $this->sanitizePath($step['file']);
+                $errorMsg .= ' (' . $step['line'] . ")\n";
+            }
+        }
+        $errorMsg .= "\r" . ' ======================================================' . "\n";
+        self::writeLog($errorMsg);
+        //---------------- END --------------------
+
+
         if ($this->activated && ($errno & error_reporting())) {
             // NOTE: we only store relative pathnames
             $this->errors[] = compact('errno', 'errstr', 'errfile', 'errline');
@@ -254,7 +293,9 @@ class XoopsLogger
     {
         if ($this->isThrowable($e)) {
             $msg = get_class($e) . ': ' . $this->sanitizePath($this->sanitizeDbMessage($e->getMessage()));
-            $this->handleError(E_USER_ERROR, $msg, $e->getFile(), $e->getLine());
+            $this->handleError(E_USER_ERROR, $msg, $e->getFile(), $e->getLine(), $e->getTrace());
+//            $this->handleError(E_USER_ERROR, $msg, $e->getFile(), $e->getLine(), $e->getTraceAsString());
+            Debug::backtrace();
         }
     }
 
@@ -374,7 +415,7 @@ class XoopsLogger
      * @param  string  $errStr
      * @param  string  $errFile
      * @param  string  $errLine
-     * @param  integer $errNo
+     * @param  int $errNo
      * @return void
      */
     public function triggerError($errkey = 0, $errStr = '', $errFile = '', $errLine = '', $errNo = 0)
@@ -453,7 +494,7 @@ class XoopsLogger
  * @param       $errFile
  * @param       $errLine
  * @param  null $errContext
- * @return bool
+ * @return bool|null
  */
 function XoopsErrorHandler_HandleError($errNo, $errStr, $errFile, $errLine, $errContext = null)
 {

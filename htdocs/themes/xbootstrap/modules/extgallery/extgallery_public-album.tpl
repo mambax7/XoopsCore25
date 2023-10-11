@@ -3,7 +3,7 @@
         <div class="col-md-12">
             <ul class="breadcrumb">
                 <li><a title="<{$extgalleryName}>" href="<{xoAppUrl 'modules/extgallery/'}>"><{$extgalleryName}></a></li>
-                <{foreach item=node from=$catPath name=breadcrumb}>
+                <{foreach item=node from=$catPath|default:null name=breadcrumb}>
                 <li><a title="<{$node.cat_name}>"
                        href="<{xoAppUrl 'modules/extgallery/'}>public-categories.php?id=<{$node.cat_id}>"><{$node.cat_name}></a></li>
                 <{/foreach}>
@@ -115,7 +115,7 @@
                                                       alt="<{$lang.rate_score}> : <{$photos[photo].photo_rating}>" title="<{$lang.rate_score}>"></div>
                     <{/if}>
 
-                    <{foreach item=pluginLink from=$photos[photo].link}>
+                    <{foreach item=pluginLink from=$photos[photo].link|default:null}>
                     <a href="<{$pluginLink.link}><{$photos[photo].photo_id}>" title="<{$pluginLink.name}>"><{$pluginLink.name}></a>
                 <{/foreach}>
 
@@ -133,12 +133,10 @@
 
 <{if $show_rss}>
     <div id="rss">
-        <a href="<{xoAppUrl 'modules/extgallery/'public-rss.php?id=}><{$extgalleryID}>" title="<{$smarty.const._MD_EXTGALLERY_ALBUMRSS}>">
-            <img src="<{xoAppUrl 'modules/extgallery/'assets/images/feedblue.png}>" alt="<{$smarty.const._MD_EXTGALLERY_ALBUMRSS}>"/>
-        </a>
-        <a href="<{xoAppUrl 'modules/extgallery/'public-rss.php}>" title="<{$smarty.const._MD_EXTGALLERY_RSS}>">
-            <img src="<{xoAppUrl 'modules/extgallery/'assets/images/feed.png}>" alt="<{$smarty.const._MD_EXTGALLERY_RSS}>"/>
-        </a>
+        <a href="<{xoAppUrl 'modules/extgallery/public-rss.php?id='}><{$extgalleryID}>" title="<{$smarty.const._MD_EXTGALLERY_ALBUMRSS}>">
+            <img src="<{xoAppUrl 'modules/extgallery/assets/images/feedblue.png'}>" alt="<{$smarty.const._MD_EXTGALLERY_ALBUMRSS}>"/></a>
+        <a href="<{xoAppUrl 'modules/extgallery/public-rss.php'}>" title="<{$smarty.const._MD_EXTGALLERY_RSS}>">
+            <img src="<{xoAppUrl 'modules/extgallery/assets/images/feed.png'}>" alt="<{$smarty.const._MD_EXTGALLERY_RSS}>"/></a>
     </div>
 <{/if}>
 

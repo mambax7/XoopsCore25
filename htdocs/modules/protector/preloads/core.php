@@ -36,9 +36,9 @@ class ProtectorCorePreload extends XoopsPreloadItem
     }
 
     /**
-     * @param $args
+     * @param array $args
      */
-    public static function eventCoreIncludeCommonEnd($args)
+    public static function eventCoreIncludeCommonEnd(array $args)
     {
         include XOOPS_TRUST_PATH . '/modules/protector/include/postcheck.inc.php';
     }

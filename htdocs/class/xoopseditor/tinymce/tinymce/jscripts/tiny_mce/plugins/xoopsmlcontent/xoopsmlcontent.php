@@ -27,7 +27,7 @@ function langDropdown()
     $content = '';
 
     $time = time();
-    if (!isset($_SESSION['XoopsMLcontent']) && @$_SESSION['XoopsMLcontent_expire'] < $time) {
+    if (!isset($_SESSION['XoopsMLcontent']) && (isset($_SESSION['XoopsMLcontent_expire']) && $_SESSION['XoopsMLcontent_expire'] < $time)) {
         include_once XOOPS_ROOT_PATH . '/kernel/module.php';
         $xlanguage = XoopsModule::getByDirname('xlanguage');
         if (is_object($xlanguage) && $xlanguage->getVar('isactive')) {
@@ -39,7 +39,7 @@ function langDropdown()
 
             $content .= '<select name="mlanguages" id="mlanguages">';
             $content .= '<option value="">{#xoopsmlcontent_dlg.sellang}</option>';
-            if (is_array($lang_list) && count($lang_list) > 0) {
+            if ($lang_list && \is_array($lang_list)) {
                 foreach (array_keys($lang_list) as $lang_name) {
                     $lang =& $lang_list[$lang_name];
                     $content .= '<option value="' . $lang['base']->getVar('lang_code') . '">' . $lang['base']->getVar('lang_name') . '</option>';
@@ -101,7 +101,7 @@ echo '<meta http-equiv="content-language" content="' . _LANGCODE . '" />';
 
                 <tr>
                     <td class="even">
-                    <?php langDropdown(); ?></th>
+                    <?php langDropdown(); ?></td>
                 </tr>
 
                 <tr>

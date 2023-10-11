@@ -13,9 +13,9 @@
             <td class='head width30 txtright'><{$smarty.const._PM_SUBJECT_ICONS}></td>
             <td class='even txtleft'>
 
-                <{foreach item=icon from=$radio_icons}>
+                <{foreach item=icon from=$radio_icons|default:null}>
                 <input type='radio' name='icon' id='<{$icon}>' value='<{$icon}>'/><label name='xolb_icon' for='<{$icon}>'><img
-                            src='<{xoAppUrl}>images/subject/<{$icon}>' alt=""/></label>
+                            src='<{xoAppUrl "images/subject/"}><{$icon}>' alt=""/></label>
                 <{/foreach}>  </td>
         </tr>
         <tr class='aligntop'>
@@ -29,7 +29,7 @@
         <tr>
             <td class='head'>&nbsp;</td>
             <td class='even'>
-                <{foreach item=element from=$pmform.elements}>
+                <{foreach item=element from=$pmform.elements|default:null}>
                     <{if $element.hidden|default:false == 1}>
                         <{$element.body}>
                     <{/if}>

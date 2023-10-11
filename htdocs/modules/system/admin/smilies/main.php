@@ -145,7 +145,7 @@ switch ($op) {
         $obj->setVar('code', Request::getString('code', ''));
 
         $obj->setVar('emotion', Request::getString('emotion', ''));
-        $obj->setVar('display', Request::getInt('display', 0));
+        $obj->setVar('display', Request::getInt('display', 0));		
 		if (Request::getString('code', '') == '' || Request::getString('emotion', '') == ''){
 			$err[] = 'the code or description are empty';
 		}
@@ -195,7 +195,7 @@ switch ($op) {
             }
             if ($smilies_Handler->delete($obj)) {
                 $urlfile = XOOPS_UPLOAD_PATH . '/' . $obj->getVar('smile_url');
-                if (is_file($urlfile)) {
+                if (\is_file($urlfile)) {
                     chmod($urlfile, 0777);
                     unlink($urlfile);
                 }

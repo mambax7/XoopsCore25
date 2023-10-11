@@ -56,15 +56,48 @@ if (isset($_POST['delete_messages']) && (isset($_POST['msg_id']) || isset($_POST
         }
         $size = count($clean_msg_id);
         $msg  =& $clean_msg_id;
+        define('_PM_ERROR_MESSAGE_NOT_FOUND', 'PM Message not Found');
+        // Define an array to hold error messages
+        $errorMessages = [];
         for ($i = 0; $i < $size; ++$i) {
             $pm = $pm_handler->get($msg[$i]);
+
+            if ($pm) {
             if ($pm->getVar('to_userid') == $GLOBALS['xoopsUser']->getVar('uid')) {
                 $pm_handler->setTodelete($pm);
             } elseif ($pm->getVar('from_userid') == $GLOBALS['xoopsUser']->getVar('uid')) {
                 $pm_handler->setFromdelete($pm);
             }
+            } else {
+                // Add an error message for this specific message ID
+                $errorMessage = sprintf(_PM_ERROR_MESSAGE_NOT_FOUND, $msg[$i]);
+                $errorMessages[] = $errorMessage;
+                // Get the XOOPS logger instance
+                $xoopsLogger = XoopsLogger::getInstance();
+                $xoopsLogger->handleError(E_USER_WARNING, $errorMessage, __FILE__, __LINE__);
+            }
+
             unset($pm);
         }
+
+        // Handle errors after the loop
+        if (!empty($errorMessages)) {
+            // Combine error messages into a single string
+            $errorString = implode('<br>', $errorMessages);
+
+            // Assign the combined error messages to the template
+            $GLOBALS['xoopsTpl']->assign('errormsg', $errorString);
+
+            // Get the XOOPS logger instance
+            $xoopsLogger = XoopsLogger::getInstance();
+
+            // Log the error messages
+            foreach ($errorMessages as $errorMessage) {
+                $xoopsLogger->handleError(E_USER_WARNING, $errorMessage, __FILE__, __LINE__);
+            }
+        }
+
+
         $GLOBALS['xoopsTpl']->assign('msg', _PM_DELETED);
     }
 }
@@ -193,7 +226,7 @@ $GLOBALS['xoopsTpl']->assign('op', $op);
 
 if ($total_messages > $GLOBALS['xoopsModuleConfig']['perpage']) {
     include_once $GLOBALS['xoops']->path('class/pagenav.php');
-    $nav = new XoopsPageNav($total_messages, $GLOBALS['xoopsModuleConfig']['perpage'], $start, 'start', 'op=' . htmlspecialchars($op));
+    $nav = new XoopsPageNav($total_messages, $GLOBALS['xoopsModuleConfig']['perpage'], $start, 'start', 'op=' . htmlspecialchars($op, ENT_QUOTES | ENT_HTML5));
     $GLOBALS['xoopsTpl']->assign('pagenav', $nav->renderNav(4));
 }
 

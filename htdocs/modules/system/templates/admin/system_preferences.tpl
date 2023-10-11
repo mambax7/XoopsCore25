@@ -1,10 +1,10 @@
-<{if $breadcrumb|default:false}>
+<{if !empty($breadcrumb)}>
     <{include file="db:system_header.tpl"}>
 <{/if}>
 <!--Preferences-->
-<{if $menu|default:false}>
+<{if !empty($menu)}>
     <div class="xo-catsetting">
-        <{foreach item=preference from=$preferences}>
+        <{foreach item=preference from=$preferences|default:null}>
             <a class="tooltip" href="admin.php?fct=preferences&amp;op=show&amp;confcat_id=<{$preference.id}>" title="<{$preference.name}>">
                 <img src="<{$preference.image}>" alt="<{$preference.name}>"/>
                 <span><{$preference.name}></span>

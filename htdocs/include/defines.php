@@ -117,8 +117,6 @@ body {font-size: 12px; background-color: #f0f0f0;
         <h2>Page is currently unavailable</h2>
         <p class='xo-siteblocked-message'>We are working on a fix<br><a href='/'>Please come back soon ...</a></p>
         <p class='xo-siteblocked-desc'>Error : %s</p>
-    </div>
-</body>
-</html>");
+");
 
 define('_XOOPS_FATAL_BACKTRACE', 'Backtrace');

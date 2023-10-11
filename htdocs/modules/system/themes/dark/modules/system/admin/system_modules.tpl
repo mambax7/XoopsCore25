@@ -1,5 +1,5 @@
 <{include file="db:system_header.tpl"}>
-<{if $install_mods|default:false}>
+<{if !empty($install_mods)}>
     <script type="text/javascript">
         IMG_ON = "<{xoAdminIcons 'success.png'}>";
         IMG_OFF = "<{xoAdminIcons 'cancel.png'}>";
@@ -31,7 +31,7 @@
             </tr>
             </thead>
             <tbody>
-            <{foreach item=row from=$install_mods}>
+            <{foreach item=row from=$install_mods|default:null}>
                 <{if $row.dirname == 'system'}>
                     <tr class="txtcenter foot">
                         <td>
@@ -77,11 +77,11 @@
             </tr>
             </tbody>
             <tbody class="xo-module">
-            <{foreach item=row from=$install_mods}>
+            <{foreach item=row from=$install_mods|default:null}>
                 <{if $row.dirname != 'system' && $row.hasmain}>
                     <tr id="mod_<{$row.mid}>" class="<{if $row.dirname == 'system'}>xo-system <{/if}>txtcenter <{cycle values='odd, even'}>">
                         <td>
-                            <{if $row.hasadmin == 1 && $row.isactive == 1}>
+                             <{if (isset($row.hasadmin) && $row.hasadmin  == 1) && (isset($row.isactive) && $row.isactive == 1)}>
                                 <a class="xo-logonormal tooltip" href="<{$xoops_url}>/modules/<{$row.dirname}>/<{$row.adminindex}>" title="<{$row.name}>">
                                     <img src="<{$xoops_url}>/modules/<{$row.dirname}>/<{$row.image}>" alt="<{$row.name}>"/></a>
                             <{else}>
@@ -89,7 +89,7 @@
                                      title="<{$row.name}>"/>
                             <{/if}>
                             <div class="spacer xo-modsimages">
-                                <{if $row.hasadmin == 1 && $row.isactive == 1}>
+                                <{if (isset($row.hasadmin) && $row.hasadmin  == 1) && (isset($row.isactive) && $row.isactive == 1)}>
                                     <a class="tooltip" href="<{$xoops_url}>/modules/<{$row.dirname}>/<{$row.adminindex}>" title="<{$row.name}>">
                                         <img class="xo-mods hide" src="<{xoAdminIcons 'applications.png'}>" alt="<{$row.name}>" title="<{$row.name}>"/></a>
                                 <{else}>
@@ -153,7 +153,7 @@
             <tr class="head">
                 <td colspan="6"></td>
             </tr>
-            <{foreach item=row from=$install_mods}>
+            <{foreach item=row from=$install_mods|default:null}>
                 <{if $row.dirname != 'system' && !$row.hasmain}>
                     <tr class="txtcenter foot">
                         <td>
@@ -219,7 +219,7 @@
     </form>
 <{/if}>
 
-<{if $toinstall_mods|default:false}>
+<{if !empty($toinstall_mods)}>
     <div class="floatleft">
         <img class="module-size cursorpointer tooltip" onclick="system_moduleLargeView();" src="<{xoAdminIcons 'view_large.png'}>"
              alt="<{$smarty.const._AM_SYSTEM_MODULES_VIEWLARGE}>" title="<{$smarty.const._AM_SYSTEM_MODULES_VIEWLARGE}>"/>
@@ -236,13 +236,13 @@
         </tr>
         </thead>
         <tbody>
-        <{foreach item=row from=$toinstall_mods}>
+        <{foreach item=row from=$toinstall_mods|default:null}>
             <tr class="txtcenter <{cycle values='odd, even'}>">
                 <td>
                     <img class="xo-logonormal" src="<{$xoops_url}>/modules/<{$row.dirname}>/<{$row.image}>" alt="<{$row.name}>" title="<{$row.name}>"/>
 
                     <div class="spacer xo-modsimages">
-                        <{if $row.hasadmin|default:0 == 1 && $row.isactive|default:0 == 1}>
+                        <{if (isset($row.hasadmin) && $row.hasadmin  == 1) && (isset($row.isactive) && $row.isactive == 1)}>
                             <a class="tooltip" href="<{$xoops_url}>/modules/<{$row.dirname}>/<{$row.adminindex}>" title="<{$row.name}>">
                                 <img class="xo-mods hide" src="<{xoAdminIcons 'applications.png'}>" alt="<{$row.name}>" title="<{$row.name}>"/></a>
                         <{else}>
@@ -265,7 +265,7 @@
     </table>
 <{/if}>
 <!--Pop-pup-->
-<{foreach item=row from=$mods_popup}>
+<{foreach item=row from=$mods_popup|default:null}>
     <div id="dialog<{$row.mid}>" title="<{$row.name}>" style='display:none;'>
         <table>
             <tr>

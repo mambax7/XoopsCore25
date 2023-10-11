@@ -1,15 +1,17 @@
 <{$xoForm.javascript}>
 <form id="<{$xoForm.name}>" name="<{$xoForm.name}>" action="<{$xoForm.action}>" method="<{$xoForm.method}>" <{$xoForm.extra}> >
     <table class="profile-form" id="profile-form-<{$xoForm.name}>">
-        <{foreach item=element from=$xoForm.elements}>
-            <{if !$element.hidden|default:false}>
+        <{foreach item=element from=$xoForm.elements|default:null}>
+            <{if empty($element.hidden)}>
                 <tr>
                     <td class="head">
-                        <div class='xoops-form-element-caption<{if $element.required|default:false}>-required<{/if}>'>
-                            <span class='caption-text'><{$element.caption|default:''}></span>
+                        <div class='xoops-form-element-caption<{if !empty($element.required)|default:false}>-required<{/if}>'>
+                            <span class='caption-text'>
+                            <{if !empty($element.caption)}><{$element.caption}><{/if}>
+                            </span>
                             <span class='caption-marker'>*</span>
                         </div>
-                        <{if $element.description|default:'' != ''}>
+                        <{if isset($element.description) &&  $element.description != ''}>
                             <div class='xoops-form-element-help'><{$element.description}></div>
                         <{/if}>
                     </td>
@@ -20,8 +22,8 @@
             <{/if}>
         <{/foreach}>
     </table>
-    <{foreach item=element from=$xoForm.elements}>
-        <{if $element.hidden|default:false}>
+    <{foreach item=element from=$xoForm.elements|default:null}>
+        <{if !empty($element.hidden)|default:false}>
             <{$element.body}>
         <{/if}>
     <{/foreach}>

@@ -8,7 +8,7 @@
 
     <!-- If is subforum-->
     <{if $parentforum}>
-        <{foreach item=forum from=$parentforum}>
+        <{foreach item=forum from=$parentforum|default:null}>
              <li class="breadcrumb-item"><a href="<{$xoops_url}>/modules/<{$xoops_dirname}>/viewforum.php?forum=<{$forum.forum_id}>"><{$forum.forum_name}></a></li>
         <{/foreach}>
     <{/if}>
@@ -133,7 +133,7 @@
     </div>
 
     </div><!-- .newbb-topic-options -->
-    <{* assign var='desctext' value=`$smarty.const._MD_NEWBB_FORUMDESCRIPTION` *}>
+    <{* assign var='desctext' value='$smarty.const._MD_NEWBB_FORUMDESCRIPTION' *}>
     <{* $desctext|regex_replace:"/:$/":"" *}>
     <div>
         <h3><{$forum_name}></h3>
@@ -141,7 +141,7 @@
     </div>
     <table class="table table-hover">
         <tbody>
-        <{foreach item=topic from=$topics}>
+        <{foreach item=topic from=$topics|default:null}>
             <tr>
                 <{if $mode gt 1}>
                 <td><input type="checkbox" name="topic_id[]" id="topic_id[<{$topic.topic_id}>]" value="<{$topic.topic_id}>"></td>
@@ -155,8 +155,8 @@
                 <{if $rating_enable}>
                 <td class="d-none d-sm-table-cell"><{$topic.rating_img}></td>
                 <{/if}>
-                <{assign var='golast' value=`$smarty.const._MD_NEWBB_GOTOLASTPOST`}>
-                <{assign var='golastimg' value="<span class=\"fa fa-forward\" aria-hidden=\"true\" title=\"`$golast`\"></span>"}>
+                <{assign var='golast' value='$smarty.const._MD_NEWBB_GOTOLASTPOST'}>
+                <{assign var='golastimg' value="<span class=\"fa fa-forward\" aria-hidden=\"true\" title=\"'$golast'\"></span>"}>
                 <td><{$topic.topic_last_posttime}> <{$smarty.const._MD_NEWBB_BY}> <{$topic.topic_last_poster}> <{$topic.topic_page_jump_icon|regex_replace:'/<img .*>/':$golastimg}></td>
             </tr>
             <{/foreach}>
@@ -214,7 +214,7 @@
 
 <div class="row collapse" id="forum-info">
     <div class="col-sm-6 col-md-6">
-        <{foreach item=perm from=$permission_table|default:''}>
+        <{foreach item=perm from=$permission_table|default:null}>
             <{$perm}>
         <{/foreach}>
     </div>
@@ -231,7 +231,7 @@
     </div>
 </div>
 
-<{if $online}>
+<{if !empty($online)}>
     <{include file="db:newbb_online.tpl"}>
 <{/if}>
 
