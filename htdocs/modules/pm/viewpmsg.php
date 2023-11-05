@@ -35,6 +35,7 @@ if (!in_array($op, $valid_op_requests)) {
 }
 
 $start = Request::getInt('start', 0);
+/** @var \PmMessageHandler $pm_handler */
 $pm_handler = xoops_getModuleHandler('message');
 
 if (isset($_POST['delete_messages']) && (isset($_POST['msg_id']) || isset($_POST['msg_ids']))) {
@@ -192,7 +193,7 @@ $GLOBALS['xoopsTpl']->assign('op', $op);
 
 if ($total_messages > $GLOBALS['xoopsModuleConfig']['perpage']) {
     include_once $GLOBALS['xoops']->path('class/pagenav.php');
-    $nav = new XoopsPageNav($total_messages, $GLOBALS['xoopsModuleConfig']['perpage'], $start, 'start', 'op=' . htmlspecialchars($op));
+    $nav = new XoopsPageNav($total_messages, $GLOBALS['xoopsModuleConfig']['perpage'], $start, 'start', 'op=' . htmlspecialchars($op, ENT_QUOTES));
     $GLOBALS['xoopsTpl']->assign('pagenav', $nav->renderNav(4));
 }
 
@@ -206,12 +207,12 @@ if (count($pm_arr) > 0) {
             $uids[] = $pm_arr[$i]['from_userid'];
         }
     }
-    /* @var XoopsMemberHandler $member_handler */
+    /** @var XoopsMemberHandler $member_handler */
     $member_handler = xoops_getHandler('member');
     $senders        = $member_handler->getUserList(new Criteria('uid', '(' . implode(', ', array_unique($uids)) . ')', 'IN'));
     foreach (array_keys($pm_arr) as $i) {
         $message              = $pm_arr[$i];
-        $message['msg_image'] = htmlspecialchars($message['msg_image'], ENT_QUOTES);
+        $message['msg_image'] = htmlspecialchars((string)$message['msg_image'], ENT_QUOTES);
         $message['msg_time']  = formatTimestamp($message['msg_time']);
         if ($op === 'out') {
             $message['postername'] = $senders[$pm_arr[$i]['to_userid']];

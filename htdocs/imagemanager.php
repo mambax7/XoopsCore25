@@ -14,20 +14,20 @@
  * @package             core
  * @since               2.0.0
  */
-/* @var  XoopsUser $xoopsUser */
+/** @var  XoopsUser $xoopsUser */
+
+use Xmf\Request;
 
 include __DIR__ . '/mainfile.php';
-XoopsLoad::load('XoopsRequest');
 
 // Get Action type
-$op = XoopsRequest::getCmd('op', 'list');
+$op = Request::getCmd('op', 'list');
 
 switch ($op) {
     case 'list':
     default:
-        XoopsLoad::load('XoopsFilterInput');
         if (isset($_REQUEST['target'])) {
-            $target = trim(XoopsFilterInput::clean($_REQUEST['target'], 'WORD'));
+            $target = Request::getWord('target', '', 'REQUEST');
         } else {
             exit('Target not set');
         }
@@ -42,7 +42,7 @@ switch ($op) {
         $xoopsTpl->assign('sitename', htmlspecialchars($xoopsConfig['sitename'], ENT_QUOTES));
         $target = htmlspecialchars($target, ENT_QUOTES);
         $xoopsTpl->assign('target', $target);
-        /* @var XoopsImagecategoryHandler $imgcat_handler */
+        /** @var XoopsImageCategoryHandler $imgcat_handler */
         $imgcat_handler = xoops_getHandler('imagecategory');
         $catlist        = $imgcat_handler->getList($group, 'imgcat_read', 1);
         $catcount       = count($catlist);
@@ -51,7 +51,7 @@ switch ($op) {
         $xoopsTpl->assign('lang_close', _CLOSE);
         if ($catcount > 0) {
             $xoopsTpl->assign('lang_go', _GO);
-            $catshow = (!isset($_GET['cat_id'])) ? 0 : (int)$_GET['cat_id'];
+            $catshow = Request::getInt('cat_id', 0, 'GET') ;
             //        $catshow = (!empty($catshow) && in_array($catshow, array_keys($catlist))) ? $catshow : 0;
             $catshow = (!empty($catshow) && array_key_exists($catshow, $catlist)) ? $catshow : 0;
             $xoopsTpl->assign('show_cat', $catshow);
@@ -81,7 +81,7 @@ switch ($op) {
                     $xoopsTpl->assign('lang_image', _IMAGE);
                     $xoopsTpl->assign('lang_imagename', _IMAGENAME);
                     $xoopsTpl->assign('lang_imagemime', _IMAGEMIME);
-                    $start = isset($_GET['start']) ? (int)$_GET['start'] : 0;
+                    $start = Request::getInt('start', 0, 'GET');
                     $criteria->setLimit(10);
                     $criteria->setStart($start);
                     $storetype = $imgcat->getVar('imgcat_storetype');
@@ -138,20 +138,19 @@ switch ($op) {
         break;
 
     case 'upload':
-        XoopsLoad::load('XoopsFilterInput');
         if (isset($_REQUEST['target'])) {
-            $target = trim(XoopsFilterInput::clean($_REQUEST['target'], 'WORD'));
+            $target = $target = Request::getWord('target', '', 'REQUEST');
         } else {
             exit('Target not set');
         }
         $imgcat_handler = xoops_getHandler('imagecategory');
-        $imgcat_id      = (int)$_GET['imgcat_id'];
+        $imgcat_id      = Request::getInt('imgcat_id', 0, 'GET');
         $imgcat         = $imgcat_handler->get($imgcat_id);
         $error          = false;
         if (!is_object($imgcat)) {
             $error = true;
         } else {
-            /* @var XoopsGroupPermHandler $imgcatperm_handler */
+            /** @var XoopsGroupPermHandler $imgcatperm_handler */
             $imgcatperm_handler = xoops_getHandler('groupperm');
             if (is_object($xoopsUser)) {
                 if (!$imgcatperm_handler->checkRight('imgcat_write', $imgcat_id, $xoopsUser->getGroups())) {

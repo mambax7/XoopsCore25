@@ -18,17 +18,19 @@
  * @author              Kris <kris@frxoops.org>
  */
 
+use Xmf\Request;
+
 $xoopsOption['pagetype'] = 'banners';
 include __DIR__ . '/mainfile.php';
 
-/********************************************/
-/* Function to let your client login to see */
-/* the stats                                */
-/********************************************/
+/**
+ * Function to let your client login to see the stats
+ * @return void
+ */
 function clientlogin()
 {
     global $xoopsDB, $xoopsLogger, $xoopsConfig;
-    include 'header.php';
+    include __DIR__ . '/header.php';
     $GLOBALS['xoTheme']->addStylesheet(null, null, '
         #login_window  {
             max-width:                          480px;
@@ -90,27 +92,33 @@ function clientlogin()
     include $GLOBALS['xoops']->path('footer.php');
 }
 
-/*********************************************/
-/* Function to display the banners stats for */
-/* each client                               */
-/*********************************************/
+/**
+ * Function to display the banners stats for each client
+ * @return void
+ */
 function bannerstats()
 {
     global $xoopsDB, $xoopsConfig, $xoopsLogger, $myts;
     if ($_SESSION['banner_login'] == '' || $_SESSION['banner_pass'] == '') {
         redirect_header('banners.php', 2, _BANNERS_NO_LOGIN_DATA);
     }
-    $result = $xoopsDB->query(sprintf('SELECT cid, name, passwd FROM %s WHERE login=%s', $xoopsDB->prefix('bannerclient'), $xoopsDB->quoteString($_SESSION['banner_login'])));
+    $sql = sprintf('SELECT cid, name, passwd FROM %s WHERE login=%s', $xoopsDB->prefix('bannerclient'), $xoopsDB->quoteString($_SESSION['banner_login']));
+    $result = $xoopsDB->query($sql);
+    if (!$xoopsDB->isResultSet($result)) {
+        throw new \RuntimeException(
+            \sprintf(_DB_QUERY_ERROR, $sql) . $xoopsDB->error(), E_USER_ERROR
+        );
+    }
     list($cid, $name, $passwd) = $xoopsDB->fetchRow($result);
     if ($_SESSION['banner_pass'] == $passwd) {
         include $GLOBALS['xoops']->path('header.php');
+        $cid = (int)$cid;
         $GLOBALS['xoTheme']->addStylesheet(null, null, '
             #bannerstats {}
             #bannerstats td {
                 text-align: center;
             }
         ');
-
         echo "<div id='bannerstats'>
               <h4 class='content_title'>" . sprintf(_BANNERS_TITLE, $name) . "</h4><hr />
               <table summary=''>
@@ -125,7 +133,13 @@ function bannerstats()
               <td>' . _BANNERS_FUNCTIONS . "</td></tr></thead>
               <tfoot><tr><td colspan='7'></td></tr></tfoot>";
 
-        $result = $xoopsDB->query('SELECT bid, imptotal, impmade, clicks, date FROM ' . $xoopsDB->prefix('banner') . " WHERE cid={$cid}");
+        $sql = 'SELECT bid, imptotal, impmade, clicks, date FROM ' . $xoopsDB->prefix('banner') . " WHERE cid={$cid}";
+        $result = $xoopsDB->query($sql);
+        if (!$xoopsDB->isResultSet($result)) {
+            throw new \RuntimeException(
+                \sprintf(_DB_QUERY_ERROR, $sql) . $xoopsDB->error(), E_USER_ERROR
+            );
+        }
         $i      = 0;
         while (false !== (list($bid, $imptotal, $impmade, $clicks, $date) = $xoopsDB->fetchRow($result))) {
             if ($impmade == 0) {
@@ -151,9 +165,15 @@ function bannerstats()
         }
         echo "</table>
               <br><br>
-              <h4 class='content_title'>" . _BANNERS_FOW_IN . htmlspecialchars($xoopsConfig['sitename']) . '</h4><hr />';
+              <h4 class='content_title'>" . _BANNERS_FOW_IN . htmlspecialchars($xoopsConfig['sitename'], ENT_QUOTES) . '</h4><hr />';
 
-        $result = $xoopsDB->query('SELECT bid, imageurl, clickurl, htmlbanner, htmlcode FROM ' . $xoopsDB->prefix('banner') . " WHERE cid={$cid}");
+        $sql = 'SELECT bid, imageurl, clickurl, htmlbanner, htmlcode FROM ' . $xoopsDB->prefix('banner') . " WHERE cid={$cid}";
+        $result = $xoopsDB->query($sql);
+        if (!$xoopsDB->isResultSet($result)) {
+            throw new \RuntimeException(
+                \sprintf(_DB_QUERY_ERROR, $sql) . $xoopsDB->error(), E_USER_ERROR
+            );
+        }
         while (false !== (list($bid, $imageurl, $clickurl, $htmlbanner, $htmlcode) = $xoopsDB->fetchRow($result))) {
             $numrows = $xoopsDB->getRowsNum($result);
             if ($numrows > 1) {
@@ -185,7 +205,9 @@ function bannerstats()
 
         /* Finnished Banners */
         echo '<br>';
-        if ($result = $xoopsDB->query('SELECT bid, impressions, clicks, datestart, dateend FROM ' . $xoopsDB->prefix('bannerfinish') . " WHERE cid={$cid}")) {
+        $sql    = 'SELECT bid, impressions, clicks, datestart, dateend FROM ' . $xoopsDB->prefix('bannerfinish') . " WHERE cid={$cid}";
+        $result = $xoopsDB->query($sql);
+        if ($xoopsDB->isResultSet($result)) {
             echo "<h4 class='content_title'>" . sprintf(_BANNERS_FINISHED, $name) . "</h4><hr />
                   <table summary=''>
                   <caption>" . sprintf(_BANNERS_FINISHED, $name) . '</caption>
@@ -222,27 +244,29 @@ function bannerstats()
     }
 }
 
-/*********************************************/
-/* Function to let the client E-mail his     */
-/* banner Stats                              */
-/*********************************************/
 /**
- * @param $cid
- * @param $bid
+ * Function to let clients email their banner's stats
+ * @param int|string $cid
+ * @param int|string $bid
+ * @return void
  */
 function emailStats($cid, $bid)
 {
     global $xoopsDB, $xoopsConfig;
     if ($_SESSION['banner_login'] != '' && $_SESSION['banner_pass'] != '') {
-        $cid = (int)$cid;
-        $bid = (int)$bid;
-        if ($result2 = $xoopsDB->query(sprintf('SELECT name, email, passwd FROM %s WHERE cid=%u AND login=%s', $xoopsDB->prefix('bannerclient'), $cid, $xoopsDB->quoteString($_SESSION['banner_login'])))) {
+        $cid     = (int)$cid;
+        $bid     = (int)$bid;
+        $sql     = sprintf('SELECT name, email, passwd FROM %s WHERE cid=%u AND login=%s', $xoopsDB->prefix('bannerclient'), $cid, $xoopsDB->quoteString($_SESSION['banner_login']));
+        $result2 = $xoopsDB->query($sql);
+        if ($xoopsDB->isResultSet($result2)) {
             list($name, $email, $passwd) = $xoopsDB->fetchRow($result2);
             if ($_SESSION['banner_pass'] == $passwd) {
                 if ($email == '') {
                     redirect_header('banners.php', 3, sprintf(_BANNERS_MAIL_ERROR, $name));
                 } else {
-                    if ($result = $xoopsDB->query('SELECT bid, imptotal, impmade, clicks, imageurl, clickurl, date FROM ' . $xoopsDB->prefix('banner') . " WHERE bid={$bid} AND cid={$cid}")) {
+                    $sql    = 'SELECT bid, imptotal, impmade, clicks, imageurl, clickurl, date FROM ' . $xoopsDB->prefix('banner') . " WHERE bid={$bid} AND cid={$cid}";
+                    $result = $xoopsDB->query($sql);
+                    if ($xoopsDB->isResultSet($result)) {
                         list($bid, $imptotal, $impmade, $clicks, $imageurl, $clickurl, $date) = $xoopsDB->fetchRow($result);
                         if ($impmade == 0) {
                             $percent = 0;
@@ -275,23 +299,22 @@ function emailStats($cid, $bid)
     redirect_header('banners.php', 2);
 }
 
-/*********************************************/
-/* Function to let the client to change the  */
-/* url for his banner                        */
-/*********************************************/
 /**
- * @param $cid
- * @param $bid
- * @param $url
+ * Function to let clients change their banner's URL
+ * @param int|string $cid
+ * @param int|string $bid
+ * @param string $url
+ * @return void
  */
 function change_banner_url_by_client($cid, $bid, $url)
 {
     global $xoopsDB;
     if ($_SESSION['banner_login'] != '' && $_SESSION['banner_pass'] != '' && $url != '') {
-        $cid = (int)$cid;
-        $bid = (int)$bid;
-        $sql = sprintf('SELECT passwd FROM %s WHERE cid=%u AND login=%s', $xoopsDB->prefix('bannerclient'), $cid, $xoopsDB->quoteString($_SESSION['banner_login']));
-        if ($result = $xoopsDB->query($sql)) {
+        $cid    = (int)$cid;
+        $bid    = (int)$bid;
+        $sql    = sprintf('SELECT passwd FROM %s WHERE cid=%u AND login=%s', $xoopsDB->prefix('bannerclient'), $cid, $xoopsDB->quoteString($_SESSION['banner_login']));
+        $result = $xoopsDB->query($sql);
+        if ($xoopsDB->isResultSet($result)) {
             list($passwd) = $xoopsDB->fetchRow($result);
             if ($_SESSION['banner_pass'] == $passwd) {
                 $sql = sprintf('UPDATE %s SET clickurl=%s WHERE bid=%u AND cid=%u', $xoopsDB->prefix('banner'), $xoopsDB->quoteString($url), $bid, $cid);
@@ -305,15 +328,22 @@ function change_banner_url_by_client($cid, $bid, $url)
 }
 
 /**
- * @param $bid
+ * @param int|string $bid
+ * @return void
  */
 function clickbanner($bid)
 {
     global $xoopsDB;
     $bid = (int)$bid;
     if ($bid > 0) {
-        $bresult = $xoopsDB->query('SELECT clickurl FROM ' . $xoopsDB->prefix('banner') . " WHERE bid={$bid}");
-        list($clickurl) = $xoopsDB->fetchRow($bresult);
+        $sql = 'SELECT clickurl FROM ' . $xoopsDB->prefix('banner') . " WHERE bid={$bid}";
+        $result = $xoopsDB->query($sql);
+        if (!$xoopsDB->isResultSet($result)) {
+            throw new \RuntimeException(
+                \sprintf(_DB_QUERY_ERROR, $sql) . $xoopsDB->error(), E_USER_ERROR
+            );
+        }
+        list($clickurl) = $xoopsDB->fetchRow($result);
         if ($clickurl) {
             if ($GLOBALS['xoopsSecurity']->checkReferer()) {
                 $xoopsDB->queryF('UPDATE ' . $xoopsDB->prefix('banner') . " SET clicks=clicks+1 WHERE bid=$bid");
@@ -328,54 +358,49 @@ function clickbanner($bid)
     redirect_header(XOOPS_URL, 3, _BANNERS_NO_ID);
 }
 
-XoopsLoad::load('XoopsFilterInput');
-$myts = MyTextSanitizer::getInstance();
 
 $op = '';
+$clean_bid = 0;
+$clean_cid = 0;
+$clean_login = '';
+$clean_pass = '';
+$clean_url = '';
 if (!empty($_POST['op'])) {
     // from $_POST we use keys: op, login, pass, url, pass, bid, cid
-    $op = trim(XoopsFilterInput::clean($_POST['op'], 'STRING'));
+    $op = Request::getCmd('op', '', 'POST');
 
-    $clean_login = '';
     if (isset($_POST['login'])) {
-        $clean_login = trim(XoopsFilterInput::clean($myts->stripSlashesGPC($_POST['login']), 'STRING'));
+        $clean_login = Request::getString('login', '', 'POST');
     }
 
-    $clean_pass = '';
     if (isset($_POST['pass'])) {
-        $clean_pass = trim(XoopsFilterInput::clean($myts->stripSlashesGPC($_POST['pass']), 'STRING'));
+        $clean_pass = Request::getString('pass', '', 'POST');
     }
 
-    $clean_url = '';
     if (isset($_POST['url'])) {
-        $clean_url = trim(XoopsFilterInput::clean($myts->stripSlashesGPC($_POST['url']), 'WEBURL'));
+        $clean_url = Request::getUrl('url', '', 'POST');
     }
 
-    $clean_bid = 0;
     if (isset($_POST['bid'])) {
-        $clean_bid = XoopsFilterInput::clean($_POST['bid'], 'INT');
+        $clean_bid = Request::getInt('bid', 0, 'POST');
     }
 
-    $clean_cid = 0;
     if (isset($_POST['cid'])) {
-        $clean_cid = XoopsFilterInput::clean($_POST['cid'], 'INT');
+        $clean_cid = Request::getInt('cid', 0, 'POST');
     }
 } elseif (!empty($_GET['op'])) {
-    // from $_POST we use keys: op, bid, cid
-    $op = trim(XoopsFilterInput::clean($_GET['op'], 'STRING'));
+    // from $_GET we use keys: op, bid, cid
+    $op = Request::getCmd('op', '', 'GET');
 
-    $clean_bid = 0;
     if (isset($_GET['bid'])) {
-        $clean_bid = XoopsFilterInput::clean($_GET['bid'], 'INT');
+        $clean_bid = Request::getInt('bid', 0, 'GET');
     }
 
-    $clean_cid = 0;
     if (isset($_GET['cid'])) {
-        $clean_cid = XoopsFilterInput::clean($_GET['cid'], 'INT');
+        $clean_cid = Request::getInt('cid', 0, 'GET');
     }
 }
 
-$myts = MyTextSanitizer::getInstance();
 switch ($op) {
     case 'click':
         $bid = $clean_bid;

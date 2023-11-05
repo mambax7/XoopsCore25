@@ -16,6 +16,8 @@
  * @author              Kazumi Ono (AKA onokazu) http://www.myweb.ne.jp/, http://jp.xoops.org/
  */
 
+use \Xmf\Request;
+
 defined('XOOPS_ROOT_PATH') || exit('Restricted access');
 
 include_once $GLOBALS['xoops']->path('include/comment_constants.php');
@@ -23,11 +25,11 @@ include_once $GLOBALS['xoops']->path('include/comment_constants.php');
 xoops_loadLanguage('comment');
 
 if ('system' === $xoopsModule->getVar('dirname')) {
-    $com_id = isset($_POST['com_id']) ? (int)$_POST['com_id'] : 0;
+    $com_id = Request::getInt('com_id', 0, 'POST');
     if (empty($com_id)) {
         exit();
     }
-    /* @var  XoopsCommentHandler $comment_handler */
+    /** @var  XoopsCommentHandler $comment_handler */
     $comment_handler = xoops_getHandler('comment');
     $comment         = $comment_handler->get($com_id);
     $module_handler  = xoops_getHandler('module');
@@ -39,17 +41,21 @@ if ('system' === $xoopsModule->getVar('dirname')) {
     $moddir          = $module->getVar('dirname');
     unset($comment);
 } else {
-    $com_id = isset($_POST['com_id']) ? (int)$_POST['com_id'] : 0;
+    $com_id = Request::getInt('com_id', 0, 'POST');
     if (XOOPS_COMMENT_APPROVENONE == $xoopsModuleConfig['com_rule']) {
         exit();
     }
     $comment_config = $xoopsModule->getInfo('comments');
     $com_modid      = $xoopsModule->getVar('mid');
     $redirect_page  = $comment_config['pageName'] . '?';
-    if (isset($comment_config['extraParams']) && is_array($comment_config['extraParams'])) {
+    if (isset($comment_config['extraParams']) && \is_array($comment_config['extraParams'])) {
         $extra_params = '';
         foreach ($comment_config['extraParams'] as $extra_param) {
-            $extra_params .= isset($_POST[$extra_param]) ? $extra_param . '=' . htmlspecialchars($_POST[$extra_param]) . '&amp;' : $extra_param . '=&amp;';
+            $extraVar = Request::getString($extra_param, 'POST', '');
+            $extra_params .=
+                ($extraVar !== '')
+                    ? $extra_param . '=' . htmlspecialchars($extraVar, ENT_QUOTES) . '&amp;'
+                    : $extra_param . '=&amp;';
         }
         $redirect_page .= $extra_params;
     }
@@ -85,10 +91,10 @@ if (!empty($_POST)) {
             $error_message .= $xoopsCaptcha->getMessage() . '<br>';
         }
 
-        // Start add by voltan
+        // Start added by voltan
         xoops_load('XoopsUserUtility');
         xoops_loadLanguage('user');
-        $myts = MyTextSanitizer::getInstance();
+        $myts = \MyTextSanitizer::getInstance();
 
         // Check user name
         $search_arr  = array(
@@ -125,73 +131,33 @@ if (!empty($_POST)) {
             '$',
             '%',
             '^',
-            '&');
-        $replace_arr = array(
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            ' ',
-            '');
-        $com_user    = trim($_POST['com_user']);
-        $com_user    = $myts->stripSlashesGPC($com_user);
-        $com_user    = $myts->xoopsCodeDecode($com_user);
-        $com_user    = $myts->filterXss($com_user);
-        $com_user    = strip_tags($com_user);
-        $com_user    = strtolower($com_user);
+            '&'
+        );
+        $com_user = Request::getString('com_user', 'POST', '');
+        $com_user = str_replace($search_arr, '', $com_user);
+        //$com_user = strtolower($com_user);
         $com_user    = htmlentities($com_user, ENT_COMPAT, 'utf-8');
-        $com_user    = preg_replace('`\[.*\]`U', ' ', $com_user);
-        $com_user    = preg_replace('`&(amp;)?#?[a-z0-9]+;`i', ' ', $com_user);
-        $com_user    = preg_replace('`&([a-z])(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i', '\\1', $com_user);
-        $com_user    = str_replace($search_arr, $replace_arr, $com_user);
 
         // Check Url
-        if (!empty($_POST['com_url'])) {
-            $com_url = trim($_POST['com_url']);
-            $com_url = filter_var($com_url, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED);
+        $com_url = Request::getUrl('com_url', '', 'POST');
+        if ('' !== $com_url) {
+            $com_url = filter_var($com_url, FILTER_VALIDATE_URL);
+            if (is_string($com_url) && (false === preg_match("#^https?://#", $com_url))) {
+                $com_url = false;
+            }
+            if (false === $com_url) {
+                $com_url='';
+            }
         }
 
         // Check Email
-        $com_email = $myts->stripSlashesGPC(trim($_POST['com_email']));
-        $com_email = htmlspecialchars(trim($com_email), ENT_QUOTES);
-        $com_email = filter_var($com_email, FILTER_VALIDATE_EMAIL);
+        $com_email = Request::getEmail('com_email', '', 'POST');
         // Invalid email address
-        if (!checkEmail($com_email)) {
+        if (empty($com_email)) {
             $error_message .= _US_INVALIDMAIL . '<br>';
         }
-        if (strrpos($com_email, ' ') > 0) {
-            $error_message .= _US_EMAILNOSPACES . '<br>';
-        }
         // Check forbidden email address if current operator is not an administrator
-        if (!$xoopsUser_isAdmin) {
+        if (!(is_object($xoopsUser) && $xoopsUser->isAdmin())) {
             foreach ($xoopsConfigUser['bad_emails'] as $be) {
                 if (!empty($be) && preg_match('/' . $be . '/i', $com_email)) {
                     $error_message .= _US_INVALIDMAIL . '<br>';
@@ -202,39 +168,41 @@ if (!empty($_POST)) {
         if (!empty($error_message)) {
             $op = 'preview';
         }
-        // End add by voltan
+        // End added by voltan
     }
 
-    $com_mode   = isset($_POST['com_mode']) ? htmlspecialchars(trim($_POST['com_mode']), ENT_QUOTES) : 'flat';
-    $com_order  = isset($_POST['com_order']) ? (int)$_POST['com_order'] : XOOPS_COMMENT_OLD1ST;
-    $com_itemid = isset($_POST['com_itemid']) ? (int)$_POST['com_itemid'] : 0;
-    $com_pid    = isset($_POST['com_pid']) ? (int)$_POST['com_pid'] : 0;
-    $com_rootid = isset($_POST['com_rootid']) ? (int)$_POST['com_rootid'] : 0;
-    $com_status = isset($_POST['com_status']) ? (int)$_POST['com_status'] : 0;
-    $dosmiley   = (isset($_POST['dosmiley']) && (int)$_POST['dosmiley'] > 0) ? 1 : 0;
-    $doxcode    = (isset($_POST['doxcode']) && (int)$_POST['doxcode'] > 0) ? 1 : 0;
-    $dobr       = (isset($_POST['dobr']) && (int)$_POST['dobr'] > 0) ? 1 : 0;
-    $dohtml     = (isset($_POST['dohtml']) && (int)$_POST['dohtml'] > 0) ? 1 : 0;
-    $doimage    = (isset($_POST['doimage']) && (int)$_POST['doimage'] > 0) ? 1 : 0;
-    $com_icon   = isset($_POST['com_icon']) ? trim($_POST['com_icon']) : '';
+    $com_mode   = htmlspecialchars(Request::getString('com_mode', 'flat', 'POST'), ENT_QUOTES);
+    $com_order  = Request::getInt('com_order', XOOPS_COMMENT_OLD1ST, 'POST') ;
+    $com_itemid = Request::getInt('com_itemid', 0, 'POST');
+    $com_pid    = Request::getInt('com_pid', 0, 'POST');
+    $com_rootid = Request::getInt('com_rootid', 0, 'POST');
+    $com_status = Request::getInt('com_status', 0, 'POST');
+    $dosmiley   = (int) Request::getBool('dosmiley', false, 'POST');
+    $doxcode    = (int) Request::getBool('doxcode', false, 'POST');
+    $dobr       = (int) Request::getBool('dobr', false, 'POST');
+    $dohtml     = (int) Request::getBool('dohtml', false, 'POST');
+    $doimage    = (int) Request::getBool('doimage', false, 'POST');
+    $com_icon   = Request::getString('com_icon', '', 'POST');
+
+    $com_title  = Request::getString('com_title', _NOTITLE, 'POST');
+    $com_text   = Request::getString('com_text', '', 'POST');
 } else {
     exit();
 }
-/* @var  XoopsUser $xoopsUser */
+/** @var  XoopsUser $xoopsUser */
 switch ($op) {
     case 'delete':
         include_once $GLOBALS['xoops']->path('include/comment_delete.php');
         break;
 
     case 'preview':
-        $myts      = MyTextSanitizer::getInstance();
+        $myts      = \MyTextSanitizer::getInstance();
         $doimage   = 1;
-        $com_title = $myts->htmlSpecialChars($myts->stripSlashesGPC($_POST['com_title']));
         if ($dohtml != 0) {
             if (is_object($xoopsUser)) {
                 if (!$xoopsUser->isAdmin($com_modid)) {
                     include_once $GLOBALS['xoops']->path('modules/system/constants.php');
-                    /* @var XoopsGroupPermHandler $sysperm_handler */
+                    /** @var XoopsGroupPermHandler $sysperm_handler */
                     $sysperm_handler = xoops_getHandler('groupperm');
                     if (!$sysperm_handler->checkRight('system_admin', XOOPS_SYSTEM_COMMENT, $xoopsUser->getGroups())) {
                         $dohtml = 0;
@@ -244,16 +212,15 @@ switch ($op) {
                 $dohtml = 0;
             }
         }
-        $p_comment =& $myts->previewTarea($_POST['com_text'], $dohtml, $dosmiley, $doxcode, $doimage, $dobr);
+        $p_comment = $myts->previewTarea($com_text, $dohtml, $dosmiley, $doxcode, $doimage, $dobr);
         $noname    = isset($noname) ? (int)$noname : 0;
-        $com_text  = $myts->htmlSpecialChars($myts->stripSlashesGPC($_POST['com_text']));
         if ($xoopsModule->getVar('dirname') !== 'system') {
             include_once $GLOBALS['xoops']->path('header.php');
             if (!empty($error_message)) {
                 xoops_error($error_message);
             }
             echo '<table cellpadding="4" cellspacing="1" width="98%" class="outer">
-                  <tr><td class="head">' . $com_title . '</td></tr>
+                  <tr><td class="head">' . $myts->htmlSpecialChars($com_title) . '</td></tr>
                   <tr><td><br>' . $p_comment . '<br></td></tr>
                   </table>';
             include_once $GLOBALS['xoops']->path('include/comment_form.php');
@@ -261,7 +228,7 @@ switch ($op) {
         } else {
             xoops_cp_header();
             echo '<table cellpadding="4" cellspacing="1" width="98%" class="outer">
-                  <tr><td class="head">' . $com_title . '</td></tr>
+                  <tr><td class="head">' . $myts->htmlSpecialChars($com_title) . '</td></tr>
                   <tr><td><br>' . $p_comment . '<br></td></tr>
                   </table>';
             include_once $GLOBALS['xoops']->path('include/comment_form.php');
@@ -273,9 +240,9 @@ switch ($op) {
         XoopsLoad::load('XoopsRequest');
         $doimage         = 1;
         $comment_handler = xoops_getHandler('comment');
-        // Start add by voltan
-        $myts = MyTextSanitizer::getInstance();
-        // Edit add by voltan
+        // Start added by voltan
+        $myts = \MyTextSanitizer::getInstance();
+        // Edit added by voltan
         $add_userpost     = false;
         $call_approvefunc = false;
         $call_updatefunc  = false;
@@ -287,7 +254,7 @@ switch ($op) {
 
             if (is_object($xoopsUser)) {
                 include_once $GLOBALS['xoops']->path('modules/system/constants.php');
-                /* @var XoopsGroupPermHandler $sysperm_handler */
+                /** @var XoopsGroupPermHandler $sysperm_handler */
                 $sysperm_handler = xoops_getHandler('groupperm');
                 if ($xoopsUser->isAdmin($com_modid) || $sysperm_handler->checkRight('system_admin', XOOPS_SYSTEM_COMMENT, $xoopsUser->getGroups())) {
                     if (!empty($com_status) && $com_status != XOOPS_COMMENT_PENDING) {
@@ -332,7 +299,7 @@ switch ($op) {
             $comment->setVar('com_ip', \Xmf\IPAddress::fromRequest()->asReadable());
             if (is_object($xoopsUser)) {
                 include_once $GLOBALS['xoops']->path('modules/system/constants.php');
-                /* @var XoopsGroupPermHandler $sysperm_handler */
+                /** @var XoopsGroupPermHandler $sysperm_handler */
                 $sysperm_handler = xoops_getHandler('groupperm');
                 if ($xoopsUser->isAdmin($com_modid) || $sysperm_handler->checkRight('system_admin', XOOPS_SYSTEM_COMMENT, $xoopsUser->getGroups())) {
                     $comment->setVar('com_status', XOOPS_COMMENT_ACTIVE);
@@ -393,8 +360,8 @@ switch ($op) {
             }
             $comment->setVar('com_uid', $uid);
         }
-        $comment->setVar('com_title', XoopsRequest::getString('com_title', _NOTITLE, 'POST'));
-        $comment->setVar('com_text', XoopsRequest::getString('com_text', '', 'POST'));
+        $comment->setVar('com_title', Request::getString('com_title', _NOTITLE, 'POST'));
+        $comment->setVar('com_text', $com_text);
         $comment->setVar('dohtml', $dohtml);
         $comment->setVar('dosmiley', $dosmiley);
         $comment->setVar('doxcode', $doxcode);
@@ -403,11 +370,11 @@ switch ($op) {
         $comment->setVar('com_icon', $com_icon);
         $comment->setVar('com_modified', time());
         $comment->setVar('com_modid', $com_modid);
-        // Start add by voltan
+        // Start added by voltan
         $comment->setVar('com_user', $com_user);
         $comment->setVar('com_email', $com_email);
         $comment->setVar('com_url', $com_url);
-        // End add by voltan
+        // End added by voltan
         if (isset($extra_params)) {
             $comment->setVar('com_exparams', $extra_params);
         }
@@ -476,7 +443,7 @@ switch ($op) {
             // increment user post if needed
             $uid = $comment->getVar('com_uid');
             if ($uid > 0 && false !== $add_userpost) {
-                /* @var XoopsMemberHandler $member_handler */
+                /** @var XoopsMemberHandler $member_handler */
                 $member_handler = xoops_getHandler('member');
                 $poster         = $member_handler->getUser($uid);
                 if (is_object($poster)) {
@@ -498,7 +465,7 @@ switch ($op) {
                 // module).
                 $comment_tags = array();
                 if ('system' === $xoopsModule->getVar('dirname')) {
-                    /* @var XoopsModuleHandler $module_handler */
+                    /** @var XoopsModuleHandler $module_handler */
                     $module_handler = xoops_getHandler('module');
                     $not_module     = $module_handler->get($not_modid);
                 } else {
@@ -507,17 +474,17 @@ switch ($op) {
                 if (!isset($comment_url)) {
                     $com_config  =& $not_module->getInfo('comments');
                     $comment_url = $com_config['pageName'] . '?';
-                    if (isset($com_config['extraParams']) && is_array($com_config['extraParams'])) {
+                    if (isset($com_config['extraParams']) && \is_array($com_config['extraParams'])) {
                         $extra_params = '';
                         foreach ($com_config['extraParams'] as $extra_param) {
-                            $extra_params .= isset($_POST[$extra_param]) ? $extra_param . '=' . htmlspecialchars($_POST[$extra_param]) . '&amp;' : $extra_param . '=&amp;';
+                            $extra_params .= isset($_POST[$extra_param]) ? $extra_param . '=' . htmlspecialchars($_POST[$extra_param], ENT_QUOTES) . '&amp;' : $extra_param . '=&amp;';
                         }
                         $comment_url .= $extra_params;
                     }
                     $comment_url .= $com_config['itemName'];
                 }
                 $comment_tags['X_COMMENT_URL'] = XOOPS_URL . '/modules/' . $not_module->getVar('dirname') . '/' . $comment_url . '=' . $com_itemid . '&amp;com_id=' . $newcid . '&amp;com_rootid=' . $com_rootid . '&amp;com_mode=' . $com_mode . '&amp;com_order=' . $com_order . '#comment' . $newcid;
-                /* @var  XoopsNotificationHandler $notification_handler */
+                /** @var  XoopsNotificationHandler $notification_handler */
                 $notification_handler          = xoops_getHandler('notification');
                 $notification_handler->triggerEvent($not_category, $not_itemid, $not_event, $comment_tags, false, $not_modid);
             }

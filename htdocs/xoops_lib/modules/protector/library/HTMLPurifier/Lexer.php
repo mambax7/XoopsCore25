@@ -48,6 +48,11 @@ class HTMLPurifier_Lexer
      */
     public $tracksLineNumbers = false;
 
+    /**
+     * @type HTMLPurifier_EntityParser
+     */
+    private $_entity_parser;
+
     // -- STATIC ----------------------------------------------------------
 
     /**
@@ -213,7 +218,7 @@ class HTMLPurifier_Lexer
 
         // hmm... now we have some uncommon entities. Use the callback.
         if ($config->get('Core.LegacyEntityDecoder')) {
-        $string = $this->_entity_parser->substituteSpecialEntities($string);
+            $string = $this->_entity_parser->substituteSpecialEntities($string);
         } else {
             if ($is_attr) {
                 $string = $this->_entity_parser->substituteAttrEntities($string);
@@ -306,8 +311,8 @@ class HTMLPurifier_Lexer
     {
         // normalize newlines to \n
         if ($config->get('Core.NormalizeNewlines')) {
-            $html = str_replace("\r\n", "\n", $html);
-            $html = str_replace("\r", "\n", $html);
+            $html = str_replace("\r\n", "\n", (string)$html);
+            $html = str_replace("\r", "\n", (string)$html);
         }
 
         if ($config->get('HTML.Trusted')) {
@@ -335,7 +340,7 @@ class HTMLPurifier_Lexer
 
         // expand entities that aren't the big five
         if ($config->get('Core.LegacyEntityDecoder')) {
-        $html = $this->_entity_parser->substituteNonSpecialEntities($html);
+            $html = $this->_entity_parser->substituteNonSpecialEntities($html);
         }
 
         // clean into wellformed UTF-8 string for an SGML context: this has

@@ -10,15 +10,15 @@
  */
 
 /**
- * @copyright    XOOPS Project http://xoops.org/
- * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
+ * @copyright    XOOPS Project https://xoops.org/
+ * @license      GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
  * @since
  * @author       XOOPS Development Team, Kazumi Ono (AKA onokazu)
  */
 
 $modversion['name']        = _MI_SYSTEM_NAME;
-$modversion['version']     = 2.16; // irmtfan bug fix: bug fix: remove codes for delete templates
+$modversion['version']     = '2.1.6-Stable';
 $modversion['description'] = _MI_SYSTEM_DESC;
 $modversion['author']      = '';
 $modversion['credits']     = 'The XOOPS Project; MusS, Kraven30, Mage';
