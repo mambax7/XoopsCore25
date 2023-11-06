@@ -199,7 +199,7 @@ class XoopsAvatarHandler extends XoopsObjectHandler
      * Egt Object
      *
      * @param  int $id
-     * @return XoopsAvatar|false
+     * @return \XoopsAvatar|false
      */
     public function get($id)
     {
@@ -209,7 +209,6 @@ class XoopsAvatarHandler extends XoopsObjectHandler
             $sql = 'SELECT * FROM ' . $this->db->prefix('avatar') . ' WHERE avatar_id=' . $id;
             $result = $this->db->query($sql);
             if (!$this->db->isResultSet($result)) {
-                //    \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
                 return false;
             }
             $numrows = $this->db->getRowsNum($result);
@@ -300,7 +299,7 @@ class XoopsAvatarHandler extends XoopsObjectHandler
         $ret   = array();
         $limit = $start = 0;
         $sql   = 'SELECT a.*, COUNT(u.user_id) AS count FROM ' . $this->db->prefix('avatar') . ' a LEFT JOIN ' . $this->db->prefix('avatar_user_link') . ' u ON u.avatar_id=a.avatar_id';
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && \method_exists($criteria, 'renderWhere')) {
             $sql .= ' ' . $criteria->renderWhere();
             $sql .= ' GROUP BY a.avatar_id ORDER BY avatar_weight, avatar_id';
             $limit = $criteria->getLimit();
@@ -308,8 +307,11 @@ class XoopsAvatarHandler extends XoopsObjectHandler
         }
         $result = $this->db->query($sql, $limit, $start);
         if (!$this->db->isResultSet($result)) {
-            \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
+            throw new \RuntimeException(
+                \sprintf(_DB_QUERY_ERROR, $sql) . $this->db->error(), E_USER_ERROR
+            );
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $avatar = new XoopsAvatar();
             $avatar->assignVars($myrow);
@@ -336,12 +338,11 @@ class XoopsAvatarHandler extends XoopsObjectHandler
 
 
         $sql = 'SELECT COUNT(*) FROM ' . $this->db->prefix('avatar');
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        if (isset($criteria) && \method_exists($criteria, 'renderWhere')) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         $result = $this->db->query($sql);
         if (!$this->db->isResultSet($result)) {
-//            \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
             return 0;
         }
 
@@ -378,7 +379,7 @@ class XoopsAvatarHandler extends XoopsObjectHandler
      * Get User
      *
      * @param  XoopsAvatar $avatar
-     * @return array
+     * @return array|false
      */
     public function getUser(XoopsAvatar $avatar)
     {
@@ -392,9 +393,9 @@ class XoopsAvatarHandler extends XoopsObjectHandler
         $sql = 'SELECT user_id FROM ' . $this->db->prefix('avatar_user_link') . ' WHERE avatar_id=' . $avatar->getVar('avatar_id');
         $result = $this->db->query($sql);
         if (!$this->db->isResultSet($result)) {
-            //    \trigger_error("Query Failed! SQL: $sql- Error: " . $this->db->error(), E_USER_ERROR);
             return $ret;
         }
+        /** @var array $myrow */
         while (false !== ($myrow = $this->db->fetchArray($result))) {
             $ret[] = &$myrow['user_id'];
         }
@@ -405,7 +406,7 @@ class XoopsAvatarHandler extends XoopsObjectHandler
     /**
      * Get a list of Avatars
      *
-     * @param  string    $avatar_type 'S' for system, 'C' for custom
+     * @param string|null $avatar_type  'S' for system, 'C' for custom
      * @param  bool|null $avatar_display null lists all, bool respects avatar_display
      * @return array
      */
