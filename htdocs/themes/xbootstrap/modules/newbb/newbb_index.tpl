@@ -299,7 +299,7 @@
                     <ul class="list-unstyled lw30">
                         <{if isset($userstats)}>
                             <li><{*$userstats.lastvisit*}>
-                                <{$userstats.lastpost}>
+                                <{$userstats.lastpost|default:''}>
                             </li>
                         <{/if}>
 
@@ -307,9 +307,9 @@
                         <li><{$smarty.const._MD_NEWBB_TODAYPOSTSC}> <{$stats[0].post.day|default:0}></li>
 
                         <{if isset($userstats)}>
-                            <li><{$userstats.topics}> | <{$userstats.posts}></li>
-                            <{if $userstats.digests}>
-                                <li><{$userstats.digests}></li>
+                            <li><{$userstats.topics|default:''}> | <{$userstats.posts|default:''}></li>
+                            <{if isset($userstats.digests)}>
+                                <li><{$userstats.digests|default:''}></li>
                             <{/if}>
                         <{/if}>
                     </ul>
