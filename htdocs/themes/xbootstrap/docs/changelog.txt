@@ -1,3 +1,9 @@
+1.05 Beta 2 NOT RELEASED
+-------------------
+- updated .htaccess (mamba)
+- updated to Bootstrap 3.4.1 (mamba)
+- updated templates for Smarty 3
+
 1.05 Beta 1 NOT RELEASED
 -------------------
 - Update imagesLoaded to 4.1.1 (mamba)
