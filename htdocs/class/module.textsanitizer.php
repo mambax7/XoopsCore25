@@ -337,9 +337,6 @@ class MyTextSanitizer
             $text
         );
 
-        // Ensure consistent handling of newlines by converting them to <br /> tags
-        $text = nl2br($text);
-
         // Clean up extra newlines
         $text = preg_replace('/(<br \/>|<br>)[\n\s]*/', '$1', $text);
 
