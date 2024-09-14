@@ -29,14 +29,31 @@ class SystemCorePreload extends XoopsPreloadItem
     {
         global $xoopsConfig;
         $url = $args[0];
-        if (preg_match("/[\\0-\\31]|about:|script:/i", (string) $url)) {
-            if (!preg_match('/^\b(java)?script:([\s]*)history\.go\(-\d*\)([\s]*[;]*[\s]*)$/si', (string) $url)) {
+        $time = $args[1];
+        $message = $args[2];
+        $addRedirect = $args[3];
+        $allowExternalLink = $args[4];
+        if (preg_match("/[\\0-\\31]|about:|script:/i", $url)) {
+            if (!preg_match('/^\b(java)?script:([\s]*)history\.go\(-\d*\)([\s]*[;]*[\s]*)$/si', $url)) {
                 $url = XOOPS_URL;
             }
         }
+        if (!$allowExternalLink && $pos = strpos($url, '://')) {
+            $xoopsLocation = substr(XOOPS_URL, strpos(XOOPS_URL, '://') + 3);
+            if (strcasecmp(substr($url, $pos + 3, strlen($xoopsLocation)), $xoopsLocation)) {
+                $url = XOOPS_URL;
+            }
+        }
+        if (!empty($_SERVER['REQUEST_URI']) && $addRedirect && false !== strpos($url, 'user.php')) {
+            if (false === strpos($url, '?')) {
+                $url .= '?xoops_redirect=' . urlencode($_SERVER['REQUEST_URI']);
+            } else {
+                $url .= '&amp;xoops_redirect=' . urlencode($_SERVER['REQUEST_URI']);
+            }
+        }
         if (!headers_sent() && isset($xoopsConfig['redirect_message_ajax']) && $xoopsConfig['redirect_message_ajax']) {
-            $_SESSION['redirect_message'] = $args[2];
-            header('Location: ' . preg_replace('/[&]amp;/i', '&', (string) $url));
+            $_SESSION['redirect_message'] = $message;
+            header('Location: ' . preg_replace('/[&]amp;/i', '&', $url));
             exit();
         }
     }
