@@ -1,4 +1,5 @@
 <?php
+
 /**
  * XOOPS Kernel Class
  *
@@ -39,7 +40,7 @@ class XoopsMemberHandler
 
     /**
      * holds reference to group handler(DAO) class
-     * @access private
+     * @access protected
      */
     protected $groupHandler;
 
@@ -60,7 +61,7 @@ class XoopsMemberHandler
 
     /**
      * constructor
-     * @param XoopsDatabase|null| $db
+     * @param XoopsDatabase $db
      */
     public function __construct(XoopsDatabase $db)
     {
@@ -127,10 +128,10 @@ class XoopsMemberHandler
      */
     public function deleteGroup(XoopsGroup $group)
     {
-        $s1 = $this->membershipHandler->deleteAll(new Criteria('groupid', $group->getVar('groupid')));
+        $s1 = $this->membershipHandler->deleteAll(new \Criteria('groupid', $group->getVar('groupid')));
         $s2 = $this->groupHandler->delete($group);
 
-        return ($s1 && $s2);// ? true : false;
+        return ($s1 && $s2);
     }
 
     /**
@@ -141,18 +142,17 @@ class XoopsMemberHandler
      */
     public function deleteUser(XoopsUser $user)
     {
-        $s1 = $this->membershipHandler->deleteAll(new Criteria('uid', $user->getVar('uid')));
+        $s1 = $this->membershipHandler->deleteAll(new \Criteria('uid', $user->getVar('uid')));
         $s2 = $this->userHandler->delete($user);
 
-        return ($s1 && $s2);// ? true : false;
+        return ($s1 && $s2);
     }
 
     /**
      * insert a group into the database
      *
      * @param  XoopsGroup $group reference to the group to insert
-     * @return bool       TRUE if already in database and unchanged
-     *                           FALSE on failure
+     * @return bool TRUE if already in database and unchanged, FALSE on failure
      */
     public function insertGroup(XoopsGroup $group)
     {
@@ -164,9 +164,7 @@ class XoopsMemberHandler
      *
      * @param XoopsUser $user reference to the user to insert
      * @param bool      $force
-     *
-     * @return bool TRUE if already in database and unchanged
-     *              FALSE on failure
+     * @return bool TRUE if already in database and unchanged, FALSE on failure
      */
     public function insertUser(XoopsUser $user, $force = false)
     {
@@ -176,11 +174,11 @@ class XoopsMemberHandler
     /**
      * retrieve groups from the database
      *
-     * @param  CriteriaElement $criteria  {@link CriteriaElement}
+     * @param \CriteriaElement|null $criteria  {@link \CriteriaElement}
      * @param  bool            $id_as_key use the group's ID as key for the array?
      * @return array           array of {@link XoopsGroup} objects
      */
-    public function getGroups(?CriteriaElement $criteria = null, $id_as_key = false)
+    public function getGroups(?\CriteriaElement $criteria = null, $id_as_key = false)
     {
         return $this->groupHandler->getObjects($criteria, $id_as_key);
     }
@@ -188,11 +186,11 @@ class XoopsMemberHandler
     /**
      * retrieve users from the database
      *
-     * @param  CriteriaElement $criteria  {@link CriteriaElement}
+     * @param \CriteriaElement|null $criteria  {@link \CriteriaElement}
      * @param  bool            $id_as_key use the group's ID as key for the array?
      * @return array           array of {@link XoopsUser} objects
      */
-    public function getUsers(?CriteriaElement $criteria = null, $id_as_key = false)
+    public function getUsers(?\CriteriaElement $criteria = null, $id_as_key = false)
     {
         return $this->userHandler->getObjects($criteria, $id_as_key);
     }
@@ -200,10 +198,10 @@ class XoopsMemberHandler
     /**
      * get a list of groupnames and their IDs
      *
-     * @param  CriteriaElement $criteria {@link CriteriaElement} object
+     * @param \CriteriaElement|null $criteria {@link \CriteriaElement} object
      * @return array           associative array of group-IDs and names
      */
-    public function getGroupList(?CriteriaElement $criteria = null)
+    public function getGroupList(?\CriteriaElement $criteria = null)
     {
         $groups = $this->groupHandler->getObjects($criteria, true);
         $ret    = [];
@@ -217,12 +215,13 @@ class XoopsMemberHandler
     /**
      * get a list of usernames and their IDs
      *
-     * @param  CriteriaElement $criteria {@link CriteriaElement} object
+     * @param \CriteriaElement|null $criteria {@link \CriteriaElement} object
      * @return array           associative array of user-IDs and names
      */
-    public function getUserList(?CriteriaElement $criteria = null)
+    public function getUserList(?\CriteriaElement $criteria = null)
     {
-        $users = & $this->userHandler->getObjects($criteria, true);
+        // Remove unnecessary reference
+        $users = $this->userHandler->getObjects($criteria, true);
         $ret   = [];
         foreach (array_keys($users) as $i) {
             $ret[$i] = $users[$i]->getVar('uname');
@@ -256,11 +255,11 @@ class XoopsMemberHandler
      */
     public function removeUsersFromGroup($group_id, $user_ids = [])
     {
-        $criteria = new CriteriaCompo();
-        $criteria->add(new Criteria('groupid', $group_id));
-        $criteria2 = new CriteriaCompo();
+        $criteria = new \CriteriaCompo();
+        $criteria->add(new \Criteria('groupid', $group_id));
+        $criteria2 = new \CriteriaCompo();
         foreach ($user_ids as $uid) {
-            $criteria2->add(new Criteria('uid', $uid), 'OR');
+            $criteria2->add(new \Criteria('uid', $uid), 'OR');
         }
         $criteria->add($criteria2);
 
@@ -280,21 +279,25 @@ class XoopsMemberHandler
     public function getUsersByGroup($group_id, $asobject = false, $limit = 0, $start = 0)
     {
         $user_ids = $this->membershipHandler->getUsersByGroup($group_id, $limit, $start);
-        if (!$asobject) {
+
+        if (!$asobject || empty($user_ids)) {
             return $user_ids;
-        } else {
+        }
+
+        // Single batch query instead of N individual queries
+        $criteria = new \Criteria('uid', '(' . implode(',', array_map('intval', $user_ids)) . ')', 'IN');
+        $users    = $this->userHandler->getObjects($criteria, true);
+
+        // Preserve original order based on membership query
             $ret = [];
-            foreach ($user_ids as $u_id) {
-                $user = $this->getUser($u_id);
-                if (is_object($user)) {
-                    $ret[] = &$user;
+        foreach ($user_ids as $uid) {
+            if (isset($users[$uid])) {
+                $ret[] = $users[$uid];
                 }
-                unset($user);
             }
 
             return $ret;
         }
-    }
 
     /**
      * get a list of groups that a user is member of
@@ -306,48 +309,55 @@ class XoopsMemberHandler
     public function getGroupsByUser($user_id, $asobject = false)
     {
         $group_ids = $this->membershipHandler->getGroupsByUser($user_id);
-        if (!$asobject) {
+
+        if (!$asobject || empty($group_ids)) {
             return $group_ids;
-        } else {
+        }
+
+        // Single batch query instead of N individual queries
+        $criteria = new \Criteria('groupid', '(' . implode(',', array_map('intval', $group_ids)) . ')', 'IN');
+        $groups   = $this->groupHandler->getObjects($criteria, true);
+
+        // Preserve original order
             $ret = [];
-            foreach ($group_ids as $g_id) {
-                $ret[] = $this->getGroup($g_id);
+        foreach ($group_ids as $gid) {
+            if (isset($groups[$gid])) {
+                $ret[] = $groups[$gid];
+            }
             }
 
             return $ret;
         }
-    }
 
     /**
      * log in a user
      *
      * @param  string    $uname username as entered in the login form
      * @param  string    $pwd   password entered in the login form
-     *
      * @return XoopsUser|false logged in XoopsUser, FALSE if failed to log in
      */
     public function loginUser($uname, $pwd)
     {
-        $db = XoopsDatabaseFactory::getDatabaseConnection();
+        $db       = \XoopsDatabaseFactory::getDatabaseConnection();
         $uname = $db->escape($uname);
         $pwd = $db->escape($pwd);
-        $criteria = new Criteria('uname', $uname);
-        $user = & $this->userHandler->getObjects($criteria, false);
-        if (!$user || count($user) != 1) {
+        $criteria = new \Criteria('uname', $uname);
+        $users    = $this->userHandler->getObjects($criteria, false);
+        if (!$users || count($users) !== 1) {
             return false;
         }
+        $user = $users[0];
 
-        $hash = $user[0]->pass();
-        $type = substr($user[0]->pass(), 0, 1);
+        $hash = $user->pass();
         // see if we have a crypt like signature, old md5 hash is just hex digits
-        if ($type === '$') {
+        if (str_starts_with($hash, '$')) {
             if (!password_verify($pwd, $hash)) {
                 return false;
             }
             // check if hash uses the best algorithm (i.e. after a PHP upgrade)
             $rehash = password_needs_rehash($hash, PASSWORD_DEFAULT);
         } else {
-            if ($hash != md5($pwd)) {
+            if ($hash !== md5($pwd)) {
                 return false;
             }
             $rehash = true; // automatically update old style
@@ -355,13 +365,13 @@ class XoopsMemberHandler
         // hash used an old algorithm, so make it stronger
         if ($rehash) {
             if ($this->getColumnCharacterLength('users', 'pass') < 255) {
-                error_log('Upgrade required on users table!');
+                error_log('Upgrade required on users table for new password hashes!');
             } else {
-                $user[0]->setVar('pass', password_hash($pwd, PASSWORD_DEFAULT));
-                $this->userHandler->insert($user[0]);
+                $user->setVar('pass', password_hash($pwd, PASSWORD_DEFAULT));
+                $this->userHandler->insert($user);
             }
         }
-        return $user[0];
+        return $user;
     }
 
     /**
@@ -369,26 +379,25 @@ class XoopsMemberHandler
      *
      * @param string $table  database table
      * @param string $column table column
-     *
      * @return int|null max length or null on error
      */
     public function getColumnCharacterLength($table, $column)
     {
-        /** @var XoopsMySQLDatabase $db */
-        $db = XoopsDatabaseFactory::getDatabaseConnection();
+        /** @var \XoopsMySQLDatabase $db */
+        $db = \XoopsDatabaseFactory::getDatabaseConnection();
 
         $dbname = constant('XOOPS_DB_NAME');
         $table = $db->prefix($table);
 
         $sql = sprintf(
-            'SELECT `CHARACTER_MAXIMUM_LENGTH` FROM `information_schema`.`COLUMNS` '
-            . "WHERE TABLE_SCHEMA = '%s'AND TABLE_NAME = '%s' AND COLUMN_NAME = '%s'",
+            'SELECT `CHARACTER_MAXIMUM_LENGTH` FROM `information_schema`.`COLUMNS` ' .
+            "WHERE TABLE_SCHEMA = '%s' AND TABLE_NAME = '%s' AND COLUMN_NAME = '%s'",
             $db->escape($dbname),
             $db->escape($table),
-            $db->escape($column),
+            $db->escape($column)
         );
 
-        /** @var mysqli_result $result */
+        /** @var \mysqli_result $result */
         $result = $db->query($sql);
         if ($db->isResultSet($result)) {
             $row = $db->fetchRow($result);
@@ -403,10 +412,10 @@ class XoopsMemberHandler
     /**
      * count users matching certain conditions
      *
-     * @param  CriteriaElement $criteria {@link CriteriaElement} object
+     * @param \CriteriaElement|null $criteria {@link \CriteriaElement} object
      * @return int
      */
-    public function getUserCount(?CriteriaElement $criteria = null)
+    public function getUserCount(?\CriteriaElement $criteria = null)
     {
         return $this->userHandler->getCount($criteria);
     }
@@ -419,7 +428,7 @@ class XoopsMemberHandler
      */
     public function getUserCountByGroup($group_id)
     {
-        return $this->membershipHandler->getCount(new Criteria('groupid', $group_id));
+        return $this->membershipHandler->getCount(new \Criteria('groupid', $group_id));
     }
 
     /**
@@ -442,10 +451,10 @@ class XoopsMemberHandler
      *
      * @param  string          $fieldName  name of the field to update
      * @param  string          $fieldValue updated value for the field
-     * @param  CriteriaElement $criteria   {@link CriteriaElement} object
+     * @param \CriteriaElement|null $criteria   {@link \CriteriaElement} object
      * @return bool            TRUE if success or unchanged, FALSE on failure
      */
-    public function updateUsersByField($fieldName, $fieldValue, ?CriteriaElement $criteria = null)
+    public function updateUsersByField($fieldName, $fieldValue, ?\CriteriaElement $criteria = null)
     {
         return $this->userHandler->updateAll($fieldName, $fieldValue, $criteria);
     }
@@ -468,11 +477,19 @@ class XoopsMemberHandler
         return $this->userHandler->insert($user, true);
     }
 
+    /**
+     * Allowed sort columns for ORDER BY clauses.
+     * Supports both prefixed and non-prefixed keys for backward compatibility.
+     *
+     * @return array<string,string> Mapping of allowed sort keys to safe column names
+     */
     protected function allowedSortMap()
     {
         // Maps both prefixed and non-prefixed column names for flexibility
         // This allows sorting by 'uid' or 'u.uid' while maintaining security
+        // Both forms are intentionally supported for backwards compatibility
         return [
+            // Non-prefixed versions (BC)
             'uid'            => 'u.uid',
             'uname'          => 'u.uname',
             'email'          => 'u.email',
@@ -496,8 +513,8 @@ class XoopsMemberHandler
      * Get a list of users belonging to certain groups and matching criteria
      * Temporary solution
      *
-     * @param  array           $groups    IDs of groups
-     * @param  CriteriaElement $criteria  {@link CriteriaElement} object
+     * @param array                 $groups    IDs of groups (or single int)
+     * @param \CriteriaElement|null $criteria  {@link \CriteriaElement} object
      * @param  bool            $asobject  return the users as objects?
      * @param  bool            $id_as_key use the UID as key for the array if $asobject is TRUE
      * @return array           Array of {@link XoopsUser} objects (if $asobject is TRUE)
@@ -506,7 +523,7 @@ class XoopsMemberHandler
 
     public function getUsersByGroupLink(
         $groups,
-        $criteria = null,
+        ?CriteriaElement $criteria = null,
         $asobject = false,
         $id_as_key = false
     ) {
@@ -560,7 +577,7 @@ class XoopsMemberHandler
             // Only allow debug in explicitly known safe development indicators
             if ((defined('XOOPS_DEBUG') && XOOPS_DEBUG)
                 || (php_sapi_name() === 'cli')
-                || (isset($_SERVER['SERVER_ADDR']) && $_SERVER['SERVER_ADDR'] === '127.0.0.1')) {
+                || (isset($_SERVER['SERVER_ADDR']) && in_array($_SERVER['SERVER_ADDR'], ['127.0.0.1', '::1'], true))) {
                 $isProd = false;
             }
         }
@@ -574,30 +591,32 @@ class XoopsMemberHandler
          * @return string Redacted SQL query
          */
         $redactSql = static function (string $sql): string {
-            // Replace quoted strings with placeholders
+            // Replace quoted strings
             $sql = preg_replace("/'[^']*'/", "'?'", $sql);
             $sql = preg_replace('/"[^"]*"/', '"?"', $sql);
             // Replace hex literals
             $sql = preg_replace("/x'[0-9A-Fa-f]+'/", "x'?'", $sql);
-            // Replace large numbers (potential IDs) but keep small ones
-            // Removed overzealous redaction of large numbers to preserve legitimate identifiers
+            // Remove overly broad numeric redaction to preserve readability
             return $sql;
         };
 
         $ret           = [];
-        $criteriaCompo = new CriteriaCompo();
+        $criteriaCompo = new \CriteriaCompo();
         $select        = $asobject ? 'u.*' : 'u.uid';
         $sql = "SELECT {$select} FROM " . $this->userHandler->db->prefix('users') . ' u';
         $whereParts = [];
-        $limit = 0;
-        $start = 0;
 
-        // Sanitize and validate groups once - clean and efficient
+        // Stricter group ID sanitation (prevents "1e3" style scientific notation)
+        $intLike     = static function ($v) {
+            return is_int($v) || (is_string($v) && ctype_digit($v));
+        };
         $validGroups = array_values(
             array_unique(
                 array_filter(
-            array_map('intval', $groups),
-                static fn($id) => $id > 0
+                    array_map('intval', array_filter($groups, $intLike)),
+                    static function ($id) {
+                        return $id > 0;
+                    }
                 )
             )
         );
@@ -613,8 +632,7 @@ class XoopsMemberHandler
         $limit   = 0;
         $start   = 0;
         $orderBy = '';
-
-        // Handle criteria - compatible with CriteriaElement and subclasses
+        // Handle criteria - compatible with \CriteriaElement and subclasses
         if ($criteria instanceof \CriteriaElement) {
             $criteriaCompo->add($criteria, 'AND');
             $sqlCriteria = trim($criteriaCompo->render());
@@ -654,30 +672,19 @@ class XoopsMemberHandler
         $result = $this->userHandler->db->query($sql, $limit, $start);
 
         if (!$this->userHandler->db->isResultSet($result)) {
-            // Enhanced error logging with security considerations
-            $logger = class_exists('XoopsLogger') ? \XoopsLogger::getInstance() : null;
-                $error = $this->userHandler->db->error();
-
-            $msg = "Database query failed in " . __METHOD__ . ": {$error}";
+            $db    = $this->userHandler->db;
+            $error = method_exists($db, 'error') ? (string)$db->error() : 'Unknown database error';
+            $errno = method_exists($db, 'errno') ? (int)$db->errno() : 0;
+            $msg   = 'Database query failed in ' . __METHOD__ . ': ' . ($errno ? "{$error} (errno {$errno})" : $error);
 
             if ($isDebug) {
-                // Comprehensive log sanitizers to prevent injection and spoofing attacks
+                // Sanitize log values to prevent injection or layout spoofing
                 $sanitizeLogValue = static function ($value): string {
                     $s = (string)$value;
-                    // Strip ASCII control chars (including CR/LF) and DEL
-                    $s = preg_replace('/[\x00-\x1F\x7F]/', '', $s);
-                    // Strip Unicode bidi/isolation controls that can spoof log layout
-                    // U+202A..U+202E (LRE..RLO) and U+2066..U+2069 (LRI..PDI)
-                    $s = preg_replace(\XoopsMemberHandler::BIDI_CONTROL_REGEX, '', $s);
-                    // Collapse excessive whitespace
+                    $s = preg_replace('/[\x00-\x1F\x7F]/', '', $s); // Strip ASCII control chars
+                    $s = preg_replace(self::BIDI_CONTROL_REGEX, '', $s); // Strip Unicode bidi controls
                     $s = preg_replace('/\s+/', ' ', $s);
-                    // Length cap with mbstring fallback
-                    if (function_exists('mb_substr')) {
-                        $s = mb_substr($s, 0, 256, 'UTF-8');
-                    } else {
-                        $s = substr($s, 0, 256);
-                    }
-                    return $s;
+                    return mb_substr($s, 0, 256);
                 };
 
                 $sanitizeMethod = static function ($method) use ($sanitizeLogValue): string {
@@ -687,44 +694,38 @@ class XoopsMemberHandler
                 };
 
                 $sanitizeUri = static function ($uri) use ($sanitizeLogValue): string {
-                    $u     = (string)$uri;
-                    $parts = parse_url($u);
+                    $parts = parse_url((string)$uri);
                     $path  = $sanitizeLogValue($parts['path'] ?? '/');
-                    // Redact sensitive query params
-                    $qs = '';
-                    if (!empty($parts['query'])) {
+                    if (empty($parts['query'])) {
+                        return $path;
+                    }
                         parse_str($parts['query'], $q);
-                        $redact = self::SENSITIVE_PARAMS;
                         foreach ($q as $k => &$v) {
-                            $kLower = strtolower((string)$k);
-                            if (in_array($kLower, $redact, true)) {
+                        if (in_array(strtolower((string)$k), self::SENSITIVE_PARAMS, true)) {
                                 $v = 'REDACTED';
                             } else {
-                                $v = is_array($v) ? $sanitizeLogValue(json_encode($v)) : $sanitizeLogValue($v);
+                            $v = is_array($v) ? '[ARRAY]' : $sanitizeLogValue($v);
                             }
                         }
                         unset($v);
-                        $qs = $sanitizeLogValue(http_build_query($q));
-                    }
-                    return $qs !== '' ? $path . '?' . $qs : $path;
+                    $qs = http_build_query($q);
+                    return $qs ? $path . '?' . $qs : $path;
                 };
-
-                // Add correlation context for easier debugging
                 $context = [
-                    'user_id'      => isset($GLOBALS['xoopsUser']) && $GLOBALS['xoopsUser'] ? (int)$GLOBALS['xoopsUser']->getVar('uid') : 'anonymous',
+                    'user_id'      => isset($GLOBALS['xoopsUser']) ? (int)$GLOBALS['xoopsUser']->getVar('uid') : 'anonymous',
                     'uri'          => isset($_SERVER['REQUEST_URI']) ? $sanitizeUri($_SERVER['REQUEST_URI']) : 'cli',
                     'method'       => isset($_SERVER['REQUEST_METHOD']) ? $sanitizeMethod($_SERVER['REQUEST_METHOD']) : 'CLI',
-                    'groups_count' => count($validGroups),
+                    'groups_count' => (int)count($validGroups),
                 ];
                 $msg .= ' Context: ' . json_encode($context, JSON_UNESCAPED_SLASHES);
                 $msg .= ' SQL: ' . $redactSql($sql);
             }
 
-            if ($logger) {
-                $logger->handleError(E_USER_WARNING, $msg, __FILE__, __LINE__);
+            if (class_exists('XoopsLogger')) {
+                \XoopsLogger::getInstance()
+                            ->handleError(E_USER_WARNING, $msg, __FILE__, __LINE__);
             } else {
-                // Enhanced fallback logging with file/line info
-                error_log($msg . " in " . __FILE__ . " on line " . __LINE__);
+                error_log($msg . ' in ' . __FILE__ . ' on line ' . __LINE__);
             }
 
             return $ret;
@@ -733,11 +734,15 @@ class XoopsMemberHandler
         // Process results with enhanced type safety
         while (false !== ($myrow = $this->userHandler->db->fetchArray($result))) {
             if ($asobject) {
-                $user = new XoopsUser();
+                $user = new \XoopsUser();
                 $user->assignVars($myrow);
                 if ($id_as_key) {
+                    // This block runs when $id_as_key is TRUE.
+                    // It correctly uses the user's ID as the array key.
                     $ret[(int)$myrow['uid']] = $user;
                 } else {
+                    // This block runs when $id_as_key is FALSE.
+                    // It correctly appends the user to the array with a numeric index.
                     $ret[] = $user;
                 }
             } else {
@@ -754,34 +759,146 @@ class XoopsMemberHandler
      * Temporary solution
      *
      * @param  array           $groups IDs of groups
-     * @param  CriteriaElement $criteria
+     * @param \CriteriaElement|null $criteria
      * @return int             count of users
      */
-    public function getUserCountByGroupLink(array $groups, ?CriteriaElement $criteria = null)
+    public function getUserCountByGroupLink(array $groups, ?\CriteriaElement $criteria = null)
     {
-        $ret           = 0;
-        $criteriaCompo = new CriteriaCompo();
-        $sql = "SELECT COUNT(*) FROM " . $this->userHandler->db->prefix('users') . " u WHERE ";
-        if (!empty($groups)) {
-            $group_in = is_array($groups) ? '(' . implode(', ', $groups) . ')' : (array) $groups;
-            $sql .= " EXISTS (SELECT * FROM " . $this->membershipHandler->db->prefix('groups_users_link')
-                . " m " . "WHERE m.groupid IN {$group_in} and m.uid = u.uid) ";
+        // Debug configuration using only current XOOPS debug system
+        $xoopsDebugMode       = isset($GLOBALS['xoopsConfig']['debug_mode']) ? (int)$GLOBALS['xoopsConfig']['debug_mode'] : 0;
+        $xoopsPhpDebugEnabled = ($xoopsDebugMode === 1 || $xoopsDebugMode === 2);
+        $xoopsDebugAllowed    = $xoopsPhpDebugEnabled;
+        if ($xoopsPhpDebugEnabled && isset($GLOBALS['xoopsConfig']['debugLevel'])) {
+            $debugLevel       = (int)$GLOBALS['xoopsConfig']['debugLevel'];
+            $xoopsUser        = $GLOBALS['xoopsUser'] ?? null;
+            $xoopsUserIsAdmin = isset($GLOBALS['xoopsUserIsAdmin']) ? $GLOBALS['xoopsUserIsAdmin'] : false;
+            switch ($debugLevel) {
+                case 2: // Admins only
+                    $xoopsDebugAllowed = $xoopsUserIsAdmin;
+                    break;
+                case 1: // Members only
+                    $xoopsDebugAllowed = ($xoopsUser !== null);
+                    break;
+                case 0: // All users
+                default:
+                    $xoopsDebugAllowed = true;
+                    break;
         }
-
-        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
+        }
+        // Production safety check - use secure environment detection
+        $isProd = false;
+        if (defined('XOOPS_PRODUCTION') && XOOPS_PRODUCTION) {
+            $isProd = true;
+        } elseif (getenv('XOOPS_ENV') === 'production') {
+            $isProd = true;
+        } else {
+            $isProd = true;
+            // Only allow debug in explicitly known safe development indicators
+            if ((defined('XOOPS_DEBUG') && XOOPS_DEBUG)
+                || (php_sapi_name() === 'cli')
+                || (isset($_SERVER['SERVER_ADDR']) && in_array($_SERVER['SERVER_ADDR'], ['127.0.0.1', '::1'], true))) {
+                $isProd = false;
+            }
+        }
+        $isDebug       = $xoopsDebugAllowed && !$isProd;
+        $redactSql     = static function (string $sql): string {
+            $sql = preg_replace("/'[^']*'/", "'?'", $sql);
+            $sql = preg_replace('/"[^"]*"/', '"?"', $sql);
+            $sql = preg_replace("/x'[0-9A-Fa-f]+'/", "x'?'", $sql);
+            return $sql;
+        };
+        $db            = $this->userHandler->db;
+        $sql           = 'SELECT COUNT(*) FROM ' . $db->prefix('users') . ' u';
+        $whereParts    = [];
+        $criteriaCompo = new \CriteriaCompo();
+        // Stricter group ID sanitation (prevents "1e3" style scientific notation)
+        $intLike     = static function ($v) {
+            return is_int($v) || (is_string($v) && ctype_digit($v));
+        };
+        $validGroups = array_values(
+            array_unique(
+                array_filter(
+                    array_map('intval', array_filter($groups, $intLike)),
+                    static function ($id) {
+                        return $id > 0;
+                    }
+                )
+            )
+        );
+        // Build group filtering
+        if (!empty($validGroups)) {
+            $group_in     = '(' . implode(', ', $validGroups) . ')';
+            $whereParts[] = 'EXISTS (SELECT 1 FROM ' . $this->membershipHandler->db->prefix('groups_users_link')
+                            . " m WHERE m.uid = u.uid AND m.groupid IN {$group_in})";
+        }
+        // Handle criteria - use instanceof consistently
+        if ($criteria instanceof \CriteriaElement) {
             $criteriaCompo->add($criteria, 'AND');
+            $sqlCriteria = trim($criteriaCompo->render());
+            $sqlCriteria = preg_replace('/^\s*WHERE\s+/i', '', $sqlCriteria);
+            if ($sqlCriteria !== '') {
+                $whereParts[] = $sqlCriteria;
         }
-        $sql_criteria = $criteriaCompo->render();
-
-        if ($sql_criteria) {
-            $sql .= ' AND ' . $sql_criteria;
         }
-        $result = $this->userHandler->db->query($sql);
-        if (!$this->userHandler->db->isResultSet($result)) {
-            return $ret;
+        // Build WHERE clause only if conditions exist
+        if (!empty($whereParts)) {
+            $sql .= ' WHERE ' . implode(' AND ', $whereParts);
         }
-        [$ret] = $this->userHandler->db->fetchRow($result);
-
-        return (int) $ret;
+        $result = $db->query($sql);
+        if (!$db->isResultSet($result)) {
+            $error = method_exists($db, 'error') ? (string)$db->error() : 'Unknown database error';
+            $errno = method_exists($db, 'errno') ? (int)$db->errno() : 0;
+            $msg   = 'Database query failed in ' . __METHOD__ . ': ' . ($errno ? "{$error} (errno {$errno})" : $error);
+            if ($isDebug) {
+                // Sanitize log values to prevent injection or layout spoofing
+                $sanitizeLogValue = static function ($value): string {
+                    $s = (string)$value;
+                    $s = preg_replace('/[\x00-\x1F\x7F]/', '', $s); // Strip ASCII control chars
+                    $s = preg_replace(self::BIDI_CONTROL_REGEX, '', $s); // Strip Unicode bidi controls
+                    $s = preg_replace('/\s+/', ' ', $s);
+                    return mb_substr($s, 0, 256);
+                };
+                $sanitizeMethod   = static function ($method) use ($sanitizeLogValue): string {
+                    $m     = strtoupper($sanitizeLogValue($method));
+                    $allow = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'];
+                    return in_array($m, $allow, true) ? $m : 'OTHER';
+                };
+                $sanitizeUri      = static function ($uri) use ($sanitizeLogValue): string {
+                    $parts = parse_url((string)$uri);
+                    $path  = $sanitizeLogValue($parts['path'] ?? '/');
+                    if (empty($parts['query'])) {
+                        return $path;
+                    }
+                    parse_str($parts['query'], $q);
+                    foreach ($q as $k => &$v) {
+                        if (in_array(strtolower((string)$k), self::SENSITIVE_PARAMS, true)) {
+                            $v = 'REDACTED';
+                        } else {
+                            $v = is_array($v) ? '[ARRAY]' : $sanitizeLogValue($v);
+                        }
+                    }
+                    unset($v);
+                    $qs = http_build_query($q);
+                    return $qs ? $path . '?' . $qs : $path;
+                };
+                $context          = [
+                    'user_id'      => isset($GLOBALS['xoopsUser']) ? (int)$GLOBALS['xoopsUser']->getVar('uid') : 'anonymous',
+                    'uri'          => isset($_SERVER['REQUEST_URI']) ? $sanitizeUri($_SERVER['REQUEST_URI']) : 'cli',
+                    'method'       => isset($_SERVER['REQUEST_METHOD']) ? $sanitizeMethod($_SERVER['REQUEST_METHOD']) : 'CLI',
+                    'groups_count' => count($validGroups),
+                ];
+                $msg              .= ' Context: ' . json_encode($context, JSON_UNESCAPED_SLASHES);
+                $msg              .= ' SQL: ' . $redactSql($sql);
+            }
+            if (class_exists('XoopsLogger')) {
+                \XoopsLogger::getInstance()
+                            ->handleError(E_USER_WARNING, $msg, __FILE__, __LINE__);
+            } else {
+                error_log($msg . ' in ' . __FILE__ . ' on line ' . __LINE__);
+            }
+            return 0;
+        }
+        $row = $db->fetchRow($result);
+        return $row ? (int)$row[0] : 0;
     }
 }
