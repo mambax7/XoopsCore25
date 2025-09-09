@@ -713,23 +713,38 @@ class XoopsMemberHandler
     }
 
     /**
-     * Generate a secure random token
-     * @param int $length Token length
+     * Generate a secure random token (hex-encoded).
+     * @param int $length Desired token length in HEX characters (4 bits per char). Clamped to [8, 32].
      * @return string Random token
      */
-    private function generateSecureToken($length = 16)
+    private function generateSecureToken($length = 32)
     {
-        if (function_exists('random_bytes')) {
-            // PHP 7.0+
-            return substr(bin2hex(random_bytes($length)), 0, $length);
-        } elseif (function_exists('openssl_random_pseudo_bytes')) {
-            // PHP 5.3+ with OpenSSL
-            return substr(bin2hex(openssl_random_pseudo_bytes($length)), 0, $length);
-        } else {
-            // Fallback to less secure method
-            return substr(md5(uniqid(mt_rand(), true)), 0, $length);
+        $length = max(8, min(128, (int)$length));
+        $bytes  = (int)ceil($length / 2);
+
+        // Prefer the OS CSPRNG
+        try {
+            if (function_exists('random_bytes')) {
+                return substr(bin2hex(random_bytes($bytes)), 0, $length);
+            }
+        } catch (\Throwable $e) {
+            // fall through to OpenSSL
         }
+
+        // OpenSSL fallback with mandatory checks
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            $crypto_strong = false;                // initialize for static analyzers
+            $raw = openssl_random_pseudo_bytes($bytes, $crypto_strong);
+            if ($raw !== false && $crypto_strong === true) {
+                return substr(bin2hex($raw), 0, $length);
+            }
+        }
+
+        // Best practice: fail closed (or return false) rather than a weak fallback
+        throw new \RuntimeException('No CSPRNG available to generate a secure token.');
     }
+
+
 
     /**
      * Check if debug output is allowed
