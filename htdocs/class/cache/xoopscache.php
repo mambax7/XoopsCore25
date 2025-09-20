@@ -33,7 +33,7 @@ class XoopsCache
      * @access protected
      */
 
-    protected $engine;
+    protected $engine = [];
 
     /**
      * Cache configuration stack
@@ -49,7 +49,7 @@ class XoopsCache
      * @var array
      * @access private
      */
-    private $name;
+    private $name = '';
 
     /**
      * XoopsCache::__construct()
@@ -108,6 +108,9 @@ class XoopsCache
         $_this = XoopsCache::getInstance();
         if (is_array($name)) {
             extract($name);
+        }
+        if (null === $name) {
+            $name = 'default';
         }
 
         if (isset($_this->configs[$name])) {
@@ -210,7 +213,7 @@ class XoopsCache
      * @return boolean True if the data was successfully cached, false on failure
      * @access public
      */
-    public static function write($key, $value, $duration = null)
+    public static function write($key, $value, $duration = '')
     {
         $key    = substr(md5(XOOPS_URL), 0, 8) . '_' . $key;
         $_this  = XoopsCache::getInstance();
@@ -291,8 +294,8 @@ class XoopsCache
     /**
      * Delete a key from the cache
      *
-     * @param  string $key    Identifier for the data
-     * @param  string $config name of the configuration to use
+     * @param string      $key    Identifier for the data
+     * @param string|null $config name of the configuration to use
      * @return boolean True if the value was successfully deleted, false if it didn't exist or couldn't be removed
      * @access public
      */
@@ -321,8 +324,8 @@ class XoopsCache
     /**
      * Delete all keys from the cache
      *
-     * @param  boolean $check  if true will check expiration, otherwise delete all
-     * @param  string  $config name of the configuration to use
+     * @param boolean     $check  if true will check expiration, otherwise delete all
+     * @param string|null $config name of the configuration to use
      * @return boolean True if the cache was successfully cleared, false otherwise
      * @access public
      */
@@ -344,7 +347,7 @@ class XoopsCache
     /**
      * Check if Cache has initialized a working storage engine
      *
-     * @param  string $engine Name of the engine
+     * @param  string|null $engine Name of the engine
      * @return bool
      * @internal param string $configs Name of the configuration setting
      * @access   public
@@ -362,7 +365,7 @@ class XoopsCache
     /**
      * Return the settings for current cache engine
      *
-     * @param  string $engine Name of the engine
+     * @param  string|null $engine Name of the engine
      * @return array  list of settings for this engine
      * @access public
      */
