@@ -422,7 +422,8 @@ class Protector
     public function get_bad_ips($with_jailed_time = false)
     {
         //        list($bad_ips_serialized) = @file(Protector::get_filepath4badips());
-        $filepath4badips = @file(Protector::get_filepath4badips());
+        $filepath = Protector::get_filepath4badips();
+        $filepath4badips = file_exists($filepath) ? file($filepath) : false;
 
         if (is_array($filepath4badips) && isset($filepath4badips[0])) {
             [$bad_ips_serialized] = $filepath4badips;
