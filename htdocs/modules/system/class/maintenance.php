@@ -60,6 +60,9 @@ class SystemMaintenance
      */
     private function isValidTable($table)
     {
+        // Defense-in-depth: callers currently always pass strings, but this is a
+        // security-critical path validating user-influenced input.
+        // @scrutinizer ignore-type
         if (!is_string($table)) {
             return false;
         }
@@ -81,6 +84,9 @@ class SystemMaintenance
      */
     private function isValidPrefixedTable($prefixedTable)
     {
+        // Defense-in-depth: callers currently always pass strings, but this is a
+        // security-critical path validating user-influenced input.
+        // @scrutinizer ignore-type
         if (!is_string($prefixedTable)) {
             return false;
         }
