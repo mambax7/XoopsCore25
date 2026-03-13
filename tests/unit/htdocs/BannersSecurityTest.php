@@ -53,15 +53,15 @@ class BannersSecurityTest extends TestCase
     #[Test]
     public function legacyPlaintextPasswordDetectedAsNonHashed(): void
     {
-        // password_get_info() returns null (PHP 8.4+) or 0 (PHP 8.2-8.3)
-        // for unrecognized/plaintext strings — either way, not a valid algo
+        // All modern password_hash() outputs start with '$' (e.g. $2y$, $argon2).
+        // Plaintext passwords never start with '$', so str_starts_with is
+        // the most reliable detection — password_get_info() returns algo=0
+        // (not null) for unrecognized strings, which is easy to mishandle.
         $plaintext = 'oldPlainPassword';
-        $info = password_get_info($plaintext);
-        $algo = $info['algo'];
 
-        $this->assertTrue(
-            $algo === null || $algo === 0,
-            'Expected algo to be null or 0 for plaintext, got: ' . var_export($algo, true)
+        $this->assertFalse(
+            str_starts_with($plaintext, '$'),
+            'Plaintext password should not start with $'
         );
     }
 
@@ -69,12 +69,10 @@ class BannersSecurityTest extends TestCase
     public function bcryptHashDetectedAsHashed(): void
     {
         $hash = password_hash('somePass', PASSWORD_DEFAULT);
-        $info = password_get_info($hash);
-        $algo = $info['algo'];
 
         $this->assertTrue(
-            $algo !== null && $algo !== 0,
-            'Expected algo to be a valid identifier for bcrypt hash'
+            str_starts_with($hash, '$'),
+            'Bcrypt hash should start with $'
         );
     }
 
@@ -106,8 +104,8 @@ class BannersSecurityTest extends TestCase
 
         // The new hash should verify correctly
         $this->assertTrue(password_verify($plaintext, $newHash));
-        // And it should now be detected as a proper hash
-        $this->assertNotNull(password_get_info($newHash)['algo']);
+        // And it should now be detected as a proper hash (starts with $)
+        $this->assertTrue(str_starts_with($newHash, '$'));
     }
 
     #[Test]

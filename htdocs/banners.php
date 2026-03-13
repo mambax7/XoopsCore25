@@ -484,23 +484,28 @@ switch ($op) {
             }
             [$clientId, $storedHash] = $row;
 
-            // Verify password: support both bcrypt hashes and legacy plaintext
+            // Verify password: support both bcrypt hashes and legacy plaintext.
+            // All modern password_hash() outputs start with '$' (e.g. $2y$, $argon2).
+            // password_get_info() returns algo=0 (not null) for unrecognized strings,
+            // so checking for '$' prefix is the most reliable detection method.
             $authenticated = false;
-            $algo = password_get_info($storedHash)['algo'];
-            if ($algo !== null && $algo !== 0) {
+            if (str_starts_with((string) $storedHash, '$')) {
                 // Modern hashed password
                 $authenticated = password_verify($clean_pass, $storedHash);
                 // Rehash if algorithm or cost has changed
                 if ($authenticated && password_needs_rehash($storedHash, PASSWORD_DEFAULT)) {
                     $newHash = password_hash($clean_pass, PASSWORD_DEFAULT);
                     // Only store if column is wide enough for the hash
-                    if (bannerClientPasswdColumnLength($xoopsDB) >= strlen($newHash)) {
+                    $colLen = bannerClientPasswdColumnLength($xoopsDB);
+                    if ($colLen >= strlen($newHash)) {
                         $xoopsDB->exec(sprintf(
                             'UPDATE %s SET passwd=%s WHERE cid=%u',
                             $xoopsDB->prefix('bannerclient'),
                             $xoopsDB->quote($newHash),
                             (int) $clientId
                         ));
+                    } else {
+                        trigger_error('bannerclient.passwd column too narrow for password hash; run schema migration', E_USER_WARNING);
                     }
                 }
             } else {
@@ -509,13 +514,16 @@ switch ($op) {
                     $authenticated = true;
                     $newHash = password_hash($clean_pass, PASSWORD_DEFAULT);
                     // Only store if column is wide enough for the hash
-                    if (bannerClientPasswdColumnLength($xoopsDB) >= strlen($newHash)) {
+                    $colLen = bannerClientPasswdColumnLength($xoopsDB);
+                    if ($colLen >= strlen($newHash)) {
                         $xoopsDB->exec(sprintf(
                             'UPDATE %s SET passwd=%s WHERE cid=%u',
                             $xoopsDB->prefix('bannerclient'),
                             $xoopsDB->quote($newHash),
                             (int) $clientId
                         ));
+                    } else {
+                        trigger_error('bannerclient.passwd column too narrow for password hash; run schema migration', E_USER_WARNING);
                     }
                 }
             }
