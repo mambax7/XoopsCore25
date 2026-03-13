@@ -205,10 +205,10 @@ switch ($op) {
             if ($colLen >= strlen($hashedPasswd)) {
                 $obj->setVar('passwd', $hashedPasswd);
             } else {
-                redirect_header('admin.php?fct=banners', 5, 'Cannot save hashed password: bannerclient.passwd column is too small. Please run the upgrade from Administration &rarr; System &rarr; Maintenance &rarr; Upgrade first.');
+                redirect_header('admin.php?fct=banners', 5, _AM_SYSTEM_BANNERS_PASSWD_COL_NARROW);
             }
         } elseif ($obj->isNew()) {
-            redirect_header('admin.php?fct=banners', 3, 'Password is required for new banner clients.');
+            redirect_header('admin.php?fct=banners', 3, _AM_SYSTEM_BANNERS_PASSWD_REQUIRED);
         }
         $obj->setVar('extrainfo', Request::getText('extrainfo', ''));
 

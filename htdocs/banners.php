@@ -310,7 +310,7 @@ function emailStats($cid, $bid)
         if ($xoopsDB->isResultSet($result2) && $result2 instanceof \mysqli_result) {
             $row = $xoopsDB->fetchRow($result2);
             if (false === $row) {
-                redirect_header('banners.php', 2);
+                redirect_header('banners.php', 2, _BANNERS_REQUEST_INVALID);
             }
             [$name, $email] = $row;
             if ($email == '') {
@@ -321,7 +321,7 @@ function emailStats($cid, $bid)
                 if ($xoopsDB->isResultSet($result) && $result instanceof \mysqli_result) {
                     $row = $xoopsDB->fetchRow($result);
                     if (false === $row) {
-                        redirect_header('banners.php', 2);
+                        redirect_header('banners.php', 2, _BANNERS_REQUEST_INVALID);
                     }
                     [$bid, $imptotal, $impmade, $clicks, $imageurl, $clickurl] = $row;
                     if ($impmade == 0) {
@@ -351,7 +351,7 @@ function emailStats($cid, $bid)
             }
         }
     }
-    redirect_header('banners.php', 2);
+    redirect_header('banners.php', 2, _BANNERS_REQUEST_INVALID);
 }
 
 /**
@@ -377,7 +377,7 @@ function change_banner_url_by_client($cid, $bid, $url)
             redirect_header('banners.php?op=Ok', 3, _BANNERS_DBUPDATED);
         }
     }
-    redirect_header('banners.php', 2);
+    redirect_header('banners.php', 2, _BANNERS_REQUEST_INVALID);
 }
 
 /**

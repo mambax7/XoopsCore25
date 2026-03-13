@@ -58,5 +58,6 @@ define('_BANNERS_NO_ID', 'No valid ID detected');
 //2.5.12
 
 define('_BANNERS_NO_FLASH', '>Sorry, Flash (.swf) files are no longer supported. Please use a modern video format.');
+define('_BANNERS_REQUEST_INVALID', 'Your request could not be processed. Please log in and try again.');
 
 
