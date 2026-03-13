@@ -69,6 +69,9 @@ define('_AM_SYSTEM_BANNERS_EXTINFO', 'Extra Info:');
 define('_AM_SYSTEM_BANNERS_CHGCLI', 'Change Client');
 define('_AM_SYSTEM_BANNERS_USEHTML', 'Use HTML code?');
 define('_AM_SYSTEM_BANNERS_CODEHTML', 'Enter HTML code:');
+// Password validation
+define('_AM_SYSTEM_BANNERS_PASSWD_REQUIRED', 'Password is required for new banner clients.');
+define('_AM_SYSTEM_BANNERS_PASSWD_COL_NARROW', 'Cannot save hashed password: bannerclient.passwd column is too small. Please run the upgrade from Administration &rarr; System &rarr; Maintenance &rarr; Upgrade first.');
 // Tips
 define('_AM_SYSTEM_BANNERS_NAV_TIPS', '
 <ul>
