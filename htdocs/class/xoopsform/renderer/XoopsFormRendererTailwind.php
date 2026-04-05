@@ -69,6 +69,28 @@ class XoopsFormRendererTailwind implements XoopsFormRendererInterface
     }
 
     /**
+     * Encode a value for use inside a JavaScript string literal in an inline
+     * `<script>` block.
+     *
+     * Uses `json_encode` with `JSON_HEX_*` flags so the result cannot break out
+     * of the surrounding `<script>` via `</script>`, cannot escape the string
+     * via single/double quotes, and cannot introduce HTML entities via `&`.
+     * The returned value INCLUDES its own surrounding quotes — do not wrap it
+     * in `"..."` at the call site.
+     *
+     * @param string $value raw value to encode
+     *
+     * @return string JSON-encoded string literal including surrounding quotes
+     */
+    protected function esJs(string $value): string
+    {
+        return (string) json_encode(
+            $value,
+            JSON_HEX_TAG | JSON_HEX_QUOT | JSON_HEX_APOS | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE,
+        );
+    }
+
+    /**
      * Capture a form element's render() output as a string.
      *
      * XoopsFormElement::render() is empty in the base class but all concrete
@@ -161,11 +183,11 @@ class XoopsFormRendererTailwind implements XoopsFormRendererInterface
         $ret = '<div class="flex flex-wrap gap-2">';
         if ($element->_showDelete) {
             $ret .= '<button type="submit" class="btn btn-error" name="delete" id="delete"'
-                . ' onclick="this.form.elements.op.value=\'delete\'">' . _DELETE . '</button>';
+                . ' onclick="this.form.elements.op.value=\'delete\'">' . $this->esc(_DELETE) . '</button>';
         }
         $ret .= '<input type="button" class="btn btn-error" name="cancel" id="cancel"'
             . ' onClick="history.go(-1);return true;" value="' . $this->esc(_CANCEL) . '">'
-            . '<button type="reset" class="btn btn-warning" name="reset" id="reset">' . _RESET . '</button>'
+            . '<button type="reset" class="btn btn-warning" name="reset" id="reset">' . $this->esc(_RESET) . '</button>'
             . '<button type="' . $type . '" class="btn btn-success"'
             . self::ATTR_NAME . $name . self::ATTR_ID . $name . '"'
             . $this->renderExtra($element) . '>' . $value . '</button>'
@@ -371,7 +393,7 @@ EOJS;
      * @param string $onclickJs    JavaScript expression for the onclick handler
      *                             (will be used inside a single-quoted HTML attribute,
      *                             so the caller must ensure it is already safe for that context)
-     * @param string $title        tooltip text (caller must escape if user-sourced)
+     * @param string $title        tooltip text (raw — escaped internally for the title attribute)
      * @param string $iconClass    Font Awesome icon class string (e.g. 'fa-solid fa-link')
      * @param string $trailingHtml optional HTML appended after the icon span
      *
@@ -381,7 +403,7 @@ EOJS;
     {
         return "<button type='button' class='" . $class
             . "' onclick='" . $onclickJs
-            . "' title='" . $title . "'>"
+            . "' title='" . $this->esc($title) . "'>"
             . "<span class='" . $iconClass . "' aria-hidden='true'></span>"
             . $trailingHtml
             . '</button>';
@@ -399,11 +421,11 @@ EOJS;
         $textarea_id = $this->esc($element->getName(false));
         $btn         = self::BTN_NEUTRAL_SM;
         $code        = "<div class='flex flex-wrap gap-1'>";
-        $code .= $this->renderEditorButton($btn, 'xoopsCodeUrl("' . $textarea_id . '", "' . $this->esc(_ENTERURL) . '", "' . $this->esc(_ENTERWEBTITLE) . '")', $this->esc(_XOOPS_FORM_ALT_URL), 'fa-solid fa-link');
-        $code .= $this->renderEditorButton($btn, 'xoopsCodeEmail("' . $textarea_id . '", "' . $this->esc(_ENTEREMAIL) . '", "' . $this->esc(_ENTERWEBTITLE) . '")', $this->esc(_XOOPS_FORM_ALT_EMAIL), 'fa-solid fa-envelope');
-        $code .= $this->renderEditorButton($btn, 'xoopsCodeImg("' . $textarea_id . '", "' . $this->esc(_ENTERIMGURL) . '", "' . $this->esc(_ENTERIMGPOS) . '", "' . $this->esc(_IMGPOSRORL) . '", "' . $this->esc(_ERRORIMGPOS) . '", "' . $this->esc(_XOOPS_FORM_ALT_ENTERWIDTH) . '")', $this->esc(_XOOPS_FORM_ALT_IMG), 'fa-solid fa-file-image');
-        $code .= $this->renderEditorButton($btn, 'openWithSelfMain("' . XOOPS_URL . '/imagemanager.php?target=' . $textarea_id . '","imgmanager",400,430)', $this->esc(_XOOPS_FORM_ALT_IMAGE), 'fa-solid fa-file-image', '<small> Manager</small>');
-        $code .= $this->renderEditorButton($btn, 'openWithSelfMain("' . XOOPS_URL . '/misc.php?action=showpopups&amp;type=smilies&amp;target=' . $textarea_id . '","smilies",300,475)', $this->esc(_XOOPS_FORM_ALT_SMILEY), 'fa-solid fa-face-smile');
+        $code .= $this->renderEditorButton($btn, 'xoopsCodeUrl("' . $textarea_id . '", "' . $this->esc(_ENTERURL) . '", "' . $this->esc(_ENTERWEBTITLE) . '")', _XOOPS_FORM_ALT_URL, 'fa-solid fa-link');
+        $code .= $this->renderEditorButton($btn, 'xoopsCodeEmail("' . $textarea_id . '", "' . $this->esc(_ENTEREMAIL) . '", "' . $this->esc(_ENTERWEBTITLE) . '")', _XOOPS_FORM_ALT_EMAIL, 'fa-solid fa-envelope');
+        $code .= $this->renderEditorButton($btn, 'xoopsCodeImg("' . $textarea_id . '", "' . $this->esc(_ENTERIMGURL) . '", "' . $this->esc(_ENTERIMGPOS) . '", "' . $this->esc(_IMGPOSRORL) . '", "' . $this->esc(_ERRORIMGPOS) . '", "' . $this->esc(_XOOPS_FORM_ALT_ENTERWIDTH) . '")', _XOOPS_FORM_ALT_IMG, 'fa-solid fa-file-image');
+        $code .= $this->renderEditorButton($btn, 'openWithSelfMain("' . XOOPS_URL . '/imagemanager.php?target=' . $textarea_id . '","imgmanager",400,430)', _XOOPS_FORM_ALT_IMAGE, 'fa-solid fa-file-image', '<small> Manager</small>');
+        $code .= $this->renderEditorButton($btn, 'openWithSelfMain("' . XOOPS_URL . '/misc.php?action=showpopups&amp;type=smilies&amp;target=' . $textarea_id . '","smilies",300,475)', _XOOPS_FORM_ALT_SMILEY, 'fa-solid fa-face-smile');
 
         $myts       = \MyTextSanitizer::getInstance();
         $extensions = array_filter($myts->config['extensions']);
@@ -422,8 +444,8 @@ EOJS;
                 $element->js .= $js;
             }
         }
-        $code .= $this->renderEditorButton($btn, 'xoopsCodeCode("' . $textarea_id . '", "' . $this->esc(_ENTERCODE) . '")', $this->esc(_XOOPS_FORM_ALT_CODE), 'fa-solid fa-code');
-        $code .= $this->renderEditorButton($btn, 'xoopsCodeQuote("' . $textarea_id . '", "' . $this->esc(_ENTERQUOTE) . '")', $this->esc(_XOOPS_FORM_ALT_QUOTE), 'fa-solid fa-quote-right');
+        $code .= $this->renderEditorButton($btn, 'xoopsCodeCode("' . $textarea_id . '", "' . $this->esc(_ENTERCODE) . '")', _XOOPS_FORM_ALT_CODE, 'fa-solid fa-code');
+        $code .= $this->renderEditorButton($btn, 'xoopsCodeQuote("' . $textarea_id . '", "' . $this->esc(_ENTERQUOTE) . '")', _XOOPS_FORM_ALT_QUOTE, 'fa-solid fa-quote-right');
         $code .= '</div>';
 
         $xoopsPreload = XoopsPreload::getInstance();
@@ -714,12 +736,10 @@ EOJS;
      */
     public function renderFormTextDateSelect(XoopsFormTextDateSelect $element)
     {
-        static $included = false;
-        if (file_exists(XOOPS_ROOT_PATH . '/language/' . $GLOBALS['xoopsConfig']['language'] . '/calendar.php')) {
-            include_once XOOPS_ROOT_PATH . '/language/' . $GLOBALS['xoopsConfig']['language'] . '/calendar.php';
-        } else {
-            include_once XOOPS_ROOT_PATH . '/language/english/calendar.php';
-        }
+        static $included        = false;
+        static $fallbackEmitted = false;
+
+        include_once $this->resolveCalendarLanguageFile();
 
         $name     = $this->esc($element->getName(false));
         $rawValue = $element->getValue(false);
@@ -737,13 +757,121 @@ EOJS;
             $timestamp     = time();
         }
 
-        $jstime = formatTimestamp($timestamp, 'm/d/Y');
+        $jstime   = formatTimestamp($timestamp, 'm/d/Y');
+        $inlineJs = $this->buildCalendarLocaleJs($jstime);
+
+        $assets = '';
         if (isset($GLOBALS['xoTheme']) && is_object($GLOBALS['xoTheme'])) {
             $GLOBALS['xoTheme']->addScript('include/calendar.js');
             $GLOBALS['xoTheme']->addStylesheet('include/calendar-blue.css');
             if (!$included) {
                 $included = true;
-                $GLOBALS['xoTheme']->addScript('', '', '
+                $GLOBALS['xoTheme']->addScript('', '', $inlineJs);
+            }
+        } elseif (!$fallbackEmitted) {
+            // No theme object is available (e.g., standalone AJAX handler or
+            // custom entry point). Emit the calendar assets and init script
+            // inline — without this, the `onclick="showCalendar(...)"` handler
+            // below references an undefined function. Emit exactly once per
+            // request so forms with many date fields do not duplicate the JS.
+            $fallbackEmitted = true;
+            $assets          = '<script type="text/javascript" src="' . XOOPS_URL . '/include/calendar.js"></script>'
+                . '<link rel="stylesheet" type="text/css" href="' . XOOPS_URL . '/include/calendar-blue.css">'
+                . '<script type="text/javascript">' . $inlineJs . '</script>';
+        }
+
+        return $assets . '<div class="join w-full">'
+            . '<input class="input input-bordered join-item w-full" type="text"'
+            . self::ATTR_NAME . $name . self::ATTR_ID . $name . '"'
+            . self::ATTR_SIZE . (int) $element->getSize() . '"'
+            . self::ATTR_MAXLENGTH . (int) $element->getMaxlength() . '"'
+            . self::ATTR_VALUE . $this->esc($display_value) . '"'
+            . $this->renderExtra($element) . '>'
+            . '<button class="btn btn-neutral join-item" type="button"'
+            . ' onclick="return showCalendar(\'' . $name . '\');">'
+            . '<i class="fa-solid fa-calendar" aria-hidden="true"></i></button>'
+            . '</div>';
+    }
+
+    /**
+     * Resolve the calendar language file to `include_once`, with two layers
+     * of directory traversal hardening.
+     *
+     * 1. Allowlist filter — only plain directory names (alphanumerics plus
+     *    `_` and `-`) are accepted via `$GLOBALS['xoopsConfig']['language']`.
+     *    This blocks `..`, `/`, `\\`, null bytes, and URL-encoded payloads at
+     *    the character level before any filesystem call.
+     *
+     * 2. Realpath boundary check — after confirming the candidate file exists
+     *    via `is_file()`, both the candidate and the language base directory
+     *    are canonicalized and compared. Any result that does not sit under
+     *    `XOOPS_ROOT_PATH/language` is rejected. This closes the residual gap
+     *    where a symlink inside `language/` could route outside the tree, and
+     *    matches the explicit `realpath()` boundary check called for in the
+     *    review feedback.
+     *
+     * Either layer failing — allowlist, `is_file`, or realpath — sends the
+     * caller to the english fallback, which ships with XOOPS core and is
+     * guaranteed to exist on a healthy installation.
+     *
+     * Exposed as its own method so the hardening logic can be unit-tested
+     * without triggering the `include_once` and its unguarded `define()`
+     * calls inside the language file.
+     *
+     * @return string absolute path to a `calendar.php` that exists under
+     *                `XOOPS_ROOT_PATH/language`
+     */
+    protected function resolveCalendarLanguageFile(): string
+    {
+        $baseDir  = XOOPS_ROOT_PATH . '/language';
+        $fallback = $baseDir . '/english/calendar.php';
+
+        // Layer 1: allowlist filter on the configured language name
+        $lang = (string) ($GLOBALS['xoopsConfig']['language'] ?? 'english');
+        if (!preg_match('/^[a-z0-9_-]+$/i', $lang)) {
+            return $fallback;
+        }
+
+        $candidate = $baseDir . '/' . $lang . '/calendar.php';
+        if (!is_file($candidate)) {
+            return $fallback;
+        }
+
+        // Layer 2: realpath boundary check — the candidate must canonicalize
+        // to a file under XOOPS_ROOT_PATH/language. Catches symlink escapes
+        // that the regex allowlist alone cannot see.
+        $realCandidate = realpath($candidate);
+        $realBase      = realpath($baseDir);
+        if ($realCandidate === false || $realBase === false) {
+            return $fallback;
+        }
+        if (!str_starts_with($realCandidate, $realBase . DIRECTORY_SEPARATOR)) {
+            return $fallback;
+        }
+
+        return $realCandidate;
+    }
+
+    /**
+     * Build the inline JavaScript block that defines the legacy Calendar
+     * widget globals (`showCalendar`, `Calendar._DN`, `Calendar._MN`,
+     * `Calendar._TT[...]`).
+     *
+     * Extracted from {@see renderFormTextDateSelect()} so the same JS can be
+     * registered with `$xoTheme` when a theme is present AND emitted inline as
+     * a fallback when it is not. All translatable constants flow through
+     * {@see esJs()} so a malicious or malformed locale string cannot escape
+     * the containing `<script>` block or break its string literals.
+     *
+     * @param string $jstime default date to seed the Calendar widget with,
+     *                       already formatted as `m/d/Y`
+     *
+     * @return string JavaScript source suitable for embedding in a
+     *                `<script>` tag or passing to `XoopsTheme::addScript()`
+     */
+    protected function buildCalendarLocaleJs(string $jstime): string
+    {
+        return '
                     var calendar = null;
                     function selected(cal, date) { cal.sel.value = date; }
                     function closeHandler(cal) {
@@ -760,7 +888,7 @@ EOJS;
                         var el = xoopsGetElementById(id);
                         if (calendar != null) { calendar.hide(); }
                         else {
-                            var cal = new Calendar(true, "' . $jstime . '", selected, closeHandler);
+                            var cal = new Calendar(true, ' . $this->esJs($jstime) . ', selected, closeHandler);
                             calendar = cal;
                             cal.setRange(1900, 2100);
                             calendar.create();
@@ -771,39 +899,26 @@ EOJS;
                         Calendar.addEvent(document, "mousedown", checkCalendar);
                         return false;
                     }
-                    Calendar._DN = new Array("' . _CAL_SUNDAY . '", "' . _CAL_MONDAY . '", "' . _CAL_TUESDAY . '", "' . _CAL_WEDNESDAY . '", "' . _CAL_THURSDAY . '", "' . _CAL_FRIDAY . '", "' . _CAL_SATURDAY . '", "' . _CAL_SUNDAY . '");
-                    Calendar._MN = new Array("' . _CAL_JANUARY . '", "' . _CAL_FEBRUARY . '", "' . _CAL_MARCH . '", "' . _CAL_APRIL . '", "' . _CAL_MAY . '", "' . _CAL_JUNE . '", "' . _CAL_JULY . '", "' . _CAL_AUGUST . '", "' . _CAL_SEPTEMBER . '", "' . _CAL_OCTOBER . '", "' . _CAL_NOVEMBER . '", "' . _CAL_DECEMBER . '");
+                    Calendar._DN = new Array(' . $this->esJs(_CAL_SUNDAY) . ', ' . $this->esJs(_CAL_MONDAY) . ', ' . $this->esJs(_CAL_TUESDAY) . ', ' . $this->esJs(_CAL_WEDNESDAY) . ', ' . $this->esJs(_CAL_THURSDAY) . ', ' . $this->esJs(_CAL_FRIDAY) . ', ' . $this->esJs(_CAL_SATURDAY) . ', ' . $this->esJs(_CAL_SUNDAY) . ');
+                    Calendar._MN = new Array(' . $this->esJs(_CAL_JANUARY) . ', ' . $this->esJs(_CAL_FEBRUARY) . ', ' . $this->esJs(_CAL_MARCH) . ', ' . $this->esJs(_CAL_APRIL) . ', ' . $this->esJs(_CAL_MAY) . ', ' . $this->esJs(_CAL_JUNE) . ', ' . $this->esJs(_CAL_JULY) . ', ' . $this->esJs(_CAL_AUGUST) . ', ' . $this->esJs(_CAL_SEPTEMBER) . ', ' . $this->esJs(_CAL_OCTOBER) . ', ' . $this->esJs(_CAL_NOVEMBER) . ', ' . $this->esJs(_CAL_DECEMBER) . ');
                     Calendar._TT = {};
-                    Calendar._TT["TOGGLE"] = "' . _CAL_TGL1STD . '";
-                    Calendar._TT["PREV_YEAR"] = "' . _CAL_PREVYR . '";
-                    Calendar._TT["PREV_MONTH"] = "' . _CAL_PREVMNTH . '";
-                    Calendar._TT["GO_TODAY"] = "' . _CAL_GOTODAY . '";
-                    Calendar._TT["NEXT_MONTH"] = "' . _CAL_NXTMNTH . '";
-                    Calendar._TT["NEXT_YEAR"] = "' . _CAL_NEXTYR . '";
-                    Calendar._TT["SEL_DATE"] = "' . _CAL_SELDATE . '";
-                    Calendar._TT["DRAG_TO_MOVE"] = "' . _CAL_DRAGMOVE . '";
-                    Calendar._TT["PART_TODAY"] = "(' . _CAL_TODAY . ')";
-                    Calendar._TT["MON_FIRST"] = "' . _CAL_DISPM1ST . '";
-                    Calendar._TT["SUN_FIRST"] = "' . _CAL_DISPS1ST . '";
-                    Calendar._TT["CLOSE"] = "' . _CLOSE . '";
-                    Calendar._TT["TODAY"] = "' . _CAL_TODAY . '";
-                    Calendar._TT["DEF_DATE_FORMAT"] = "' . _SHORTDATESTRING . '";
-                    Calendar._TT["TT_DATE_FORMAT"] = "' . _SHORTDATESTRING . '";
+                    Calendar._TT["TOGGLE"] = ' . $this->esJs(_CAL_TGL1STD) . ';
+                    Calendar._TT["PREV_YEAR"] = ' . $this->esJs(_CAL_PREVYR) . ';
+                    Calendar._TT["PREV_MONTH"] = ' . $this->esJs(_CAL_PREVMNTH) . ';
+                    Calendar._TT["GO_TODAY"] = ' . $this->esJs(_CAL_GOTODAY) . ';
+                    Calendar._TT["NEXT_MONTH"] = ' . $this->esJs(_CAL_NXTMNTH) . ';
+                    Calendar._TT["NEXT_YEAR"] = ' . $this->esJs(_CAL_NEXTYR) . ';
+                    Calendar._TT["SEL_DATE"] = ' . $this->esJs(_CAL_SELDATE) . ';
+                    Calendar._TT["DRAG_TO_MOVE"] = ' . $this->esJs(_CAL_DRAGMOVE) . ';
+                    Calendar._TT["PART_TODAY"] = "(" + ' . $this->esJs(_CAL_TODAY) . ' + ")";
+                    Calendar._TT["MON_FIRST"] = ' . $this->esJs(_CAL_DISPM1ST) . ';
+                    Calendar._TT["SUN_FIRST"] = ' . $this->esJs(_CAL_DISPS1ST) . ';
+                    Calendar._TT["CLOSE"] = ' . $this->esJs(_CLOSE) . ';
+                    Calendar._TT["TODAY"] = ' . $this->esJs(_CAL_TODAY) . ';
+                    Calendar._TT["DEF_DATE_FORMAT"] = ' . $this->esJs(_SHORTDATESTRING) . ';
+                    Calendar._TT["TT_DATE_FORMAT"] = ' . $this->esJs(_SHORTDATESTRING) . ';
                     Calendar._TT["WK"] = "";
-                ');
-            }
-        }
-        return '<div class="join w-full">'
-            . '<input class="input input-bordered join-item w-full" type="text"'
-            . self::ATTR_NAME . $name . self::ATTR_ID . $name . '"'
-            . self::ATTR_SIZE . (int) $element->getSize() . '"'
-            . self::ATTR_MAXLENGTH . (int) $element->getMaxlength() . '"'
-            . self::ATTR_VALUE . $this->esc($display_value) . '"'
-            . $this->renderExtra($element) . '>'
-            . '<button class="btn btn-neutral join-item" type="button"'
-            . ' onclick="return showCalendar(\'' . $name . '\');">'
-            . '<i class="fa-solid fa-calendar" aria-hidden="true"></i></button>'
-            . '</div>';
+                ';
     }
 
     /**
